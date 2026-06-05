@@ -335,7 +335,8 @@ graph TD
 - **Backend:** Django (DRF) + SimpleJWT, separate service. REST, one ViewSet per resource.
 - **Tenancy:** subdomain-per-tenant, shared DB with `tenant_id`; resolved via `X-Tenant` header.
 - **Connection:** `src/lib/api/client.ts` (JWT + `X-Tenant`) → TanStack Query hooks replace JSON fixtures.
-- **Hosting:** **self-hosted on Contabo VPS** with Docker Compose + Nginx + Postgres + Redis + Celery.
+- **Hosting:** **self-hosted VPS** — **Contabo** primary, **DigitalOcean** alternative (same Docker Compose
+  stack: Nginx + Next.js + Django + Postgres + Redis + Celery).
 - **Keep almost all modules.** Drop the static export (needs a server runtime).
 - **Full plan** — now includes a connection/request sequence diagram, hosting & infrastructure section, and a
   complete backend data model (Django ER diagram + per-model field table): **[`SAAS_PLAN.md`](SAAS_PLAN.md)**.

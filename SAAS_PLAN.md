@@ -161,14 +161,16 @@ sequenceDiagram
 
 ---
 
-## Hosting & infrastructure (decision: **self-hosted on Contabo VPS**)
+## Hosting & infrastructure (decision: **self-hosted VPS — Contabo primary, DigitalOcean alternative**)
 
-Run everything on **Contabo** Linux VPS box(es), orchestrated with **Docker Compose** behind **Nginx**.
-Contabo gives the most RAM/vCPU/disk per dollar (good fit for a Postgres + Redis + app stack on one box);
-trade-off is manual ops (you own patching, backups, monitoring) and Contabo's network/support being more
-basic than Hetzner/DO. Start single-node; split services onto more boxes only when load demands it.
+Run everything on a Linux VPS, orchestrated with **Docker Compose** behind **Nginx**. **Contabo** is the
+chosen primary (most RAM/vCPU/disk per dollar). **DigitalOcean** is the documented alternative / fallback —
+pricier, but better network, console, managed add-ons, and docs. The **same Docker Compose stack runs on
+either**, so the provider is not locked into the app — only into ops tooling. Start single-node; split
+services onto more boxes only when load demands it.
 
-**Contabo specifics to plan for:**
+### Option A — Contabo (primary)
+Cheapest per resource; trade-off is more manual ops and more basic network/support.
 - **Sizing:** a **Cloud VPS** (e.g. VPS M/L — ~6–8 vCPU, 16–32 GB RAM, NVMe) comfortably runs the full
   Compose stack for early SaaS load. Scale vertically first (Contabo lets you upgrade the plan).
 - **Storage:** keep Postgres data + media on the NVMe system disk early; add a **Contabo Object Storage**
@@ -180,6 +182,35 @@ basic than Hetzner/DO. Start single-node; split services onto more boxes only wh
 - **Backups:** Contabo's auto-backup add-on covers the VPS image; still run app-level nightly `pg_dump` +
   media sync to Contabo Object Storage (or another provider) and **test restores** — don't rely on the
   image snapshot alone.
+
+### Option B — DigitalOcean (alternative / fallback)
+More expensive for the same RAM/CPU, but smoother ops and a clear managed-upgrade path if self-managing
+Postgres becomes a burden.
+- **Sizing:** start on a **Basic/Premium Droplet** (e.g. 4 vCPU / 8–16 GB, NVMe) for the Compose stack;
+  resize live as load grows. Use **Reserved IP** so you can rebuild the box without changing DNS.
+- **Storage:** attach a **Block Storage Volume** for Postgres/media data (survives droplet rebuilds);
+  use **DO Spaces** (S3-compatible) + the built-in **Spaces CDN** for backups and product media.
+- **Managed upgrade path:** offload Postgres to **DO Managed Databases** (automated backups, failover,
+  patching) and/or Redis to a managed instance — drop those containers from Compose, keep the rest. This is
+  DO's main advantage over Contabo: you can stop babysitting the DB without re-platforming.
+- **Networking/TLS:** add a **DO Load Balancer** (with managed Let's Encrypt certs incl. wildcard) once you
+  run more than one app box; single-node, Nginx + certbot on the droplet is enough.
+- **Email:** same rule — relay transactional mail (Postmark/SES/Mailgun); don't send from the droplet.
+- **Backups:** enable Droplet backups/snapshots **and** keep app-level `pg_dump` → Spaces; test restores.
+
+### Quick comparison
+| Dimension | Contabo (primary) | DigitalOcean (alternative) |
+|---|---|---|
+| Cost / resource | 🟢 Cheapest (most RAM/CPU/disk per $) | 🟡 ~2–3× pricier for same specs |
+| Ops effort | 🟡 More manual (bare images, self-managed DB) | 🟢 Smoother (snapshots, managed DB/Redis option) |
+| Network / latency | 🟡 Adequate; fewer regions, IPs sometimes blocklisted | 🟢 Strong global network + CDN |
+| Object storage | Contabo Object Storage (S3) | DO Spaces + Spaces CDN (S3) |
+| Managed DB | ❌ Self-host Postgres in container | ✅ DO Managed Databases (optional) |
+| Best when | Maximizing runway / cost per tenant | Want low-ops + easy managed upgrades |
+
+> **App-portability rule:** keep all provider differences in infra config (Compose env, Nginx, backup
+> scripts, object-storage endpoint) — **never** in application code. The S3 endpoint, DB host, and Redis URL
+> are all `.env` values, so switching Contabo ↔ DigitalOcean is a redeploy, not a rewrite.
 
 ```mermaid
 graph TD
