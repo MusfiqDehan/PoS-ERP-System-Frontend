@@ -5,9 +5,19 @@ skip re-scanning the tree. Paths are relative to this folder (`retail-pos/nextjs
 
 > **DIRECTION:** This template is being adopted as the front-end for a **SaaS product**.
 > Locked decisions: **Django (DRF) backend** (separate service), **keep almost all modules**,
-> **subdomain-per-tenant with a shared DB + `tenant_id`**, and **drop the static export** (needs a
-> server runtime for auth/middleware/subdomain). Full migration plan: **[SAAS_PLAN.md](SAAS_PLAN.md)**.
+> **subdomain-per-tenant with a shared DB + `tenant_id`**, **drop the static export** (needs a
+> server runtime for auth/middleware/subdomain), **self-hosted VPS hosting** (**Contabo** primary,
+> **DigitalOcean** alternative — same Docker Compose stack), and **mandatory unit testing**
+> (Vitest+RTL front-end, pytest+DRF back-end).
 > Status: plan only — no migration code written yet.
+>
+> **Project docs (keep these in sync when decisions change):**
+> - **[README.md](README.md)** — full developer onboarding: architecture, diagrams, directory map, conventions, **Testing (required)** setup.
+> - **[SAAS_PLAN.md](SAAS_PLAN.md)** — backend (Django ER model), FE↔BE connection flow, hosting/infra (Contabo + DO), testing strategy, phased rollout.
+> - **[SQA_PLAN.md](SQA_PLAN.md)** — QA standard: test levels/pyramid, test types, defect lifecycle, per-module test scope, environments, CI gates, release sign-off.
+> - **[page-component-count.csv](page-component-count.csv)** — per-page LOC + component counts (decomposition targets).
+>
+> **Repo:** git-tracked, remote `origin` → `https://github.com/GeekSSort/geekpos_frontend.git`, default branch `main`.
 
 ---
 
@@ -192,7 +202,10 @@ npm run build    # next build → static export to /out (eslint + type errors ig
 npm run start    # next start
 npm run lint     # next lint
 ```
-No test runner (0 tests). No CI. No `.env*`.
+No test runner wired **yet** (0 tests today) and no CI/`.env*`. **But testing is now mandatory policy:**
+new/changed features must ship with **Vitest + React Testing Library** unit tests (`*.test.tsx` co-located).
+Setup + examples in [README.md → Testing](README.md#-testing-required); QA process in [SQA_PLAN.md](SQA_PLAN.md).
+Don't state "this project has no tests" as a goal — adding them is the standard going forward.
 
 ---
 
@@ -208,11 +221,12 @@ Risks (address before building a product on top):
 - **Giant components.** Several 2k–3.6k LOC (`uiinterface/navtabs.tsx` 3605, `dropdowns.tsx` 3108, `application/filemanager.tsx` 2637, `pos.tsx` 1798).
 - **Dead/placeholder UI.** 4500+ `href="#"`, length-based sorters, duplicate variants (pos..pos-5, signin/-2/-3, layout clones).
 - **Dependency bloat.** `package.json` lists `npm`, `i`, and overlapping libs (chart.js *and* apexcharts; react-dnd *and* @hello-pangea/dnd *and* dragula).
-- **No tests, CI, or env config.**
+- **No tests, CI, or env config yet** — now addressed by policy: see testing requirement (above) + [SQA_PLAN.md](SQA_PLAN.md).
 
 First steps toward a product (mirrors SAAS_PLAN.md): introduce an API client + TanStack Query and actually
 configure Redux; re-enable `no-explicit-any` / `ignoreDuringBuilds:false` incrementally; decompose 2k+ LOC
-components; prune duplicate variants & unused deps; replace `href="#"` with real `all_routes` links + mutations.
+components; prune duplicate variants & unused deps; replace `href="#"` with real `all_routes` links + mutations;
+stand up the test harness (Vitest/pytest) + CI quality gates per SQA_PLAN.
 
 ---
 
