@@ -323,7 +323,7 @@ No test runner (0 tests). No CI. No `.env*`.
 graph TD
     U["Users<br/>acme.geekpos.com · *.geekpos.com"] --> DNS["DNS (wildcard) → VPS IP"]
     DNS --> NG["Nginx (reverse proxy + TLS)<br/>Let's Encrypt wildcard"]
-    subgraph VPS["Self-hosted VPS — Docker Compose"]
+    subgraph VPS["Contabo VPS — Docker Compose"]
       NG --> FE["Next.js (server runtime)"]
       NG --> API["Django + DRF (Gunicorn)"]
       API --> PG[("PostgreSQL<br/>shared DB + tenant_id")]
@@ -335,7 +335,7 @@ graph TD
 - **Backend:** Django (DRF) + SimpleJWT, separate service. REST, one ViewSet per resource.
 - **Tenancy:** subdomain-per-tenant, shared DB with `tenant_id`; resolved via `X-Tenant` header.
 - **Connection:** `src/lib/api/client.ts` (JWT + `X-Tenant`) → TanStack Query hooks replace JSON fixtures.
-- **Hosting:** **self-hosted VPS** (Hetzner/DigitalOcean) with Docker Compose + Nginx + Postgres + Redis.
+- **Hosting:** **self-hosted on Contabo VPS** with Docker Compose + Nginx + Postgres + Redis + Celery.
 - **Keep almost all modules.** Drop the static export (needs a server runtime).
 - **Full plan** — now includes a connection/request sequence diagram, hosting & infrastructure section, and a
   complete backend data model (Django ER diagram + per-model field table): **[`SAAS_PLAN.md`](SAAS_PLAN.md)**.

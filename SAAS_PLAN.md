@@ -161,18 +161,31 @@ sequenceDiagram
 
 ---
 
-## Hosting & infrastructure (decision: **self-hosted VPS**)
+## Hosting & infrastructure (decision: **self-hosted on Contabo VPS**)
 
-Run everything on one (or a small cluster of) Linux VPS boxes (e.g. **Hetzner / DigitalOcean / Contabo**),
-orchestrated with **Docker Compose** behind **Nginx**. Cheapest at scale and full control; trade-off is
-manual ops (you own patching, backups, monitoring). Start single-node; split services onto more boxes only
-when load demands it.
+Run everything on **Contabo** Linux VPS box(es), orchestrated with **Docker Compose** behind **Nginx**.
+Contabo gives the most RAM/vCPU/disk per dollar (good fit for a Postgres + Redis + app stack on one box);
+trade-off is manual ops (you own patching, backups, monitoring) and Contabo's network/support being more
+basic than Hetzner/DO. Start single-node; split services onto more boxes only when load demands it.
+
+**Contabo specifics to plan for:**
+- **Sizing:** a **Cloud VPS** (e.g. VPS M/L — ~6–8 vCPU, 16–32 GB RAM, NVMe) comfortably runs the full
+  Compose stack for early SaaS load. Scale vertically first (Contabo lets you upgrade the plan).
+- **Storage:** keep Postgres data + media on the NVMe system disk early; add a **Contabo Object Storage**
+  (S3-compatible) bucket for off-site backups and product media (works as the MinIO/S3 target below).
+- **OS:** Ubuntu LTS image; harden on first boot (Contabo defaults are bare — set up `ufw`, SSH keys,
+  disable password login, fail2ban immediately).
+- **Network:** order/confirm a clean **IPv4 + IPv6**; Contabo IPs occasionally land on mail blocklists, so
+  send transactional email via a relay (Postmark/SES/Mailgun), **not** the box's own SMTP.
+- **Backups:** Contabo's auto-backup add-on covers the VPS image; still run app-level nightly `pg_dump` +
+  media sync to Contabo Object Storage (or another provider) and **test restores** — don't rely on the
+  image snapshot alone.
 
 ```mermaid
 graph TD
     U["Users<br/>acme.geekpos.com · globex.geekpos.com · *.geekpos.com"] --> DNS["DNS<br/>A/AAAA + wildcard *.geekpos.com → VPS IP"]
     DNS --> NG["Nginx (reverse proxy + TLS)<br/>Let's Encrypt wildcard cert (DNS-01)"]
-    subgraph VPS["VPS — Docker Compose"]
+    subgraph VPS["Contabo VPS — Docker Compose"]
       NG --> FE["Next.js (server runtime)<br/>node, PM2/container :3000"]
       NG --> API["Django + DRF<br/>Gunicorn :8000"]
       API --> PG[("PostgreSQL<br/>container + volume")]
@@ -181,7 +194,7 @@ graph TD
       API --> MED["Media volume / MinIO<br/>product images, signatures"]
     end
     NG -.serves.-> MED
-    VPS --> BK["Off-site backups<br/>nightly pg_dump + media → object storage"]
+    VPS --> BK["Off-site backups<br/>nightly pg_dump + media → Contabo Object Storage (S3)"]
 ```
 
 ### Components on the box
