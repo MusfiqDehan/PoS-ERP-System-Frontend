@@ -320,21 +320,26 @@ No test runner (0 tests). No CI. No `.env*`.
 ### Planned SaaS direction (locked decisions)
 
 ```mermaid
-graph LR
-    subgraph Tenants
-      T1["acme.geekpos.com"]
-      T2["globex.geekpos.com"]
+graph TD
+    U["Users<br/>acme.geekpos.com · *.geekpos.com"] --> DNS["DNS (wildcard) → VPS IP"]
+    DNS --> NG["Nginx (reverse proxy + TLS)<br/>Let's Encrypt wildcard"]
+    subgraph VPS["Self-hosted VPS — Docker Compose"]
+      NG --> FE["Next.js (server runtime)"]
+      NG --> API["Django + DRF (Gunicorn)"]
+      API --> PG[("PostgreSQL<br/>shared DB + tenant_id")]
+      API --> RD[("Redis (cache + Celery)")]
+      API --> CEL["Celery workers"]
     end
-    T1 --> FE["Next.js front-end<br/>(this repo, server runtime)"]
-    T2 --> FE
-    FE -->|"REST / TanStack Query"| API["Django (DRF) backend<br/>(separate service)"]
-    API --> DB[("Shared DB<br/>+ tenant_id")]
 ```
 
-- **Backend:** Django (DRF), separate service.
-- **Tenancy:** subdomain-per-tenant, shared DB with `tenant_id`.
+- **Backend:** Django (DRF) + SimpleJWT, separate service. REST, one ViewSet per resource.
+- **Tenancy:** subdomain-per-tenant, shared DB with `tenant_id`; resolved via `X-Tenant` header.
+- **Connection:** `src/lib/api/client.ts` (JWT + `X-Tenant`) → TanStack Query hooks replace JSON fixtures.
+- **Hosting:** **self-hosted VPS** (Hetzner/DigitalOcean) with Docker Compose + Nginx + Postgres + Redis.
 - **Keep almost all modules.** Drop the static export (needs a server runtime).
-- Full plan: [`SAAS_PLAN.md`](SAAS_PLAN.md). *Status: plan only — no migration code written yet.*
+- **Full plan** — now includes a connection/request sequence diagram, hosting & infrastructure section, and a
+  complete backend data model (Django ER diagram + per-model field table): **[`SAAS_PLAN.md`](SAAS_PLAN.md)**.
+  *Status: plan only — no migration code written yet.*
 
 ---
 
