@@ -20,8 +20,9 @@ A commercial **Admin / Point-of-Sale (POS) dashboard UI** built on **Next.js 15 
 10. [How The Moving Parts Work](#-how-the-moving-parts-work)
 11. [Conventions & Gotchas](#-conventions--gotchas)
 12. [Scripts](#-scripts)
-13. [Project Health & Roadmap](#-project-health--roadmap)
-14. [Contributing Workflow](#-contributing-workflow)
+13. [Testing (required)](#-testing-required)
+14. [Project Health & Roadmap](#-project-health--roadmap)
+15. [Contributing Workflow](#-contributing-workflow)
 
 ---
 
@@ -285,7 +286,129 @@ npm run start    # next start
 npm run lint     # next lint
 ```
 
-No test runner (0 tests). No CI. No `.env*`.
+No test runner (0 tests) **yet** — see [Testing](#-testing-required) below for the required setup. No CI. No `.env*`.
+
+---
+
+## 🧪 Testing (required)
+
+> **Policy: every new or changed feature ships with unit tests.** PRs that add/modify a component, a hook,
+> or (later) an API function are **not complete without tests**. The repo currently has **0 tests** — the
+> first task when you touch a screen is to add coverage for it.
+
+### Stack
+
+| Layer | Tool | Why |
+|---|---|---|
+| Unit / component | **Vitest** + **React Testing Library** + `jsdom` | Fast, native TS/ESM, works with Next.js 15 + React 19. Most components are `"use client"`, so RTL renders them directly. |
+| User-event simulation | `@testing-library/user-event` | Clicks, typing, form interaction. |
+| API mocking (for hooks) | **MSW** (Mock Service Worker) | Mock the future Django REST endpoints so hooks/screens test against realistic responses. |
+| E2E (later) | **Playwright** | Full flows (login → add product → checkout) once the backend exists. |
+
+> Jest also works (Next.js supports it), but this project standardizes on **Vitest** — keep it consistent.
+
+### One-time setup
+
+```bash
+npm i -D vitest @vitejs/plugin-react jsdom \
+  @testing-library/react @testing-library/jest-dom @testing-library/user-event
+```
+
+`vitest.config.ts` (project root):
+```ts
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+import path from "path";
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: "./vitest.setup.ts",
+  },
+  resolve: { alias: { "@": path.resolve(__dirname, "./src") } }, // matches tsconfig @/* → ./src/*
+});
+```
+
+`vitest.setup.ts`:
+```ts
+import "@testing-library/jest-dom";
+```
+
+Add to `package.json` → `scripts`:
+```json
+"test": "vitest run",
+"test:watch": "vitest",
+"test:coverage": "vitest run --coverage"
+```
+
+### How to write a test
+
+Tests live **next to the file** they cover: `<name>.test.tsx` beside `<name>.tsx` (or in `__tests__/`).
+Test **behavior the user sees**, not implementation details.
+
+**1. A component renders fixture rows** (`src/components/Inventory/productList/productlist.test.tsx`):
+```tsx
+import { render, screen } from "@testing-library/react";
+import ProductList from "./productlist";
+
+describe("ProductList", () => {
+  it("renders products from the data source", () => {
+    render(<ProductList />);
+    expect(screen.getByText("Lenovo 3rd Generation")).toBeInTheDocument();
+    expect(screen.getByText("PT001")).toBeInTheDocument(); // SKU column
+  });
+});
+```
+
+**2. The DataTable search filters rows** (`src/core/common/pagination/datatable.test.tsx`):
+```tsx
+import { render, screen, queryByText } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Datatable from "./datatable";
+
+const columns = [{ title: "Name", dataIndex: "name", key: "name" }];
+const data = [{ key: 1, name: "Apple" }, { key: 2, name: "Banana" }];
+
+it("filters rows by the search box", async () => {
+  render(<Datatable columns={columns} dataSource={data} />);
+  await userEvent.type(screen.getByRole("textbox"), "App");
+  expect(screen.getByText("Apple")).toBeInTheDocument();
+  expect(screen.queryByText("Banana")).not.toBeInTheDocument();
+});
+```
+
+**3. A data hook (once API wiring lands)** — mock the endpoint with MSW, then assert the hook returns it:
+```tsx
+import { renderHook, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useProducts } from "@/hooks/useProducts";
+
+const wrapper = ({ children }) => (
+  <QueryClientProvider client={new QueryClient()}>{children}</QueryClientProvider>
+);
+
+it("loads products from the API", async () => {
+  const { result } = renderHook(() => useProducts(), { wrapper });
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  expect(result.current.data).toHaveLength(2); // shape mocked via MSW handler
+});
+```
+
+### What to test (priority order)
+1. **Business logic first** — POS cart math (totals, discount, GST/tax), invoice/payment due calculations, stock adjustments. Pure functions → easiest, highest value. **Extract logic out of giant components into testable helpers** as you go.
+2. **Data hooks** — loading/error/success states, query params (search/sort/pagination), mutations.
+3. **Component rendering** — correct rows/columns, conditional UI (status badges, empty states).
+4. **User interactions** — search filtering, form validation, modal open/submit.
+5. **Skip** template filler (`uiinterface`, `charts`, mock `application` screens) — don't waste effort there.
+
+### Rules
+- **Run `npm test` before every push** (and it must pass).
+- Co-locate tests with source; name `*.test.tsx` / `*.test.ts`.
+- Don't test third-party libs (antd, Bootstrap) — test **your** usage of them.
+- Aim for meaningful coverage of business screens, not a vanity 100% (target the `pos-module`, `Inventory`, `sales`, `purchase`, `FinanceAccounts`, `hrm` domains).
+- Backend (Django) has its own testing standard — see **[`SAAS_PLAN.md`](SAAS_PLAN.md) → Testing strategy**.
 
 ---
 
@@ -352,7 +475,8 @@ graph TD
 4. **Need a link?** → use `all_routes` from `src/data/all_routes.tsx`.
 5. **Need a modal?** → Bootstrap modal in `src/core/modals/<domain>/`, triggered via `data-bs-toggle`.
 6. **Need a table?** → reuse `core/common/pagination/datatable.tsx`.
-7. **Run `npm run dev`** and verify in the browser.
+7. **Write unit tests** → add `*.test.tsx` next to what you changed (see [Testing](#-testing-required)). **Required.**
+8. **Run `npm run dev`** and verify in the browser, then **`npm test`** — both must pass before pushing.
 
 > 📖 A deeper, AI-assistant-oriented primer lives in [`CLAUDE.md`](CLAUDE.md) — read it for the full verified context.
 

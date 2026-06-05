@@ -350,3 +350,59 @@ class TenantViewSet(viewsets.ModelViewSet):
         serializer.save(tenant=self.request.tenant)
 ```
 `request.tenant` is set by middleware from the `X-Tenant` header (validated against the JWT's allowed tenants).
+
+---
+
+## Testing strategy
+
+**Policy: both repos require unit tests on every new/changed feature.** No untested business logic, no
+untested endpoint, no untested data hook.
+
+### Front-end (this repo) — see [`README.md`](README.md#-testing-required) for full setup
+- **Vitest + React Testing Library + jsdom** for unit/component tests; **MSW** to mock Django endpoints;
+  **Playwright** for E2E later.
+- Co-locate `*.test.tsx` with source. Prioritize **POS cart math, totals/tax/discount, hooks, table search**.
+
+### Back-end (Django) — standard
+- **`pytest` + `pytest-django`** (preferred over Django's `unittest` TestCase for fixtures/parametrization).
+- **`factory_boy`** (or `model_bakery`) to build model instances; **DRF `APIClient`** for endpoint tests.
+- **`pytest-cov`** for coverage; run in CI on every PR.
+
+```bash
+pip install pytest pytest-django pytest-cov factory_boy
+```
+`pytest.ini`:
+```ini
+[pytest]
+DJANGO_SETTINGS_MODULE = config.settings.test
+python_files = tests.py test_*.py *_tests.py
+```
+
+**The non-negotiable backend test — tenant isolation** (the safety rail must be proven, not assumed):
+```python
+import pytest
+from rest_framework.test import APIClient
+
+@pytest.mark.django_db
+def test_tenant_cannot_read_another_tenants_products(tenant_a, tenant_b, product_factory):
+    product_factory(tenant=tenant_b, name="Secret Widget")
+    client = APIClient()
+    client.force_authenticate(user=tenant_a.owner)
+    res = client.get("/api/v1/products/", HTTP_X_TENANT=tenant_a.subdomain)
+    names = [p["name"] for p in res.json()["results"]]
+    assert "Secret Widget" not in names          # tenant B's data must NOT leak to tenant A
+    assert res.status_code == 200
+```
+
+**What to test (backend priority):**
+1. **Tenant scoping** — every ViewSet: a tenant can't read/write another tenant's rows (parametrize across resources).
+2. **Auth** — login returns JWT, refresh works, unauthenticated → 401, wrong/missing `X-Tenant` → 403.
+3. **Business calculations** — sale totals = Σ(item subtotal) − discount + tax; due = grand_total − paid; stock decrements on sale, increments on purchase/return.
+4. **Serializers** — field names match the front-end fixtures; money/date parsing; validation errors.
+5. **Endpoints** — list pagination shape `{count,next,previous,results}`, `?search=`/`?ordering=`/filters.
+
+### Per-module Definition of Done (DoD)
+When wiring a module (the phase-4 loop), it isn't "done" until:
+- [ ] Backend: model + serializer + ViewSet **with tests** (tenant isolation + happy path + validation).
+- [ ] Front-end: hook + screen wired, **with tests** (renders data, search/sort, mutation happy path).
+- [ ] Both test suites green in CI; coverage not decreased.
