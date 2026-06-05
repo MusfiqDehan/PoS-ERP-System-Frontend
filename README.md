@@ -410,6 +410,9 @@ it("loads products from the API", async () => {
 - Aim for meaningful coverage of business screens, not a vanity 100% (target the `pos-module`, `Inventory`, `sales`, `purchase`, `FinanceAccounts`, `hrm` domains).
 - Backend (Django) has its own testing standard — see **[`SAAS_PLAN.md`](SAAS_PLAN.md) → Testing strategy**.
 
+> 🧰 **For QA/SQA** (test levels, defect lifecycle, module test scope, environments, release sign-off):
+> see the full **[`SQA_PLAN.md`](SQA_PLAN.md)**. Unit testing above is one level of that broader plan.
+
 ---
 
 ## 🩺 Project Health & Roadmap
