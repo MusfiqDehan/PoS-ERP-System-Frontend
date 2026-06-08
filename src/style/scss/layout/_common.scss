@@ -1132,7 +1132,7 @@ th,td {
     &.low-stock-top-head {
         @include mixins.respond-below(custom575) {
             flex-wrap: wrap;  
-           justify-content: start;
+           justify-content: flex-start;
         }
         li {
             margin-bottom: 10px;

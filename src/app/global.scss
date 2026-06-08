@@ -1,4 +1,4 @@
-@import "../style/scss/main.scss";
+@use "../style/scss/main.scss";
 
 $__basecolor: #2c3038;
 
@@ -688,7 +688,7 @@ div.ant-picker.ant-picker-outlined {
 }
 
 #DataTables_Table_0_filter.dataTables_filter.custom-data-table-react {
-  justify-content: end;
+  justify-content: flex-end;
   display: flex;
 }
 

@@ -3727,8 +3727,8 @@ ul.list-inline .list-inline-item {
 	-webkit-box-align: center;
 	-ms-flex-align: center;
 	align-items: center;
-	justify-content: end;
-	-webkit-justify-content: end;
+	justify-content: flex-end;
+	-webkit-justify-content: flex-end;
 	-ms-flex-pack: end;
 	.green-check {
 		color: #0D9B35;
@@ -4599,8 +4599,8 @@ ul.list-inline .list-inline-item {
                         -webkit-box-align: center;
                         -ms-flex-align: center;
                         align-items: center;
-                        justify-content: end;
-                        -webkit-justify-content: end;
+                        justify-content: flex-end;
+                        -webkit-justify-content: flex-end;
                         -ms-flex-pack: end;
                         @include mixins.transition(all .5s ease);
                     }
@@ -4965,7 +4965,7 @@ ul.list-inline .list-inline-item {
                 margin-bottom: 26px;
                 display: flex;
                 display: -webkit-flex;
-                align-items: end;
+                align-items: flex-end;
                 &:last-child {
                     margin-bottom: 0;
                 }
@@ -5089,12 +5089,12 @@ ul.list-inline .list-inline-item {
                         padding: 0 0 0 8px;
                     }
                     .chat-profile-name {
-                        justify-content: end;
-                        -webkit-justify-content: end;
+                        justify-content: flex-end;
+                        -webkit-justify-content: flex-end;
                         -ms-flex-pack: end;
                     }
                     .chat-info {
-                        justify-content: end;
+                        justify-content: flex-end;
                     }
                     .chat-actions {
                         margin-right: 8px;
@@ -5130,8 +5130,8 @@ ul.list-inline .list-inline-item {
                         }
                     }                                        
                     .emonji-wrap {
-                        justify-content: end;
-                        -webkit-justify-content: end;
+                        justify-content: flex-end;
+                        -webkit-justify-content: flex-end;
                         -ms-flex-pack: end;
                     }
                 }
@@ -5144,7 +5144,7 @@ ul.list-inline .list-inline-item {
     margin-bottom: 30px;
     display: flex;
     display: -webkit-flex;
-    align-items: end;
+    align-items: flex-end;
     .chat-avatar {
         padding-right: 8px;
         display: flex;
@@ -5541,8 +5541,8 @@ ul.list-inline .list-inline-item {
     .footer-form {
         display: flex;
         display: -webkit-flex;
-        align-items: end;
-        -webkit-align-items: end;
+        align-items: flex-end;
+        -webkit-align-items: flex-end;
         position: absolute;
         bottom: 0px;
         left: 0;

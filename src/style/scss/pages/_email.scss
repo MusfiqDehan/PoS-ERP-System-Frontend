@@ -144,8 +144,8 @@
     display: none;
     transform: scale(0.9);
     transition: opacity 0.3s ease, transform 0.3s ease;
-    align-items: end;
-    justify-content: end;
+    align-items: flex-end;
+    justify-content: flex-end;
 }
 #compose-view.show {
     display: flex
@@ -484,8 +484,8 @@
     display: none;
     transform: scale(0.9);
    transition: opacity 0.3s ease, transform 0.3s ease;
-   align-items: end;
-   justify-content: end;
+   align-items: flex-end;
+   justify-content: flex-end;
     &.show {
       display: flex;
       transform: scale(1);
