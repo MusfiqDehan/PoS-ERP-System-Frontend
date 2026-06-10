@@ -1,4 +1,5 @@
 import CommonFooter from "@/core/common/footer/commonFooter";
+import ExpiredProducts from "@/components/NewDashboard/ExpiredProducts";
 import LowStockAlert from "@/components/NewDashboard/LowStockAlert";
 import LowStockProducts from "@/components/NewDashboard/LowStockProducts";
 import OrderStatistics from "@/components/NewDashboard/OrderStatistics";
@@ -10,6 +11,7 @@ import RevenueWidgets from "@/components/NewDashboard/RevenueWidgets";
 import SaleWidgets from "@/components/NewDashboard/SaleWidgets";
 import SalesPurchaseChart from "@/components/NewDashboard/SalesPurchaseChart";
 import SalesStatistics from "@/components/NewDashboard/SalesStatistics";
+import RecentlyAdded from "@/components/NewDashboard/RecentlyAdded";
 import TopCategories from "@/components/NewDashboard/TopCategories";
 import TopCustomers from "@/components/NewDashboard/TopCustomers";
 import TopSellingProducts from "@/components/NewDashboard/TopSellingProducts";
@@ -22,23 +24,27 @@ export default function Dashboard() {
         <LowStockAlert />
         <SaleWidgets />
         <RevenueWidgets />
-        <div className="row">
+        <div className="row mt-4 align-items-stretch dashboard-chart-row">
           <SalesPurchaseChart />
           <OverallInformation />
         </div>
-        <div className="row">
+        <div className="row mt-4">
           <TopSellingProducts />
           <LowStockProducts />
           <RecentSales />
         </div>
-        <div className="row">
+        <div className="row align-items-stretch">
           <SalesStatistics />
           <RecentTransactions />
         </div>
-        <div className="row">
+        <div className="row mt-4">
           <TopCustomers />
           <TopCategories />
           <OrderStatistics />
+        </div>
+        <div className="row mt-4">
+          <ExpiredProducts />
+          <RecentlyAdded />
         </div>
       </div>
       <CommonFooter />
