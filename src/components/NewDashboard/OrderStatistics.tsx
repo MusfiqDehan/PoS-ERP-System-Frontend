@@ -1,54 +1,71 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
+
+import ImageWithBasePath from "@/core/common/image-with-base-path";
 import Link from "next/link";
-import HeatmapChart from "@/components/charts/heartchat";
+import { useState } from "react";
+import OrderStatisticsHeatmap from "./OrderStatisticsHeatmap";
+import {
+  orderStatisticsAssets,
+  orderStatisticsFilterOptions,
+} from "./orderStatisticsData";
 
 export default function OrderStatistics() {
+  const [activeFilter, setActiveFilter] = useState(
+    orderStatisticsFilterOptions[1],
+  );
+
   return (
-          <div className="col-xxl-4 col-md-12 d-flex">
-            <div className="card flex-fill">
-              <div className="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div className="d-inline-flex align-items-center">
-                  <span className="title-icon bg-soft-indigo fs-16 me-2">
-                    <i className="ti ti-package" />
-                  </span>
-                  <h5 className="card-title mb-0">Order Statistics</h5>
-                </div>
-                <div className="dropdown">
+    <div className="col-xxl-4 col-md-6 d-flex">
+      <div className="order-statistics flex-fill">
+        <div className="order-statistics__header">
+          <p className="order-statistics__title">Order Statistics</p>
+          <div className="dropdown order-statistics__filter-dropdown">
+            <button
+              type="button"
+              className="order-statistics__filter dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span className="order-statistics__filter-content">
+                <ImageWithBasePath
+                  src={orderStatisticsAssets.calendar}
+                  alt=""
+                  width={16}
+                  height={16}
+                />
+                <span>{activeFilter}</span>
+              </span>
+              <ImageWithBasePath
+                src={orderStatisticsAssets.chevronDown}
+                alt=""
+                width={16}
+                height={16}
+                className="order-statistics__filter-chevron"
+              />
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              {orderStatisticsFilterOptions.map((option) => (
+                <li key={option}>
                   <Link
                     href="#"
-                    className="dropdown-toggle btn btn-sm btn-white"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                    className="dropdown-item"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setActiveFilter(option);
+                    }}
                   >
-                    <i className="ti ti-calendar me-1" />
-                    Weekly
+                    {option}
                   </Link>
-                  <ul className="dropdown-menu p-3">
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        Today
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        Weekly
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        Monthly
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="card-body pb-0">
-                <div id="heat_chart">
-                 <HeatmapChart />
-                </div>
-              </div>
-            </div>
+                </li>
+              ))}
+            </ul>
           </div>
+        </div>
+
+        <div className="order-statistics__body">
+          <OrderStatisticsHeatmap />
+        </div>
+      </div>
+    </div>
   );
 }

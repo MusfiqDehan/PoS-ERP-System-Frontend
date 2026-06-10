@@ -1,165 +1,116 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
+
+import ImageWithBasePath from "@/core/common/image-with-base-path";
 import Link from "next/link";
+import { useState } from "react";
+import {
+  recentSalesAssets,
+  recentSalesData,
+  recentSalesFilterOptions,
+  recentSaleStatusStyles,
+} from "./recentSalesData";
 
 export default function RecentSales() {
+  const [activeFilter, setActiveFilter] = useState(recentSalesFilterOptions[0]);
+
   return (
-          <div className="col-xxl-4 col-md-12 d-flex">
-            <div className="card flex-fill">
-              <div className="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div className="d-inline-flex align-items-center">
-                  <span className="title-icon bg-soft-pink fs-16 me-2">
-                    <i className="ti ti-box" />
-                  </span>
-                  <h5 className="card-title mb-0">Recent Sales</h5>
-                </div>
-                <div className="dropdown">
+    <div className="col-xxl-4 col-md-12 d-flex">
+      <div className="recent-sales flex-fill">
+        <div className="recent-sales__header">
+          <p className="recent-sales__title">Recent Sales</p>
+          <div className="dropdown recent-sales__filter-dropdown">
+            <button
+              type="button"
+              className="recent-sales__filter dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span className="recent-sales__filter-content">
+                <ImageWithBasePath
+                  src={recentSalesAssets.calendar}
+                  alt=""
+                  width={16}
+                  height={16}
+                />
+                <span>{activeFilter}</span>
+              </span>
+              <ImageWithBasePath
+                src={recentSalesAssets.chevronDown}
+                alt=""
+                width={16}
+                height={16}
+                className="recent-sales__filter-chevron"
+              />
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              {recentSalesFilterOptions.map((option) => (
+                <li key={option}>
                   <Link
                     href="#"
-                    className="dropdown-toggle btn btn-sm btn-white"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                    className="dropdown-item"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setActiveFilter(option);
+                    }}
                   >
-                    <i className="ti ti-calendar me-1" />
-                    Weekly
+                    {option}
                   </Link>
-                  <ul className="dropdown-menu p-3">
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        Today
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        Weekly
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        Monthly
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="card-body">
-                <div className="d-flex align-items-center justify-content-between mb-4">
-                  <div className="d-flex align-items-center">
-                    <Link href="#" className="avatar avatar-lg">
-                      <img src="assets/img/products/product-11.jpg" alt="img" />
-                    </Link>
-                    <div className="ms-2">
-                      <h6 className="fw-bold mb-1">
-                        <Link href="#">Apple Watch Series 9</Link>
-                      </h6>
-                      <div className="d-flex align-items-center item-list">
-                        <p>Electronics</p>
-                        <p className="text-gray-9">$640</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-end">
-                    <p className="fs-13 mb-1">Today</p>
-                    <span className="badge bg-purple badge-xs d-inline-flex align-items-center">
-                      <i className="ti ti-circle-filled fs-5 me-1" />
-                      Processing
-                    </span>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center justify-content-between mb-4">
-                  <div className="d-flex align-items-center">
-                    <Link href="#" className="avatar avatar-lg">
-                      <img src="assets/img/products/product-12.jpg" alt="img" />
-                    </Link>
-                    <div className="ms-2">
-                      <h6 className="fw-bold mb-1">
-                        <Link href="#">Gold Bracelet</Link>
-                      </h6>
-                      <div className="d-flex align-items-center item-list">
-                        <p>Fashion</p>
-                        <p className="text-gray-9">$126</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-end">
-                    <p className="fs-13 mb-1">Today</p>
-                    <span className="badge badge-danger badge-xs d-inline-flex align-items-center">
-                      <i className="ti ti-circle-filled fs-5 me-1" />
-                      Cancelled
-                    </span>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center justify-content-between mb-4">
-                  <div className="d-flex align-items-center">
-                    <Link href="#" className="avatar avatar-lg">
-                      <img src="assets/img/products/product-13.jpg" alt="img" />
-                    </Link>
-                    <div className="ms-2">
-                      <h6 className="fw-bold mb-1">
-                        <Link href="#">Parachute Down Duvet</Link>
-                      </h6>
-                      <div className="d-flex align-items-center item-list">
-                        <p>Health</p>
-                        <p className="text-gray-9">$69</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-end">
-                    <p className="fs-13 mb-1">15 Jan 2025</p>
-                    <span className="badge badge-cyan badge-xs d-inline-flex align-items-center">
-                      <i className="ti ti-circle-filled fs-5 me-1" />
-                      Onhold
-                    </span>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center justify-content-between mb-4">
-                  <div className="d-flex align-items-center">
-                    <Link href="#" className="avatar avatar-lg">
-                      <img src="assets/img/products/product-14.jpg" alt="img" />
-                    </Link>
-                    <div className="ms-2">
-                      <h6 className="fw-bold mb-1">
-                        <Link href="#">YETI Rambler Tumbler</Link>
-                      </h6>
-                      <div className="d-flex align-items-center item-list">
-                        <p>Sports</p>
-                        <p className="text-gray-9">$65</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-end">
-                    <p className="fs-13 mb-1">12 Jan 2025</p>
-                    <span className="badge bg-purple badge-xs d-inline-flex align-items-center">
-                      <i className="ti ti-circle-filled fs-5 me-1" />
-                      Processing
-                    </span>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center justify-content-between mb-0">
-                  <div className="d-flex align-items-center">
-                    <Link href="#" className="avatar avatar-lg">
-                      <img src="assets/img/products/product-15.jpg" alt="img" />
-                    </Link>
-                    <div className="ms-2">
-                      <h6 className="fw-bold mb-1">
-                        <Link href="#">Osmo Genius Starter Kit</Link>
-                      </h6>
-                      <div className="d-flex align-items-center item-list">
-                        <p>Lifestyles</p>
-                        <p className="text-gray-9">$87.56</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-end">
-                    <p className="fs-13 mb-1">11 Jan 2025</p>
-                    <span className="badge badge-success badge-xs d-inline-flex align-items-center">
-                      <i className="ti ti-circle-filled fs-5 me-1" />
-                      Completed
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+                </li>
+              ))}
+            </ul>
           </div>
+        </div>
+
+        <div className="recent-sales__body">
+          <ul className="recent-sales__list">
+            {recentSalesData.map((sale, index) => {
+              const statusStyle = recentSaleStatusStyles[sale.status];
+
+              return (
+                <li
+                  key={sale.id}
+                  className={`recent-sales__item${
+                    index < recentSalesData.length - 1
+                      ? " recent-sales__item--divider"
+                      : ""
+                  }`}
+                >
+                  <div className="recent-sales__sale">
+                    <ImageWithBasePath
+                      src={sale.imageSrc}
+                      alt=""
+                      width={48}
+                      height={48}
+                      className="recent-sales__thumb"
+                    />
+                    <div className="recent-sales__info">
+                      <p className="recent-sales__name">{sale.name}</p>
+                      <div className="recent-sales__meta">
+                        <span className="recent-sales__price">{sale.price}</span>
+                        <span className="recent-sales__category">
+                          {sale.category}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="recent-sales__status">
+                      <span className="recent-sales__date">{sale.date}</span>
+                      <span
+                        className="recent-sales__badge"
+                        style={{
+                          backgroundColor: statusStyle.background,
+                          color: statusStyle.color,
+                        }}
+                      >
+                        {sale.statusLabel}
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 }

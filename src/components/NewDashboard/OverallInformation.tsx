@@ -1,116 +1,131 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
+
+import ImageWithBasePath from "@/core/common/image-with-base-path";
 import Link from "next/link";
-import CustomerChart from "@/components/charts/customerchart";
+import { useState } from "react";
+import CustomerOverviewChart from "./CustomerOverviewChart";
+import {
+  customerOverviewFilterOptions,
+  customerOverviewMetrics,
+  overallInformationAssets,
+  overallStatsData,
+} from "./overallInformationData";
 
 export default function OverallInformation() {
+  const [activeFilter, setActiveFilter] =
+    useState(customerOverviewFilterOptions[0]);
+
   return (
-          <div className="col-xxl-4 col-xl-5 d-flex">
-            <div className="card flex-fill">
-              <div className="card-header">
-                <div className="d-inline-flex align-items-center">
-                  <span className="title-icon bg-soft-info fs-16 me-2">
-                    <i className="ti ti-info-circle" />
-                  </span>
-                  <h5 className="card-title mb-0">Overall Information</h5>
-                </div>
+    <div className="col-xxl-4 col-xl-5 d-flex">
+      <div className="overall-information flex-fill">
+        <h2 className="overall-information__title">Overall Information</h2>
+
+        <div className="overall-information__stats">
+          {overallStatsData.map((stat) => (
+            <div
+              key={stat.id}
+              className="overall-information__stat"
+              style={{
+                borderTopColor: stat.borderColor,
+                maxWidth: stat.width,
+              }}
+            >
+              <div className="overall-information__stat-head">
+                <ImageWithBasePath
+                  src={stat.iconSrc}
+                  alt=""
+                  width={18}
+                  height={18}
+                  className="overall-information__stat-icon"
+                />
+                <span
+                  className="overall-information__stat-label"
+                  style={{ color: stat.labelColor }}
+                >
+                  {stat.label}
+                </span>
               </div>
-              <div className="card-body">
-                <div className="row g-3">
-                  <div className="col-md-4">
-                    <div className="info-item border bg-light p-3 text-center">
-                      <div className="mb-3 text-info fs-24">
-                        <i className="ti ti-user-check" />
-                      </div>
-                      <p className="mb-1">Suppliers</p>
-                      <h5>6987</h5>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="info-item border bg-light p-3 text-center">
-                      <div className="mb-3 text-orange fs-24">
-                        <i className="ti ti-users" />
-                      </div>
-                      <p className="mb-1">Customer</p>
-                      <h5>4896</h5>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="info-item border bg-light p-3 text-center">
-                      <div className="mb-3 text-teal fs-24">
-                        <i className="ti ti-shopping-cart" />
-                      </div>
-                      <p className="mb-1">Orders</p>
-                      <h5>487</h5>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="card-footer pb-sm-0">
-                <div className="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                  <h6>Customers Overview</h6>
-                  <div className="dropdown dropdown-wraper">
+              <p className="overall-information__stat-value">{stat.value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="overall-information__customers">
+          <div className="overall-information__customers-header">
+            <h2 className="overall-information__subtitle">Customers Overview</h2>
+            <div className="dropdown overall-information__filter-dropdown">
+              <button
+                type="button"
+                className="overall-information__filter dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <span className="overall-information__filter-content">
+                  <ImageWithBasePath
+                    src={overallInformationAssets.calendar}
+                    alt=""
+                    width={14}
+                    height={14}
+                  />
+                  <span>{activeFilter}</span>
+                </span>
+                <ImageWithBasePath
+                  src={overallInformationAssets.chevronDown}
+                  alt=""
+                  width={8}
+                  height={5}
+                  className="overall-information__filter-chevron"
+                />
+              </button>
+              <ul className="dropdown-menu dropdown-menu-end">
+                {customerOverviewFilterOptions.map((option) => (
+                  <li key={option}>
                     <Link
                       href="#"
-                      className="dropdown-toggle btn btn-sm"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
+                      className="dropdown-item"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setActiveFilter(option);
+                      }}
                     >
-                      <i className="ti ti-calendar me-1" />
-                      Today
+                      {option}
                     </Link>
-                    <ul className="dropdown-menu p-3">
-                      <li>
-                        <Link href="#" className="dropdown-item">
-                          Today
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="dropdown-item">
-                          Weekly
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="dropdown-item">
-                          Monthly
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="row align-items-center">
-                  <div className="col-sm-5">
-                    <div id="customer-chart">
-                      <CustomerChart />
-                    </div>
-                  </div>
-                  <div className="col-sm-7">
-                    <div className="row gx-0">
-                      <div className="col-sm-6">
-                        <div className="text-center border-end">
-                          <h2 className="mb-1">5.5K</h2>
-                          <p className="text-orange mb-2">First Time</p>
-                          <span className="badge badge-success badge-xs d-inline-flex align-items-center">
-                            <i className="ti ti-arrow-up-left me-1" />
-                            25%
-                          </span>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="text-center">
-                          <h2 className="mb-1">3.5K</h2>
-                          <p className="text-teal mb-2">Return</p>
-                          <span className="badge badge-success badge-xs d-inline-flex align-items-center">
-                            <i className="ti ti-arrow-up-left me-1" />
-                            21%
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
+
+          <div className="overall-information__customers-body">
+            <CustomerOverviewChart />
+            <div className="overall-information__metrics">
+              {customerOverviewMetrics.map((metric) => (
+                <div
+                  key={metric.id}
+                  className="overall-information__metric"
+                  style={{ borderLeftColor: metric.borderColor }}
+                >
+                  <p className="overall-information__metric-text">
+                    {metric.value}{" "}
+                    <span style={{ color: metric.labelColor }}>
+                      {metric.label}
+                    </span>
+                  </p>
+                  <span className="overall-information__metric-badge">
+                    <ImageWithBasePath
+                      src={overallInformationAssets.arrowUp}
+                      alt=""
+                      width={14}
+                      height={14}
+                    />
+                    {metric.change}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

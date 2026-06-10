@@ -1,76 +1,129 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
+
+import ImageWithBasePath from "@/core/common/image-with-base-path";
 import Link from "next/link";
-import SalesStatisticsChart from "@/components/charts/salesstatisticschart";
+import { useState } from "react";
+import SalesStatisticsBarChart from "./SalesStatisticsBarChart";
+import {
+  salesStatisticsAssets,
+  salesStatisticsFilterOptions,
+  salesStatisticsLegend,
+} from "./salesStatisticsData";
 
 export default function SalesStatistics() {
+  const [activeFilter, setActiveFilter] = useState(
+    salesStatisticsFilterOptions[0],
+  );
+
   return (
-          <div className="col-xl-6 col-sm-12 col-12 d-flex">
-            <div className="card flex-fill">
-              <div className="card-header d-flex justify-content-between align-items-center">
-                <div className="d-inline-flex align-items-center">
-                  <span className="title-icon bg-soft-danger fs-16 me-2">
-                    <i className="ti ti-alert-triangle" />
-                  </span>
-                  <h5 className="card-title mb-0">Sales Statics</h5>
-                </div>
-                <div className="dropdown">
+    <div className="col-xl-6 col-sm-12 col-12 d-flex">
+      <div className="sales-statistics flex-fill">
+        <div className="sales-statistics__header">
+          <p className="sales-statistics__title">Sales Statics</p>
+          <div className="dropdown sales-statistics__filter-dropdown">
+            <button
+              type="button"
+              className="sales-statistics__filter dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span className="sales-statistics__filter-content">
+                <ImageWithBasePath
+                  src={salesStatisticsAssets.calendar}
+                  alt=""
+                  width={16}
+                  height={16}
+                />
+                <span>{activeFilter}</span>
+              </span>
+              <ImageWithBasePath
+                src={salesStatisticsAssets.chevronDown}
+                alt=""
+                width={16}
+                height={16}
+                className="sales-statistics__filter-chevron"
+              />
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              {salesStatisticsFilterOptions.map((option) => (
+                <li key={option}>
                   <Link
                     href="#"
-                    className="dropdown-toggle btn btn-sm btn-white"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                    className="dropdown-item"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setActiveFilter(option);
+                    }}
                   >
-                    <i className="ti ti-calendar me-1" />
-                    2025
+                    {option}
                   </Link>
-                  <ul className="dropdown-menu p-3">
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        2025
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        2022
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        2021
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="card-body pb-0">
-                <div className="d-flex align-items-center flex-wrap gap-2">
-                  <div className="border p-2 br-8">
-                    <h5 className="d-inline-flex align-items-center text-teal">
-                      $12,189
-                      <span className="badge badge-success badge-xs d-inline-flex align-items-center ms-2">
-                        <i className="ti ti-arrow-up-left me-1" />
-                        25%
-                      </span>
-                    </h5>
-                    <p>Revenue</p>
-                  </div>
-                  <div className="border p-2 br-8">
-                    <h5 className="d-inline-flex align-items-center text-orange">
-                      $48,988,078
-                      <span className="badge badge-danger badge-xs d-inline-flex align-items-center ms-2">
-                        <i className="ti ti-arrow-down-right me-1" />
-                        25%
-                      </span>
-                    </h5>
-                    <p>Expense</p>
-                  </div>
-                </div>
-                <div id="sales-statistics">
-                  <SalesStatisticsChart />
-                </div>
-              </div>
-            </div>
+                </li>
+              ))}
+            </ul>
           </div>
+        </div>
+
+        <div className="sales-statistics__body">
+          <SalesStatisticsBarChart />
+        </div>
+
+        <div className="sales-statistics__legend">
+          <div className="sales-statistics__legend-item">
+            <ImageWithBasePath
+              src={salesStatisticsAssets.legendRevenue}
+              alt=""
+              width={8}
+              height={8}
+              className="sales-statistics__legend-dot"
+            />
+            <p className="sales-statistics__legend-text">
+              {salesStatisticsLegend.revenue.label} :{" "}
+              <span
+                className="sales-statistics__legend-value"
+                style={{ color: salesStatisticsLegend.revenue.valueColor }}
+              >
+                {salesStatisticsLegend.revenue.value}
+              </span>
+            </p>
+            <span className="sales-statistics__legend-badge sales-statistics__legend-badge--up">
+              <ImageWithBasePath
+                src={salesStatisticsAssets.arrowUp}
+                alt=""
+                width={14}
+                height={14}
+              />
+              {salesStatisticsLegend.revenue.change}
+            </span>
+          </div>
+          <div className="sales-statistics__legend-item">
+            <ImageWithBasePath
+              src={salesStatisticsAssets.legendExpense}
+              alt=""
+              width={8}
+              height={8}
+              className="sales-statistics__legend-dot"
+            />
+            <p className="sales-statistics__legend-text">
+              {salesStatisticsLegend.expense.label} :{" "}
+              <span
+                className="sales-statistics__legend-value"
+                style={{ color: salesStatisticsLegend.expense.valueColor }}
+              >
+                {salesStatisticsLegend.expense.value}
+              </span>
+            </p>
+            <span className="sales-statistics__legend-badge sales-statistics__legend-badge--down">
+              <ImageWithBasePath
+                src={salesStatisticsAssets.arrowDown}
+                alt=""
+                width={14}
+                height={14}
+              />
+              {salesStatisticsLegend.expense.change}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

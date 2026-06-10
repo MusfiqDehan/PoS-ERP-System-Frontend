@@ -1,102 +1,107 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
+
+import ImageWithBasePath from "@/core/common/image-with-base-path";
 import Link from "next/link";
-import TopCategoryChart from "@/components/charts/topcategory";
+import { useState } from "react";
+import TopCategoriesChart from "./TopCategoriesChart";
+import {
+  topCategoriesAssets,
+  topCategoriesFilterOptions,
+  topCategoriesLegend,
+  topCategoriesStats,
+} from "./topCategoriesData";
 
 export default function TopCategories() {
+  const [activeFilter, setActiveFilter] = useState(
+    topCategoriesFilterOptions[1],
+  );
+
   return (
-          <div className="col-xxl-4 col-md-6 d-flex">
-            <div className="card flex-fill">
-              <div className="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div className="d-inline-flex align-items-center">
-                  <span className="title-icon bg-soft-orange fs-16 me-2">
-                    <i className="ti ti-users" />
-                  </span>
-                  <h5 className="card-title mb-0">Top Categories</h5>
-                </div>
-                <div className="dropdown">
+    <div className="col-xxl-4 col-md-6 d-flex">
+      <div className="top-categories flex-fill">
+        <div className="top-categories__header">
+          <p className="top-categories__title">Top Categories</p>
+          <div className="dropdown top-categories__filter-dropdown">
+            <button
+              type="button"
+              className="top-categories__filter dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <span className="top-categories__filter-content">
+                <ImageWithBasePath
+                  src={topCategoriesAssets.calendar}
+                  alt=""
+                  width={16}
+                  height={16}
+                />
+                <span>{activeFilter}</span>
+              </span>
+              <ImageWithBasePath
+                src={topCategoriesAssets.chevronDown}
+                alt=""
+                width={16}
+                height={16}
+                className="top-categories__filter-chevron"
+              />
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              {topCategoriesFilterOptions.map((option) => (
+                <li key={option}>
                   <Link
                     href="#"
-                    className="dropdown-toggle btn btn-sm btn-white d-flex align-items-center"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                    className="dropdown-item"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setActiveFilter(option);
+                    }}
                   >
-                    <i className="ti ti-calendar me-1" />
-                    Weekly
+                    {option}
                   </Link>
-                  <ul className="dropdown-menu p-3">
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        Today
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        Weekly
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item">
-                        Monthly
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="card-body">
-                <div className="d-flex align-items-center justify-content-between flex-wrap gap-4 mb-4">
-                  <div>
-                    <TopCategoryChart />
-                  </div>
-                  <div>
-                    <div className="category-item category-primary">
-                      <p className="fs-13 mb-1">Electronics</p>
-                      <h2 className="d-flex align-items-center">
-                        698
-                        <span className="fs-13 fw-normal text-default ms-1">
-                          Sales
-                        </span>
-                      </h2>
-                    </div>
-                    <div className="category-item category-orange">
-                      <p className="fs-13 mb-1">Sports</p>
-                      <h2 className="d-flex align-items-center">
-                        545
-                        <span className="fs-13 fw-normal text-default ms-1">
-                          Sales
-                        </span>
-                      </h2>
-                    </div>
-                    <div className="category-item category-secondary">
-                      <p className="fs-13 mb-1">Lifestyles</p>
-                      <h2 className="d-flex align-items-center">
-                        456
-                        <span className="fs-13 fw-normal text-default ms-1">
-                          Sales
-                        </span>
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-                <h6 className="mb-2">Category Statistics</h6>
-                <div className="border br-8">
-                  <div className="d-flex align-items-center justify-content-between border-bottom p-2">
-                    <p className="d-inline-flex align-items-center mb-0">
-                      <i className="ti ti-square-rounded-filled text-indigo fs-8 me-2" />
-                      Total Number Of Categories
-                    </p>
-                    <h5>698</h5>
-                  </div>
-                  <div className="d-flex align-items-center justify-content-between p-2">
-                    <p className="d-inline-flex align-items-center mb-0">
-                      <i className="ti ti-square-rounded-filled text-orange fs-8 me-2" />
-                      Total Number Of Products
-                    </p>
-                    <h5>7899</h5>
-                  </div>
-                </div>
-              </div>
-            </div>
+                </li>
+              ))}
+            </ul>
           </div>
+        </div>
+
+        <div className="top-categories__overview">
+          <TopCategoriesChart />
+          <ul className="top-categories__legend">
+            {topCategoriesLegend.map((item) => (
+              <li key={item.id} className="top-categories__legend-item">
+                <span
+                  className="top-categories__legend-dot"
+                  style={{ backgroundColor: item.color }}
+                />
+                <div className="top-categories__legend-content">
+                  <span className="top-categories__legend-label">
+                    {item.label}
+                  </span>
+                  <span className="top-categories__legend-sales">
+                    {item.sales} Sales
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="top-categories__stats-section">
+          <p className="top-categories__stats-title">Category Statistics</p>
+          <ul className="top-categories__stats">
+            {topCategoriesStats.map((stat) => (
+              <li
+                key={stat.id}
+                className="top-categories__stat"
+                style={{ borderLeftColor: stat.borderColor }}
+              >
+                <span className="top-categories__stat-label">{stat.label}</span>
+                <span className="top-categories__stat-value">{stat.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 }

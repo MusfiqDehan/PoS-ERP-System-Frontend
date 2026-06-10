@@ -1,38 +1,56 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
+
+import ImageWithBasePath from "@/core/common/image-with-base-path";
 import Link from "next/link";
+import { useState } from "react";
+import { lowStockAlertData } from "./lowStockAlertData";
 
 export default function LowStockAlert() {
+  const [visible, setVisible] = useState(true);
+
+  if (!visible) {
+    return null;
+  }
+
   return (
-        <div className="alert bg-orange-transparent alert-dismissible fade show mb-4">
-          <div>
-            <span>
-              {" "}
-              <i className="ti ti-info-circle fs-14 text-orange me-2" /> Your
-              Product{" "}
-            </span>
-            <span className="text-orange fw-semibold">
-              {" "}
-              Apple Iphone 15 is running Low,{" "}
+    <div className="low-stock-alert" role="alert">
+      <div className="low-stock-alert__inner">
+        <div className="low-stock-alert__content">
+          <ImageWithBasePath
+            src={lowStockAlertData.infoIconSrc}
+            alt=""
+            width={24}
+            height={24}
+            className="low-stock-alert__icon"
+          />
+          <p className="low-stock-alert__text">
+            Your product{" "}
+            <span className="low-stock-alert__highlight">
+              {lowStockAlertData.productName} is running Low,
             </span>{" "}
-            already below 5 Pcs.,
+            already below {lowStockAlertData.threshold},{" "}
             <Link
-              href="#"
-              className="link-orange text-decoration-underline fw-semibold"
-              data-bs-toggle="modal"
-              data-bs-target="#add-stock"
+              href={lowStockAlertData.addStockHref}
+              className="low-stock-alert__link"
             >
-              Add Stock
+              Add Stock.
             </Link>
-          </div>
-          <button
-            type="button"
-            className="btn-close text-gray-9 fs-14"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-          >
-            <i className="ti ti-x" />
-          </button>
+          </p>
         </div>
+        <button
+          type="button"
+          className="low-stock-alert__close"
+          aria-label="Close"
+          onClick={() => setVisible(false)}
+        >
+          <ImageWithBasePath
+            src={lowStockAlertData.closeIconSrc}
+            alt=""
+            width={24}
+            height={24}
+          />
+        </button>
+      </div>
+    </div>
   );
 }
