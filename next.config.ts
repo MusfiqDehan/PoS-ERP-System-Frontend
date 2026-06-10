@@ -20,13 +20,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  webpack: (config:any) => {
-    // Fix: Prevent Webpack from trying to serialize warnings (causing your issue)
-    config.cache = {
-      type: "memory", // prevents "No serializer registered for Warning"
-    };
-
-    // Keep your current ignored warnings
+  webpack: (config: any) => {
+    // Keep ignored warnings (do not force memory cache — it breaks vendor-chunks on disk in dev)
     config.ignoreWarnings = [
       {
         module: /customStyle\.scss/,
