@@ -1,9 +1,19 @@
-import GiftCardsComponent from "@/components/promo/giftCard";
+import GiftCardTable from "@/components/promo/gift-cards/GiftCardTable";
+import PageHeader from "@/components/promo/gift-cards/PageHeader";
+import GiftCardModals from "@/core/modals/coupons/giftCardModals";
+import CommonFooter from "@/core/common/footer/commonFooter";
 
 export default function GiftCards() {
   return (
-    <>
-      <GiftCardsComponent />
-    </>
+    <div>
+      <div className="page-wrapper">
+        <div className="content">
+          <PageHeader />
+          <GiftCardTable />
+        </div>
+        <CommonFooter />
+      </div>
+      <GiftCardModals />
+    </div>
   );
 }
