@@ -1,0 +1,354 @@
+@use "../utils/variables";
+
+.pos-status-toast {
+  position: fixed;
+  top: 88px;
+  left: 50%;
+  z-index: 1055;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 48px);
+  padding: 10px 16px;
+  border-radius: 4px;
+  background: #333333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  font-family: "Urbanist", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: normal;
+  color: #ffffff;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.pos-layout-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 24px 24px 24px;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  .main-wrapper {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .page-wrapper,
+  .pos-pg-wrapper {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+    padding-top: 0;
+    margin-left: 0;
+  }
+
+  .content.pos-design {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    height: 0;
+    min-height: 0 !important;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  /* New Figma POS (/pos) — CSS grid three-panel layout */
+  .pos-five .pos-wrapper {
+    display: grid;
+    flex: 1 1 auto;
+    grid-template-columns: minmax(0, 689fr) minmax(0, 338fr) minmax(0, 337fr);
+    gap: 14px;
+    align-items: stretch;
+    height: 0;
+    min-height: 0;
+    overflow: hidden;
+
+    @media (max-width: 1199.98px) {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+
+      .pos-transaction-details__col {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 991.98px) {
+      grid-template-columns: minmax(0, 1fr);
+      height: auto;
+      overflow: visible;
+    }
+  }
+
+  /* Legacy POS variants (/pos-2 … /pos-5) — keep Bootstrap row/column layout */
+  .main-wrapper:not(.pos-five) {
+    height: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .page-wrapper,
+    .pos-pg-wrapper {
+      height: auto;
+      overflow: visible;
+    }
+
+    .content.pos-design {
+      height: auto;
+      overflow: visible;
+    }
+
+    .pos-wrapper {
+      height: auto;
+      min-height: 0;
+      overflow: visible;
+    }
+
+    .pos-categories {
+      height: auto;
+      max-height: calc(100vh - 180px);
+      overflow-y: auto;
+    }
+
+    aside.product-order-list {
+      max-height: calc(100vh - 180px);
+      overflow-y: auto;
+    }
+  }
+
+  .pos-five aside {
+    height: auto;
+    max-height: none;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+}
+
+.pos-page-header {
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  background: variables.$white;
+  border: 1px solid #f1f1f1;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  overflow: visible;
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 70px;
+    padding: 11px 16px;
+    flex-wrap: wrap;
+  }
+
+  &__left,
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  &__right {
+    margin-left: auto;
+    gap: 14px;
+  }
+
+  &__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__logo {
+    display: block;
+    width: 128px;
+    height: 28px;
+    object-fit: contain;
+    object-position: left center;
+  }
+
+  &__date {
+    margin: 0;
+    font-family: "Urbanist", sans-serif;
+    font-size: 12px;
+    font-weight: variables.$font-weight-medium;
+    line-height: 18px;
+    color: #666666;
+    white-space: nowrap;
+  }
+
+  &__nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: variables.$white;
+    border: 1px solid #e7e7e7;
+    border-radius: 4px;
+    box-shadow: 0 4px 30px rgba(231, 231, 231, 0.48);
+    flex-shrink: 0;
+  }
+
+  &__nav-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    height: 24px;
+    padding: 4px 8px;
+    border-radius: 2px;
+    font-family: "Urbanist", sans-serif;
+    font-size: 14px;
+    font-weight: variables.$font-weight-medium;
+    line-height: normal;
+    color: #333333;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &--active {
+      background: #089b7c;
+      color: variables.$white;
+    }
+  }
+
+  &__location-dropdown,
+  &__profile-dropdown {
+    position: relative;
+
+    .dropdown-toggle::after {
+      display: none;
+    }
+
+    .dropdown-menu {
+      z-index: 1060;
+      margin-top: 6px;
+      border: 1px solid #e7e7e7;
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      font-family: "Urbanist", sans-serif;
+      font-size: 14px;
+    }
+  }
+
+  &__location {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 168px;
+    min-height: 40px;
+    padding: 8px 12px;
+    background: variables.$white;
+    border: 1px solid #e7e7e7;
+    border-radius: 4px;
+    box-shadow: 0 4px 30px rgba(231, 231, 231, 0.48);
+    cursor: pointer;
+    font-family: "Urbanist", sans-serif;
+    font-size: 14px;
+    font-weight: variables.$font-weight-medium;
+    line-height: normal;
+    color: #333333;
+  }
+
+  &__location-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  &__location-icon {
+    display: block;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 2px;
+  }
+
+  &__location-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  &__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 0;
+    text-decoration: none;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__action-icon {
+    display: block;
+    object-fit: contain;
+  }
+
+  &__profile {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 40px;
+    padding: 6px 12px;
+    background: variables.$white;
+    border: 1px solid #e7e7e7;
+    border-radius: 2px;
+    box-shadow: 0 4px 60px rgba(231, 231, 231, 0.48);
+    cursor: pointer;
+    max-width: 180px;
+  }
+
+  &__avatar {
+    display: block;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__user-name {
+    font-family: "Urbanist", sans-serif;
+    font-size: 16px;
+    font-weight: variables.$font-weight-medium;
+    line-height: normal;
+    color: #333333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  &__chevron {
+    display: block;
+    flex-shrink: 0;
+    object-fit: contain;
+  }
+}
