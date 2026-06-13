@@ -1,7 +1,9 @@
-import PosComponent from "@/components/pos-module/pos/pos";
+import PosComponent from "@/components/pos-module/pos/index";
 
-export default function Pos(){
-    return(
-        <><PosComponent /></>
-    )
+export default function Pos() {
+  return (
+    <>
+      <PosComponent />
+    </>
+  );
 }
