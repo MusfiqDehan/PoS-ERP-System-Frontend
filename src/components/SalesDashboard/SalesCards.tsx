@@ -1,55 +1,102 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
-import { ChevronUp, RotateCcw } from "react-feather";
+
+import ImageWithBasePath from "@/core/common/image-with-base-path";
+import {
+  salesCardsAssets,
+  salesStatCards,
+  weeklyEarningCard,
+} from "./salesCardsData";
 
 export default function SalesCards() {
   return (
-<div className="row sales-cards">
-          <div className="col-xl-6 col-sm-12 col-12 d-flex">
-            <div className="card d-flex align-items-center justify-content-between flex-fill mb-4">
-              <div>
-                <h6>Weekly Earning</h6>
-                <h3>
-                  $
-                  <span className="counters" data-count="95000.45">
-                    95000.45
-                  </span>
-                </h3>
-                <p className="sales-range">
-                  <span className="text-success">
-                    <ChevronUp className="feather-16" />
-                    48%&nbsp;
-                  </span>
-                  increase compare to last week
-                </p>
-              </div>
-              <img src="assets/img/icons/weekly-earning.svg" alt="img" />
-            </div>
+    <div className="sales-cards">
+      <div className="sales-cards__row">
+        <div className="sales-cards__weekly">
+          <div className="sales-cards__weekly-content">
+            <p className="sales-cards__weekly-title">{weeklyEarningCard.title}</p>
+            <p className="sales-cards__weekly-value">{weeklyEarningCard.value}</p>
           </div>
-          <div className="col-xl-3 col-sm-6 col-12 d-flex">
-            <div className="card color-info bg-primary flex-fill mb-4">
-              <div className="mb-2">
-                <img src="assets/img/icons/total-sales.svg" alt="img" />
-              </div>
-              <h3 className="counters" data-count={10000.0}>
-                10,000+
-              </h3>
-              <p>No of Total Sales</p>
-              <RotateCcw className="feather feather-rotate-ccw feather-16" />
+          <ImageWithBasePath
+            src={salesCardsAssets.weeklyEarningDeco}
+            alt=""
+            width={64}
+            height={64}
+            className="sales-cards__weekly-deco"
+          />
+          <div className="sales-cards__weekly-footer">
+            <div className="sales-cards__weekly-change">
+              <ImageWithBasePath
+                src={salesCardsAssets.arrowUp}
+                alt=""
+                width={16}
+                height={16}
+                className="sales-cards__weekly-change-icon"
+              />
+              <p className="sales-cards__weekly-change-text">
+                {weeklyEarningCard.changeLabel}
+              </p>
             </div>
-          </div>
-          <div className="col-xl-3 col-sm-6 col-12 d-flex">
-            <div className="card color-info bg-secondary flex-fill mb-4">
-              <div className="mb-2">
-                <img src="assets/img/icons/purchased-earnings.svg" alt="img" />
-              </div>
-              <h3 className="counters" data-count={800.0}>
-                800+
-              </h3>
-              <p>No of Total Sales</p>
-              <RotateCcw className="feather feather-rotate-ccw feather-16" />
-            </div>
+            <ImageWithBasePath
+              src={salesCardsAssets.mastercard}
+              alt=""
+              width={36}
+              height={24}
+              className="sales-cards__weekly-brand"
+            />
           </div>
         </div>
+
+        {salesStatCards.map((card) => (
+          <div
+            key={card.id}
+            className={`sales-cards__stat sales-cards__stat--${card.variant}`}
+          >
+            <div className="sales-cards__stat-top">
+              <div className="sales-cards__stat-copy">
+                <p className="sales-cards__stat-title">{card.title}</p>
+                <p className="sales-cards__stat-value">{card.value}</p>
+              </div>
+              <button
+                type="button"
+                className="sales-cards__stat-refresh"
+                aria-label={`Refresh ${card.title}`}
+              >
+                <ImageWithBasePath
+                  src={salesCardsAssets.refresh}
+                  alt=""
+                  width={20}
+                  height={20}
+                />
+              </button>
+            </div>
+            <div
+              className={`sales-cards__stat-badge${
+                card.trendBadge ? " sales-cards__stat-badge--trend" : ""
+              }`}
+            >
+              {card.trendBadge && (
+                <ImageWithBasePath
+                  src={salesCardsAssets.arrowUp}
+                  alt=""
+                  width={14}
+                  height={14}
+                  className="sales-cards__stat-badge-icon"
+                />
+              )}
+              <span>{card.badge}</span>
+            </div>
+            <div className="sales-cards__stat-deco" aria-hidden="true">
+              <ImageWithBasePath
+                src={card.decoSrc}
+                alt=""
+                width={32}
+                height={32}
+                className="sales-cards__stat-deco-img"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
