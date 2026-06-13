@@ -1929,12 +1929,22 @@ h6 {
 
 [class^="ant-"],
 [class*=" ant-"],
+.p-component,
+.p-inputtext,
+.fc,
 .select2-container,
 .select2-container--default .select2-selection--single,
 .select2-container--default .select2-selection--multiple,
+.select2-results__option,
 .react-select__control,
-.swal2-popup {
-  font-family: "Urbanist", sans-serif;
+.react-select__menu,
+.react-select__option,
+.swal2-popup,
+.apexcharts-canvas,
+.apexcharts-text,
+.apexcharts-legend-text,
+.apexcharts-tooltip {
+  font-family: "Urbanist", sans-serif !important;
 }
 .ant-table-wrapper .ant-table-pagination.ant-pagination {
   margin: 0;
