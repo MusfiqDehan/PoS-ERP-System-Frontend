@@ -123,6 +123,7 @@ export const planType = [
   { value: "Yearly", label: "Yearly" },
 ];
 export const currency = [
+  { value: "BDT", label: "BDT" },
   { value: "USD", label: "USD" },
   { value: "Euro", label: "Euro" },
 ];
