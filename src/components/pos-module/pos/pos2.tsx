@@ -128,7 +128,7 @@ export default function Pos2Component()  {
     };
   }, []);
   return (
-    <div className="main-wrapper">
+    <div className="main-wrapper pos-two">
       <div className="page-wrapper pos-pg-wrapper ms-0">
         <div className="content pos-design p-0">
           <div className="row align-items-start pos-wrapper">
