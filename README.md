@@ -2,16 +2,16 @@
 
 # 🛒 GeekPOS — Frontend
 
-**A commercial Admin / Point-of-Sale (POS) dashboard UI**
-Built on **Next.js 15** (App Router) + **React 19** · based on the *DreamsPOS* template
+**Retail POS & admin dashboard front-end for a multi-tenant SaaS product**
+Built on **Next.js 15** (App Router) + **React 19**
 
 </div>
 
 > [!WARNING]
-> **Read this before you touch anything.** Today this repo is a **front-end-only UI template** — no backend,
-> API, database, auth, or persisted state. Every screen renders from **hardcoded JSON fixtures**. Think
-> *"UI kit"*, not *"running app"*. It is being adopted as the front-end for a **multi-tenant SaaS product**
-> (Django/DRF backend, subdomain-per-tenant). Migration plan: [`SAAS_PLAN.md`](SAAS_PLAN.md) — **plan only, no code yet.**
+> **Read this before you touch anything.** This repo is the **GeekPOS front-end** — no backend, API,
+> database, auth, or persisted state yet. Most screens still render from **hardcoded JSON fixtures**;
+> a few modules (POS, dashboards, sales/stock/purchase/promo) have active GeekPOS development with
+> working front-end logic. SaaS migration plan: [`SAAS_PLAN.md`](SAAS_PLAN.md) — **plan only, no backend code yet.**
 
 ---
 
@@ -28,6 +28,8 @@ New here? Jump to what you need:
 | **Change a screen** | [The Core Pattern](#-the-core-pattern) · [Contributing Workflow](#-contributing-workflow) |
 | **Write tests** | [Testing](#-testing-required) |
 | **Work on the POS screen** | [POS Module (`/pos`)](#-pos-module-pos) |
+| **See Figma-aligned dashboards** | [Dashboards](#-dashboards) |
+| **Follow the modular screen pattern** | [Modular Screen Pattern](#-modular-screen-pattern) |
 | **Know the conventions / gotchas** | [Conventions & Gotchas](#-conventions--gotchas) |
 | **See where this is heading** | [Roadmap & SaaS Direction](#-roadmap--saas-direction) |
 
@@ -60,6 +62,9 @@ New here? Jump to what you need:
 - [Canonical Paths](#-canonical-paths)
 - [How the Moving Parts Work](#-how-the-moving-parts-work)
 - [POS Module (`/pos`)](#-pos-module-pos)
+- [Dashboards](#-dashboards)
+- [Modular Screen Pattern](#-modular-screen-pattern)
+- [Currency (BDT)](#-currency-bdt)
 - [Conventions & Gotchas](#-conventions--gotchas)
 - [Testing (required)](#-testing-required)
 - [Contributing Workflow](#-contributing-workflow)
@@ -99,12 +104,30 @@ npm run build    # 3. production build → static export to /out
 
 | ✅ It IS | ❌ It is NOT (yet) |
 |---|---|
-| A polished admin + POS **UI template** | Fully connected to a backend / API *(in progress)* |
-| ~258 routes, ~323 components, fully styled | All modules wired to Django |
-| **`/pos` has live front-end cart + loyalty** | Persisted sales data (DB) |
+| A polished admin + POS **UI** with active GeekPOS development | Fully connected to a backend / API *(in progress)* |
+| ~258 routes, hundreds of components, fully styled | All modules wired to Django |
+| **`/pos` — Figma checkout with live cart + loyalty** | Persisted sales data (DB) |
+| **Admin & sales dashboards — Figma-aligned, modular** | Real-time analytics from API |
+| **Sales, stock, purchase, promo — modular refactor done** | Every screen decomposed yet |
+| **Default currency: BDT (৳)** via `src/lib/currency.ts` | Multi-currency backend |
 | Driven by static JSON fixtures (most screens) | Backed by a database everywhere |
 | Static-export capable (`output: "export"`) | Authenticated / state-managed |
-| The future front-end of a SaaS product | Multi-tenant *yet* (see SAAS_PLAN.md) |
+| The front-end of a SaaS product | Multi-tenant *yet* (see SAAS_PLAN.md) |
+
+### GeekPOS work completed (vs. template filler)
+
+| Area | Route(s) | Status |
+|---|---|---|
+| **POS checkout** | `/pos` | Figma redesign · 34+ components · live cart, loyalty, sessionStorage hold/draft |
+| **Admin dashboard** | `/admin-dashboard` | Decomposed into `NewDashboard/` (~40 components) · Figma SCSS |
+| **Sales dashboard** | `/sales-dashboard` | Decomposed into `SalesDashboard/` · KPI cards, charts, recent transactions |
+| **Sales module** | `/invoice`, `/quotation-list`, … | Folder-per-screen: PageHeader, Filters, Table, columns, hooks |
+| **Stock module** | `/manage-stocks`, `/stock-adjustment`, `/stock-transfer` | Same modular pattern |
+| **Purchase module** | `/purchase-list`, `/purchase-returns`, … | Same modular pattern |
+| **Promo module** | `/coupons`, `/discount`, … | Same modular pattern |
+| **App chrome** | Header, sidebar | Header split into subcomponents under `core/common/header/header/` |
+
+Legacy monolith entry points from the refactor live in **`src/old-codes/`** (not used by active routes).
 
 ### ⚠️ Installed but NOT wired — don't assume these work
 - **Redux** (`@reduxjs/toolkit`, `react-redux`, `redux-persist`) — no store, no `<Provider>`. App is effectively **stateless** (local `useState` + prop drilling).
@@ -161,14 +184,18 @@ graph TD
 
 To change a screen, edit its component under `src/components/<Domain>/` — **NOT** `src/app/`.
 
+**Classic (single-file) screens** still use one fat component + inline columns:
+
 ```
-src/app/(features)/(Inventory)/product-list/page.tsx   ← thin route wrapper (imports the component)
-  └─ src/components/Inventory/productList/productlist.tsx   ← "use client", ALL the UI + logic + columns
-       ├─ data:   src/core/json/productlistdata.tsx          ← static array (the "database")
-       ├─ table:  @/core/common/pagination/datatable          ← antd Table wrapper w/ built-in search
-       ├─ modals: src/core/modals/inventory/...               ← Bootstrap modals imported into the component
-       └─ links:  all_routes from @/data/all_routes           ← never hardcode paths
+src/app/(features)/(Inventory)/product-list/page.tsx   ← thin route wrapper
+  └─ src/components/Inventory/productList/productlist.tsx   ← "use client", UI + logic + columns
+       ├─ data:   src/core/json/productlistdata.tsx
+       ├─ table:  @/core/common/pagination/datatable
+       ├─ modals: src/core/modals/inventory/...
+       └─ links:  all_routes from @/data/all_routes
 ```
+
+**Refactored screens** (sales, stock, purchase, promo, dashboards, POS) use a **folder-per-route** layout — see [Modular Screen Pattern](#-modular-screen-pattern).
 
 ---
 
@@ -210,7 +237,17 @@ src/
 │   ├── (pos)/                #   pos, pos-2 … pos-5 (5 POS screen variants)
 │   ├── layout.tsx            #   root layout (global CSS + Bootstrap JS, NO providers)
 │   └── global.scss
-├── components/               # 323 .tsx — the ACTUAL UI. One folder per domain.
+├── components/               # The ACTUAL UI. One folder per domain.
+│   ├── NewDashboard/       #   Admin dashboard (Figma-aligned, modular)
+│   ├── SalesDashboard/     #   Sales dashboard (Figma-aligned, modular)
+│   ├── pos-module/pos/     #   Canonical POS (`index.tsx` + ~34 child components)
+│   ├── sales/              #   Modular: invoice/, quotation/, online-orders/, …
+│   ├── stock/              #   Modular: managestock/, stock-adjustment/, stock-transfer/
+│   ├── purchase/           #   Modular: purchase-list/, purchase-returns/, …
+│   └── promo/              #   Modular: coupons/, discount/, discount-plan/, gift-cards/
+├── lib/
+│   └── currency.ts         # BDT formatting — formatCurrency(), parseCurrency()
+├── old-codes/              # Archived legacy monoliths (not used by routes)
 ├── core/
 │   ├── common/               # shared widgets: header, sidebar, footer, datatable, pagination,
 │   │                         #   selectOption, datepickers, texteditor, modal/commonDeleteModal …
@@ -218,7 +255,7 @@ src/
 │   └── modals/               # 85 Bootstrap modals grouped by domain
 ├── data/
 │   └── all_routes.tsx        # central route-name → path map (~299 entries). Import `all_routes`.
-├── environment.tsx           # exports image_path ('/') used by image-with-base-path
+├── environment.tsx           # image_path + re-exports currency helpers
 └── style/                    # css, scss (layout/theme), fonts, icons, i18n (unwired)
 public/                       # assets/, favicon, manifest, prebuilt index.html
 ```
@@ -233,17 +270,19 @@ public/                       # assets/, favicon, manifest, prebuilt index.html
 
 | Domain | Covers | Key screens |
 |---|---|---|
-| `pos-module/pos` | POS checkout | **`index.tsx`** (canonical `/pos` — Figma redesign, live cart) · legacy `pos.tsx` + `pos2..pos5` variants |
+| `pos-module/pos` | POS checkout | **`index.tsx`** (canonical `/pos` — Figma redesign, live cart) · legacy `pos.tsx` + `pos2..pos5` at `/pos-2` … `/pos-5` |
+| `NewDashboard` | Admin KPI board | `/admin-dashboard` — modular Figma redesign (replaces legacy `newdashboard.tsx` in `old-codes/`) |
+| `SalesDashboard` | Sales analytics | `/sales-dashboard` — KPI cards, best sellers, charts, recent transactions |
 | `Inventory` | Products & master data | productList *(canonical)*, add/edit-product, product-details, category, sub-categories, brand, units, variant-attributes, warranty, barcode, qrcode, low-stocks, expired-products |
-| `stock` | Inventory movement | manage-stock, stock-adjustment, stock-transfer |
-| `sales` | Sales & orders | invoice (list + details), quotation, online-orders, pos-orders, sale-return |
-| `purchase` | Procurement | purchase-list, purchase-returns, purchase-order-report |
+| `sales` | Sales & orders | **Modular:** `invoice/`, `invoice-details/`, `quotation/`, `online-orders/`, `pos-orders/`, `sale-return/` |
+| `stock` | Inventory movement | **Modular:** `managestock/`, `stock-adjustment/`, `stock-transfer/` |
+| `purchase` | Procurement | **Modular:** `purchase-list/`, `purchase-returns/`, `purchase-order-report/` |
+| `promo` | Promotions | **Modular:** `coupons/`, `discount/`, `discount-plan/`, `gift-cards/` |
 | `FinanceAccounts` | Accounting | account-list, account-statement, balance-sheet, cash-flow, income, trial-balance, money-transfer, expenses |
 | `hrm` | HR & payroll | employees, departments, designation, shifts, attendance, leaves, leave-types, holidays, payroll, payslip |
 | `Reports` | Analytics | sales/purchase/inventory/supplier/customer/expense/income/tax/profit-loss/annual + due/expiry |
 | `people` | Master data | suppliers, billers, warehouses, store-list |
-| `promo` | Promotions | discount, discount-plan, coupons, gift-card |
-| `dashboards` | KPI boards | `newdashboard.tsx` (admin), `dashboard.tsx`, `saledashboard.tsx` |
+| `dashboards` | Legacy KPI boards | `dashboard.tsx`, `saledashboard.tsx` — superseded by `NewDashboard/` and `SalesDashboard/` for main routes |
 | `settings` | Config | 31 form screens: general/financial/system/website/app/other + settingssidebar |
 | `usermanagement` | Users / roles | users, roles-permissions, permissions, delete-account |
 | `superadmin` | SaaS tenant admin | companies, domain, package, subscription, purchase-transaction, dashboard |
@@ -264,7 +303,9 @@ public/                       # assets/, favicon, manifest, prebuilt index.html
 |---|---|
 | Route → path map (canonical) | `src/data/all_routes.tsx` |
 | Sidebar menu data | `src/core/json/siderbar_data.tsx` *(note misspelling "**sider**bar")* |
-| Sidebar / Header / Footer | `src/core/common/sidebar/sidebar.tsx`, `…/header/header.tsx`, `…/footer/commonFooter.tsx` |
+| Sidebar / Header / Footer | `src/core/common/sidebar/sidebar.tsx`, `…/header/header.tsx` (+ subcomponents in `header/header/`), `…/footer/commonFooter.tsx` |
+| Currency (BDT) | `src/lib/currency.ts` — `formatCurrency()`, `parseCurrency()`; also re-exported from `environment.tsx` |
+| Archived legacy monoliths | `src/old-codes/` — not imported by active routes |
 | DataTable (antd + search) | `src/core/common/pagination/datatable.tsx` — props: `columns`, `dataSource`, `props` |
 | react-select option lists | `src/core/common/selectOption/selectOption.tsx` (30+ `{label,value}` arrays) |
 | Theme / layout switcher | `src/core/common/sidebar/themeSettings.tsx` |
@@ -276,6 +317,8 @@ public/                       # assets/, favicon, manifest, prebuilt index.html
 | **POS screen (canonical)** | `src/components/pos-module/pos/index.tsx` |
 | POS cart & loyalty logic | `usePosCart.ts`, `posLoyaltyConfig.ts` |
 | POS route + chrome | `src/app/(pos)/pos/page.tsx`, `src/app/(pos)/layout.tsx` |
+| Admin dashboard | `src/components/NewDashboard/` · route: `src/app/(features)/(dashboard)/admin-dashboard/page.tsx` |
+| Sales dashboard | `src/components/SalesDashboard/` · route: `src/app/(features)/(dashboard)/sales-dashboard/page.tsx` |
 
 ---
 
@@ -341,6 +384,8 @@ maps 1:1 to a future Django endpoint (keep field names stable to minimize column
 | Add links via `all_routes` (`src/data/all_routes.tsx`) | Hardcode paths |
 | Reuse `datatable.tsx` for tables | Copy its `.length`-based sorters (template quirk, not real sorting) |
 | Use `<ImageWithBasePath src="assets/img/…" />` for assets | Assume `href="#"` links do anything (4500+ are placeholders) |
+| Import POS via `@/components/pos-module/pos/index` | Import `@/components/pos-module/pos` (resolves to legacy `pos.tsx`) |
+| Use `formatCurrency()` from `@/lib/currency` for money | Hardcode `$` or `৳` in new screens |
 | Match the neighbor file's extension in `core/json` (`.tsx/.jsx/.js` mixed) | Expect a backend, auth, persisted state, working i18n, or a Redux store |
 
 > Almost every component starts with `"use client"` (298/323) — this is a client-rendered, SPA-style app.
@@ -467,10 +512,23 @@ it("loads products from the API", async () => {
 
 ## 🧾 POS Module (`/pos`)
 
-The primary POS route (`http://localhost:3000/pos`) is a **refactored, Figma-aligned checkout**
-with **working front-end cart state**. It is the reference implementation for future Django API wiring.
+The primary POS route (`http://localhost:3000/pos`) is a **Figma-aligned checkout** with **working front-end cart state**. It is the reference implementation for future Django API wiring.
 
-> Legacy monoliths (`pos.tsx`, `pos2`–`pos5`) still exist for template comparison — **edit `index.tsx` and its children**, not the old files.
+### Routes & import gotcha
+
+| Route | Component | Notes |
+|---|---|---|
+| **`/pos`** | `pos/index.tsx` | **Canonical GeekPOS checkout** — edit this tree |
+| `/pos-2` … `/pos-5` | `pos2.tsx` … `pos5.tsx` | Legacy template variants (comparison / fallback) |
+| Header **POS** button | `all_routes.pos2` → `/pos-2` | Opens legacy variant; change to `all_routes.pos` when ready to default to the new screen |
+
+> **Import shadowing:** `@/components/pos-module/pos` resolves to legacy **`pos.tsx`**, not the folder index.
+> The `/pos` page must import explicitly:
+> ```tsx
+> import PosComponent from "@/components/pos-module/pos/index";
+> ```
+
+> Legacy monoliths (`pos.tsx`, `pos2`–`pos5`) and archived copies in `src/old-codes/` are **not** the canonical POS — edit `index.tsx` and its children.
 
 ### Layout (3 panels)
 
@@ -641,6 +699,91 @@ Then RTL tests for `usePosCart` flows: add product, select customer, complete or
 
 ---
 
+## 📊 Dashboards
+
+Both main dashboards were rebuilt from Figma into small, composable components. Routes are thin wrappers that import children directly (no monolith orchestrator file).
+
+### Admin dashboard (`/admin-dashboard`)
+
+**Folder:** `src/components/NewDashboard/` · **Styles:** `src/style/scss/pages/_admin-dashboard.scss`
+
+| Component | Role |
+|---|---|
+| `PageHeader`, `DashboardDateRange` | Title bar + date range picker |
+| `SaleWidgets`, `RevenueWidgets`, `KpiCard` | Top KPI row |
+| `SalesPurchaseChart`, `SalesStatistics`, `OrderStatistics` | Charts & heatmaps |
+| `RecentSales`, `RecentTransactions`, `RecentlyAdded` | Activity feeds |
+| `TopCategories`, `TopCustomers`, `TopSellingProducts` | Rankings |
+| `LowStockAlert`, `LowStockProducts`, `ExpiredProducts` | Inventory alerts |
+| `OverallInformation` | Summary sidebar |
+
+Fixture data lives beside components (`kpiCardsData.ts`, `recentSalesData.ts`, etc.).
+
+### Sales dashboard (`/sales-dashboard`)
+
+**Folder:** `src/components/SalesDashboard/` · **Styles:** `src/style/scss/pages/_sales-dashboard.scss`
+
+| Component | Role |
+|---|---|
+| `PageHeader` | Title + actions |
+| `SalesCards` | Four KPI cards (incl. avg order value) |
+| `BestSeller` | Top products list |
+| `RecentTransactions` | Latest sales table |
+| `SalesAnalytics` + `SalesAnalyticsBarChart` | Revenue trend chart |
+| `SalesByCountries` | Geographic breakdown |
+
+---
+
+## 🧱 Modular Screen Pattern
+
+Refactored business screens follow a **folder-per-route** layout. The route `page.tsx` composes children; logic moves into hooks and column defs.
+
+```
+src/components/sales/invoice/
+  PageHeader.tsx          # Breadcrumb + title + actions
+  InvoiceFilters.tsx      # Search / filter toolbar
+  InvoiceTable.tsx        # Card wrapper + DataTable
+  InvoiceRow.tsx          # Optional row renderer
+  columns.tsx             # antd column definitions
+  types.ts                # Shared TypeScript types
+  useInvoices.ts          # Data hook (fixture now → TanStack Query later)
+```
+
+**Modules using this pattern today:**
+
+| Module | Folders |
+|---|---|
+| `sales/` | `invoice`, `invoice-details`, `quotation`, `online-orders`, `pos-orders`, `sale-return` |
+| `stock/` | `managestock`, `stock-adjustment`, `stock-transfer` |
+| `purchase/` | `purchase-list`, `purchase-returns`, `purchase-order-report` |
+| `promo/` | `coupons`, `discount`, `discount-plan`, `gift-cards` |
+
+When adding a new screen or decomposing a monolith, copy this structure. Pre-refactor monoliths are in **`src/old-codes/`** for reference only.
+
+---
+
+## 💱 Currency (BDT)
+
+GeekPOS defaults to **Bangladeshi Taka (BDT)**. Use the shared helpers — do not hardcode `৳` or `$` in new code.
+
+```ts
+import { formatCurrency, parseCurrency } from "@/lib/currency";
+
+formatCurrency(4233);   // "৳4,233.00"
+parseCurrency("৳1,200.50"); // 1200.5
+```
+
+| Export | Location | Purpose |
+|---|---|---|
+| `formatCurrency(value)` | `src/lib/currency.ts` | Display amounts in UI |
+| `parseCurrency(string)` | `src/lib/currency.ts` | Parse formatted strings to numbers |
+| `DEFAULT_CURRENCY_CODE` | `"BDT"` | For future API / i18n |
+| Re-exports | `src/environment.tsx` | Convenience import alongside `image_path` |
+
+POS product fixtures (`posProductsData.ts`) and cart math use BDT throughout.
+
+---
+
 ## 🤝 Contributing Workflow
 
 1. **Find the screen** → `src/app/(features)/.../page.tsx` tells you which component it renders.
@@ -658,7 +801,7 @@ Then RTL tests for `usePosCart` flows: add product, select customer, complete or
 
 ## 🩺 Roadmap & SaaS Direction
 
-**Maintainable as a template: partially. Scalable to a real product: not as-is.**
+**Maintainable as a product shell: improving. Scalable to production: not as-is** (API layer, auth, tests still pending).
 
 **Strengths:** clear per-domain taxonomy · thin pages + fat components · modern stack · central route map.
 
@@ -713,6 +856,6 @@ graph TD
 
 <div align="center">
 
-*Based on the DreamsPOS template by Dreams Technologies · Adapted as the GeekPOS SaaS front-end.*
+**GeekPOS** — retail POS SaaS front-end · [GeekSSort](https://github.com/GeekSSort/geekpos_frontend)
 
 </div>
