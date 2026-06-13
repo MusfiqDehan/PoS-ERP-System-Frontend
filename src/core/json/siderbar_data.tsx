@@ -265,8 +265,8 @@ export const SidebarData = [
         showSubRoute: false,
         submenu: true,
         submenuItems: [
-          { label: "POS 1", link: "/pos", showSubRoute: false },
-          { label: "POS 2", link: "/pos-2", showSubRoute: false },
+          { label: "POS 1", link: route.pos, showSubRoute: false },
+          { label: "POS 2", link: route.pos2, showSubRoute: false },
           { label: "POS 3", link: "/pos-3", showSubRoute: false },
           { label: "POS 4", link: "/pos-4", showSubRoute: false },
           { label: "POS 5", link: "/pos-5", showSubRoute: false },

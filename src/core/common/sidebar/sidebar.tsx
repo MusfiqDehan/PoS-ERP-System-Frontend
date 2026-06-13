@@ -20,6 +20,12 @@ export default function Sidebar() {
   const [toggle, SetToggle] = useState(false);
   const [expandMenus, setExpandMenus] = useState(false); // Local state for expandMenus
   const [dataLayout, setDataLayout] = useState("default"); // Local state for dataLayout
+  const sidebarDateLabel = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date());
 
   const toggleSidebar = (title: string): void => {
     if (title === subOpen) {
@@ -56,73 +62,33 @@ export default function Sidebar() {
     // Update the DOM based on `dataLayout` and `expandMenus`
     document.body.classList.toggle("expand-menu", expandMenus || dataLayout === "layout-hovered");
   }, [expandMenus, dataLayout]);
-  
+
 
   return (
     <>
       <div
-        className={`sidebar ${toggle ? "" : "active"} ${
-          expandMenus || dataLayout === "layout-hovered" ? "expand-menu" : ""
-        }`}
+        className={`sidebar figma-sidebar ${toggle ? "" : "active"} ${expandMenus || dataLayout === "layout-hovered" ? "expand-menu" : ""
+          }`}
         id="sidebar"
         onMouseLeave={expandMenu}
         onMouseOver={expandMenuOpen}
       >
         <>
-          {/* Logo */}
-          <div className="sidebar-logo">
-            <Link href={route.newdashboard} className="logo logo-normal">
-              <img src="assets/img/logo.svg" alt="Img" />
-            </Link>
-            <Link href={route.newdashboard} className="logo logo-white">
-              <img src="assets/img/logo-white.svg" alt="Img" />
-            </Link>
-            <Link href={route.newdashboard} className="logo-small">
-              <img src="assets/img/logo-small.png" alt="Img" />
-            </Link>
-            <Link href={route.newdashboard} className="logo-small-white">
-              <img src="assets/img/logo-small-white.png" alt="Img" />
-            </Link>
-            <Link id="toggle_btn" href="#" onClick={handlesidebar}>
+          <div className="sidebar-branding">
+            <div className="sidebar-branding__content">
+              <p className="sidebar-branding__name">Company Name</p>
+              <p className="sidebar-branding__date">{sidebarDateLabel}</p>
+            </div>
+            <Link
+              id="toggle_btn"
+              className="sidebar-branding__toggle"
+              href="#"
+              onClick={handlesidebar}
+              aria-label="Toggle sidebar"
+            >
               <i data-feather="chevrons-left" />
               <ChevronsLeft className="feather-16" />
             </Link>
-          </div>
-          {/* /Logo */}
-          <div className="modern-profile p-3 pb-0">
-            <div className="text-center rounded bg-light p-3 mb-4 border">
-              <div className="avatar avatar-lg online mb-3">
-                <img
-                  src="assets/img/customer/customer15.jpg"
-                  alt="Img"
-                  className="img-fluid rounded-circle"
-                />
-              </div>
-              <h6 className="fs-14 fw-bold mb-1">Adrian Herman</h6>
-              <p className="fs-12 mb-0">System Admin</p>
-            </div>
-            <div className="sidebar-nav mb-3">
-              <ul
-                className="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified bg-transparent"
-                role="tablist"
-              >
-                <li className="nav-item">
-                  <Link className="nav-link active border-0" href="#">
-                    Menu
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link border-0" href={route.chat}>
-                    Chats
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link border-0" href={route.email}>
-                    Inbox
-                  </Link>
-                </li>
-              </ul>
-            </div>
           </div>
         </>
         <PerfectScrollbar>
@@ -148,11 +114,10 @@ export default function Sidebar() {
                         return (
                           <React.Fragment key={i}>
                             <li
-                              className={`submenu ${
-                                !title?.submenu && pathname === title?.link
+                              className={`submenu ${!title?.submenu && pathname === title?.link
                                   ? "custom-active-hassubroute-false"
                                   : ""
-                              }`}
+                                }`}
                             >
                               <Link
                                 href={title?.link || "#"}
@@ -163,13 +128,11 @@ export default function Sidebar() {
                                     : undefined
                                 }
                                 onClick={() => toggleSidebar(title?.label)}
-                                className={`${
-                                  subOpen === title?.label ? "subdrop" : ""
-                                } ${
-                                  title?.links?.includes(pathname)
+                                className={`${subOpen === title?.label ? "subdrop" : ""
+                                  } ${title?.links?.includes(pathname)
                                     ? "subdrop active"
                                     : ""
-                                }`}
+                                  }`}
                               >
                                 <i className={`ti ti-${title.icon} me-2`}></i>
                                 <span className="custom-active-span">
@@ -193,18 +156,16 @@ export default function Sidebar() {
                                     >
                                       <Link
                                         href={item?.link || "#"}
-                                        className={`${
-                                          item?.submenuItems
+                                        className={`${item?.submenuItems
                                             ?.map((link: any) => link.link)
                                             .includes(pathname) ||
-                                          item?.link === pathname
+                                            item?.link === pathname
                                             ? "active"
                                             : ""
-                                        } ${
-                                          subsidebar === item?.label
+                                          } ${subsidebar === item?.label
                                             ? "subdrop"
                                             : ""
-                                        }`}
+                                          }`}
                                         target={item?.target || undefined}
                                         rel={
                                           item?.target === "_blank"
@@ -215,7 +176,12 @@ export default function Sidebar() {
                                           toggleSubsidebar(item?.label)
                                         }
                                       >
-                                        {item?.label}
+                                        <span className="sidebar-subitem-icon" aria-hidden="true">
+                                          <i className="ti ti-point-filled" />
+                                        </span>
+                                        <span className="sidebar-subitem-label">
+                                          {item?.label}
+                                        </span>
                                         {item?.submenu && (
                                           <span className="menu-arrow inside-submenu" />
                                         )}
@@ -233,20 +199,18 @@ export default function Sidebar() {
                                             <li key={subIndex}>
                                               <Link
                                                 href={items?.link || "#"}
-                                                className={`${
-                                                  subsidebar === items?.label
+                                                className={`${subsidebar === items?.label
                                                     ? "submenu-two subdrop"
                                                     : "submenu-two"
-                                                } ${
-                                                  items?.submenuItems
+                                                  } ${items?.submenuItems
                                                     ?.map(
                                                       (link: any) => link.link
                                                     )
                                                     .includes(pathname) ||
-                                                  items?.link === pathname
+                                                    items?.link === pathname
                                                     ? "active"
                                                     : ""
-                                                }`}
+                                                  }`}
                                                 target={items?.target || undefined}
                                                 rel={
                                                   items?.target === "_blank"
@@ -254,7 +218,12 @@ export default function Sidebar() {
                                                     : undefined
                                                 }
                                               >
-                                                {items?.label}
+                                                <span className="sidebar-subitem-icon" aria-hidden="true">
+                                                  <i className="ti ti-point-filled" />
+                                                </span>
+                                                <span className="sidebar-subitem-label">
+                                                  {items?.label}
+                                                </span>
                                               </Link>
                                             </li>
                                           )
