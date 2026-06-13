@@ -8,10 +8,10 @@ export default function PosLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-    <PosHeader />
+    <div className="pos-layout-shell">
+      <PosHeader />
       <ThemeSettings />
       {children}
-    </>
+    </div>
   );
 }
