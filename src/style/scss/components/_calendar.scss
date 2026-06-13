@@ -33,7 +33,7 @@
 	line-height: 30px;
 }
 .fc-day-grid-event .fc-time {
-	font-family: 'Roboto', sans-serif;
+	font-family: variables.$font-family-primary;
 }
 .fc-day {
 	background: variables.$white;
@@ -110,12 +110,12 @@
 .fc-basic-view td.fc-week-number span {
 	padding-right: 8px;
 	font-weight: variables.$font-weight-bold;
-	font-family: 'Roboto', sans-serif;
+	font-family: variables.$font-family-primary;
 }
 .fc-basic-view td.fc-day-number {
 	padding-right: 8px;
 	font-weight: variables.$font-weight-bold;
-	font-family: 'Roboto', sans-serif;
+	font-family: variables.$font-family-primary;
 }
 .event-form .input-group .form-control {
 	height: 40px;

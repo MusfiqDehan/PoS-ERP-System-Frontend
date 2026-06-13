@@ -1,2 +1,73 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@use "../utils/variables";
+
+:root {
+  --bs-body-font-family: #{variables.$font-family-primary};
+  --bs-font-sans-serif: #{variables.$font-family-primary};
+}
+
+// Third-party UI libraries and widgets
+.p-component,
+.p-inputtext,
+.p-dropdown,
+.p-multiselect,
+.p-calendar,
+.p-dialog,
+.p-menu,
+.p-tabview,
+.fc,
+.fc-toolbar,
+.fc-view,
+.fc-col-header,
+.fc-daygrid,
+.swal2-container,
+.swal2-popup,
+.swal2-title,
+.swal2-html-container,
+.select2-container,
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple,
+.select2-results__option,
+.react-select__control,
+.react-select__menu,
+.react-select__option,
+.react-select__single-value,
+.react-select__placeholder,
+.react-select__input-container,
+.apexcharts-canvas,
+.apexcharts-text,
+.apexcharts-title-text,
+.apexcharts-legend-text,
+.apexcharts-tooltip,
+.apexcharts-xaxis-label,
+.apexcharts-yaxis-label,
+.chartjs-render-monitor,
+.rsw-editor,
+.rsw-ce,
+.slick-slider,
+.modal,
+.dropdown-menu,
+.popover,
+.tooltip,
+.toast,
+.offcanvas,
+.accordion,
+.list-group,
+.breadcrumb,
+.pagination,
+.nav,
+.navbar,
+.card,
+.table,
+.form-control,
+.form-select,
+.form-label,
+.btn,
+.badge,
+.alert {
+  font-family: variables.$font-family-primary;
+}
+
+[class^="ant-"],
+[class*=" ant-"] {
+  font-family: variables.$font-family-primary;
+}

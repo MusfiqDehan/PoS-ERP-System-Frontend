@@ -155,7 +155,7 @@
                 border-radius: 8px;
                 border: 1px solid #423B93;
                 font-size: variables.$font-size-14;
-                font-family: variables.$font-weight-semibold;
+                font-weight: variables.$font-weight-semibold;
                 color: #423B93;
             }
             &.pending {
@@ -163,7 +163,7 @@
                 border-radius: 8px;
                 border: 1px solid #288EC7;
                 font-size: variables.$font-size-14;
-                font-family: variables.$font-weight-semibold;
+                font-weight: variables.$font-weight-semibold;
                 color: #288EC7;
             }
             &.low {
@@ -171,7 +171,7 @@
                 border-radius: 8px;
                 border: 1px solid variables.$warning;
                 font-size: variables.$font-size-14;
-                font-family: variables.$font-weight-semibold;
+                font-weight: variables.$font-weight-semibold;
                 color: variables.$warning;                
             }
             &.success {
@@ -179,7 +179,7 @@
                 border-radius: 8px;
                 border: 1px solid variables.$success;
                 font-size: variables.$font-size-14;
-                font-family: variables.$font-weight-semibold;
+                font-weight: variables.$font-weight-semibold;
                 color: variables.$success;                
             }
             i {

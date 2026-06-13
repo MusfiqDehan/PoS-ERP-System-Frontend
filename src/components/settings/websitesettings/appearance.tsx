@@ -22,10 +22,7 @@ export default function AppearanceComponent () {
     { value: "small", label: "Small - 85px" },
     { value: "large", label: "Large - 250px" },
   ];
-  const fonts = [
-    { value: "Nunito", label: "Nunito" },
-    { value: "Poppins", label: "Poppins" },
-  ];
+  const fonts = [{ value: "Urbanist", label: "Urbanist" }];
 
 
   return (
