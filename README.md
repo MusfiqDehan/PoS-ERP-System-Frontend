@@ -27,6 +27,7 @@ New here? Jump to what you need:
 | **Find where a thing lives** | [Directory Map](#-directory-map) · [Canonical Paths](#-canonical-paths) |
 | **Change a screen** | [The Core Pattern](#-the-core-pattern) · [Contributing Workflow](#-contributing-workflow) |
 | **Write tests** | [Testing](#-testing-required) |
+| **Work on the POS screen** | [POS Module (`/pos`)](#-pos-module-pos) |
 | **Know the conventions / gotchas** | [Conventions & Gotchas](#-conventions--gotchas) |
 | **See where this is heading** | [Roadmap & SaaS Direction](#-roadmap--saas-direction) |
 
@@ -58,6 +59,7 @@ New here? Jump to what you need:
 **Part 3 · Working in the Codebase**
 - [Canonical Paths](#-canonical-paths)
 - [How the Moving Parts Work](#-how-the-moving-parts-work)
+- [POS Module (`/pos`)](#-pos-module-pos)
 - [Conventions & Gotchas](#-conventions--gotchas)
 - [Testing (required)](#-testing-required)
 - [Contributing Workflow](#-contributing-workflow)
@@ -97,9 +99,10 @@ npm run build    # 3. production build → static export to /out
 
 | ✅ It IS | ❌ It is NOT (yet) |
 |---|---|
-| A polished admin + POS **UI template** | A working application |
-| ~258 routes, ~323 components, fully styled | Connected to any backend / API |
-| Driven by static JSON fixtures | Backed by a database |
+| A polished admin + POS **UI template** | Fully connected to a backend / API *(in progress)* |
+| ~258 routes, ~323 components, fully styled | All modules wired to Django |
+| **`/pos` has live front-end cart + loyalty** | Persisted sales data (DB) |
+| Driven by static JSON fixtures (most screens) | Backed by a database everywhere |
 | Static-export capable (`output: "export"`) | Authenticated / state-managed |
 | The future front-end of a SaaS product | Multi-tenant *yet* (see SAAS_PLAN.md) |
 
@@ -230,7 +233,7 @@ public/                       # assets/, favicon, manifest, prebuilt index.html
 
 | Domain | Covers | Key screens |
 |---|---|---|
-| `pos-module/pos` | POS checkout (5 variants) | `pos.tsx` (1798 LOC) + `pos2..pos5`, `posHeader.tsx` |
+| `pos-module/pos` | POS checkout | **`index.tsx`** (canonical `/pos` — Figma redesign, live cart) · legacy `pos.tsx` + `pos2..pos5` variants |
 | `Inventory` | Products & master data | productList *(canonical)*, add/edit-product, product-details, category, sub-categories, brand, units, variant-attributes, warranty, barcode, qrcode, low-stocks, expired-products |
 | `stock` | Inventory movement | manage-stock, stock-adjustment, stock-transfer |
 | `sales` | Sales & orders | invoice (list + details), quotation, online-orders, pos-orders, sale-return |
@@ -270,6 +273,9 @@ public/                       # assets/, favicon, manifest, prebuilt index.html
 | Modals | `src/core/modals/<domain>/` (85 files; Bootstrap `data-bs-toggle`) |
 | Feature chrome (Header+Sidebar+Theme) | `src/app/(features)/layout.tsx` |
 | Root layout (global CSS + Bootstrap JS) | `src/app/layout.tsx` |
+| **POS screen (canonical)** | `src/components/pos-module/pos/index.tsx` |
+| POS cart & loyalty logic | `usePosCart.ts`, `posLoyaltyConfig.ts` |
+| POS route + chrome | `src/app/(pos)/pos/page.tsx`, `src/app/(pos)/layout.tsx` |
 
 ---
 
@@ -456,6 +462,182 @@ it("loads products from the API", async () => {
 - Co-locate tests; name `*.test.tsx` / `*.test.ts`. Don't test third-party libs — test **your** usage of them.
 - Aim for meaningful coverage of business modules (`pos-module`, `Inventory`, `sales`, `purchase`, `FinanceAccounts`, `hrm`), not a vanity 100%.
 - Backend (Django) testing → [`SAAS_PLAN.md` → Testing strategy](SAAS_PLAN.md). Full QA process → [`SQA_PLAN.md`](SQA_PLAN.md).
+
+---
+
+## 🧾 POS Module (`/pos`)
+
+The primary POS route (`http://localhost:3000/pos`) is a **refactored, Figma-aligned checkout**
+with **working front-end cart state**. It is the reference implementation for future Django API wiring.
+
+> Legacy monoliths (`pos.tsx`, `pos2`–`pos5`) still exist for template comparison — **edit `index.tsx` and its children**, not the old files.
+
+### Layout (3 panels)
+
+```mermaid
+graph LR
+  H["posHeader.tsx<br/>(app/(pos)/layout.tsx)"]
+  P["Products panel<br/>689fr"]
+  O["Order Details<br/>338fr"]
+  T["Transaction Details<br/>337fr"]
+  H --> P
+  H --> O
+  H --> T
+```
+
+| Panel | Component(s) | Role |
+|---|---|---|
+| **All Products** | `PosProductsPanel`, `PosProductCard`, `PosCategoryTabs` | Browse/search products, add to cart |
+| **Order Details** | `PosOrderDetails`, `OrderDetailsRow` | Line items, qty +/- , remove, clear all |
+| **Transaction Details** | `PosOrderSidebar`, customer/payment subcomponents | Customer, totals, payment method, checkout actions |
+
+**Styles:** `src/style/scss/pages/_pos-header.scss`, `_pos-products-panel.scss`, `_pos-order-details.scss`, `_pos-transaction-details.scss`, `_pos-sale-modals.scss`
+
+### Entry point & state
+
+```
+src/app/(pos)/pos/page.tsx          → thin wrapper
+src/components/pos-module/pos/
+  index.tsx                         → orchestrator (panels + modals)
+  usePosPage.ts                     → category tab + body class
+  usePosCart.ts                     → cart, customer, payment, checkout (single source of truth)
+```
+
+All cart logic flows through **`usePosCart()`** — when the Django backend lands, replace fixture reads/writes inside this hook (or extract to `usePosCartQuery`) without restructuring the UI.
+
+### What works today (front-end only)
+
+| Action | Behavior |
+|---|---|
+| Click product | Adds to order (or increments qty); out-of-stock disabled; low-stock capped |
+| Order qty **−** / **+** | Decrease (removes at 1) / increase with stock limit |
+| Remove row / Clear All | Removes line / empties cart |
+| Customer search | Filter by name or phone (partial match) |
+| **+** Create customer | Compact modal → new customer with **0 points**, auto-selected |
+| Payment method | Required before Pay; opens finalize-sale modal |
+| **Hold** | Saves order to `sessionStorage` (`pos-held-orders`), new invoice |
+| **New** / **Clear** | Reset cart; New increments invoice `#INV-xxxx` |
+| **Save as Draft** | Persists to `sessionStorage` (`pos-draft-order`) |
+| **Complete Sale** / **Pay & Print** | Finalize modal → success modal; clears cart; redeems or earns loyalty points |
+
+**Product data:** `posProductsData.ts` · **Customer list (fixture):** `transactionDetailsData.ts` · **Legacy template modals:** still imported via `PosModals` for non-POS flows.
+
+### Customer loyalty & points
+
+Loyalty rules live in **`posLoyaltyConfig.ts`** — pure functions, easy to unit-test and mirror on the Django backend.
+
+#### Design (milestone model — not tier ranges)
+
+1. Each registered customer has a **points balance** (walk-in = 0, no loyalty).
+2. **Discount %** = how many complete **100-point blocks** they have: `floor(points / 100)`, capped at `MAX_LOYALTY_DISCOUNT_PERCENT` (10%).
+   - 99 pts → **0%** · 100 pts → **1%** · 178 pts → **1%** (78 remain after exchange)
+   - 200 pts → **2%** · 220 pts → **2%** (20 remain) · 420 pts → **4%** (20 remain)
+3. **Per order, seller/customer chooses** (toggle in Customer Details):
+   - **Exchange N pts** — spend `discount% × 100` points for that % off; **remainder stays** in the account.
+   - **Store points** — no discount; full balance kept; **earn** `floor(subtotal × rate)` on completion.
+4. **Order math:** subtotal → optional loyalty discount → tax on discounted amount → total.
+
+#### Configurable parameters
+
+| Constant | Default | Meaning |
+|---|---|---|
+| `POINTS_PER_DISCOUNT_PERCENT` | `100` | Points per 1% discount block |
+| `MAX_LOYALTY_DISCOUNT_PERCENT` | `10` | Cap on redeemable discount % |
+| `POINTS_PER_CURRENCY_UNIT` | `1` | Points earned per BDT 1 subtotal (store-points mode only) |
+| `MIN_SUBTOTAL_TO_EARN_POINTS` | `1` | Minimum subtotal to earn any points |
+| `WALK_IN_CUSTOMER_ID` | `"walk-in"` | Anonymous customer — no earn, no discount |
+
+#### Milestone examples
+
+| Balance | Offer | Exchange cost | Remainder after redeem |
+|---:|---:|---:|---:|
+| 99 | 0% | — | — |
+| 100 | 1% | 100 | 0 |
+| 178 | 1% | 100 | **78** |
+| 220 | 2% | 200 | **20** |
+| 420 | 4% | 400 | **20** |
+
+Redeem deducts **only** the exchange cost (`discount% × 100`), not the full balance.
+
+#### Order total calculation (`calculateOrderTotals`)
+
+```
+subtotal        = Σ (line price × quantity)
+loyaltyDiscount = subtotal × (tierDiscountPercent / 100)
+taxableSubtotal = subtotal − loyaltyDiscount
+tax             = taxableSubtotal × TAX_RATE        (currently 12%)
+totalPayable    = taxableSubtotal + tax + shipping
+```
+
+Payment Summary hides the discount row when tier discount is **0%**.
+
+#### Points display
+
+- **Always** shows `{n} Points` (including **0 Points** for new customers).
+- **Discount % badge** shows eligible milestone discount (not whether it is applied this order).
+- **Loyalty on this order** toggle: `Exchange N pts · X% off · Y pts left` vs `Store points · earn today`.
+- After checkout (redeem): `N pts exchanged for X% off · Y pts left` · (store): `+N points earned`.
+
+#### Key files
+
+| File | Purpose |
+|---|---|
+| `posLoyaltyConfig.ts` | Milestone math, `getCustomerLoyalty`, `calculatePointsEarned`, `calculateOrderTotals` |
+| `usePosCart.ts` | Applies loyalty to summary; awards points in `completeOrder` |
+| `CustomerLoyaltyBadges.tsx` | Points + discount badges in customer UI |
+| `TransactionCustomerSection.tsx` | Searchable customer picker |
+| `PosCreateCustomerModal.tsx` | Create customer (starts at 0 points) |
+
+#### Backend migration notes
+
+When wiring Django, the API should own:
+
+- `Customer.points` (persisted balance)
+- Same milestone formula server-side (`floor(points / 100)` capped at max %)
+- Point earn on `Sale.completed` (idempotent per invoice)
+- Walk-in sales: no customer id → no points
+
+Front-end: replace `transactionCustomers` fixture with `GET /customers?search=` and `POST /customers`; keep `posLoyaltyConfig.ts` helpers for client-side preview until server totals are authoritative.
+
+### POS modals (GeekPOS-styled)
+
+| Modal ID | Component | Purpose |
+|---|---|---|
+| `#pos-create-customer` | `PosCreateCustomerModal.tsx` | Add customer (compact green theme) |
+| `#pos-finalize-sale` | `PosSaleModals.tsx` | Payment confirmation (cash change / reference) |
+| `#pos-payment-completed` | `PosSaleModals.tsx` | Success + print receipt |
+
+Payment method buttons target `#pos-finalize-sale` (not the legacy `modal-lg` templates in `posModals.tsx`).
+
+### File map (`src/components/pos-module/pos/`)
+
+```
+index.tsx                    # Page orchestrator
+usePosCart.ts                # Cart + customer + checkout state
+usePosPage.ts                # UI shell (tabs, body class)
+posLoyaltyConfig.ts          # Loyalty milestones & order math
+posProductsData.ts           # Product fixtures
+transactionDetailsData.ts    # Customer fixtures, payment methods
+orderDetailsData.ts          # Order line types & formatters
+posHeader.tsx / posHeaderData.ts
+PosProductsPanel.tsx         # Left panel
+PosOrderDetails.tsx          # Center panel
+PosOrderSidebar.tsx          # Right panel (transaction)
+PosSaleModals.tsx            # Finalize + payment completed
+PosCreateCustomerModal.tsx   # Create customer
+Transaction*.tsx             # Sidebar sections
+OrderDetails*.tsx            # Order table sections
+```
+
+### Tests to add first (when harness is wired)
+
+Priority pure-function tests in `posLoyaltyConfig.test.ts`:
+
+- `getEligibleDiscountPercent` / `getCustomerLoyalty` at milestones (99 vs 100, 178 → 1%, 220 → 2%, etc.)
+- `calculateOrderTotals` — discount before tax
+- `calculatePointsEarned` — floor behavior, minimum subtotal
+
+Then RTL tests for `usePosCart` flows: add product, select customer, complete order updates points.
 
 ---
 
