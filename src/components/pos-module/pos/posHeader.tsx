@@ -1,312 +1,225 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
-import React, { useEffect, useState } from "react";
-import { Tooltip } from "antd";
-import Link from "next/link";
+import ImageWithBasePath from "@/core/common/image-with-base-path";
 import { all_routes } from "@/data/all_routes";
+import Link from "next/link";
 import { Settings, User } from "react-feather";
+import { useEffect, useState } from "react";
+import {
+  posHeaderActions,
+  posHeaderAssets,
+  posHeaderStores,
+  posHeaderUser,
+} from "./posHeaderData";
 
-const PosHeader = () => {
-  const [isFullscreen, setIsFullscreen] = useState(false);
+const formatHeaderDate = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
-  const toggleFullscreen = () => {
-    if (!isFullscreen) {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch((err) => {});
-        setIsFullscreen(true);
-      }
-    } else {
-      if (document.exitFullscreen) {
-        if (document.fullscreenElement) {
-          document.exitFullscreen().catch((err) => {});
-        }
-        setIsFullscreen(false);
-      }
-    }
-  };
+export default function PosHeader() {
+  const [activeStoreId, setActiveStoreId] = useState(posHeaderStores[0].id);
+  const [headerDate, setHeaderDate] = useState("");
+
+  useEffect(() => {
+    setHeaderDate(formatHeaderDate(new Date()));
+  }, []);
+
+  const activeStore =
+    posHeaderStores.find((store) => store.id === activeStoreId) ??
+    posHeaderStores[0];
 
   return (
-    <>
-      {/* Header */}
-      <div className="header pos-header">
-        {/* Logo */}
-        <div className="header-left active">
-          <Link href={all_routes.newdashboard} className="logo logo-normal">
-            <img src="assets/img/logo.png" alt="Img" />
-          </Link>
-          <Link href={all_routes.newdashboard} className="logo logo-white">
-            <img src="assets/img/logo-white.png" alt="Img" />
-          </Link>
-          <Link href={all_routes.newdashboard} className="logo-small">
-            <img src="assets/img/logo-small.png" alt="Img" />
-          </Link>
-        </div>
-        {/* /Logo */}
-        <Link id="mobile_btn" className="mobile_btn d-none" href="#sidebar">
-          <span className="bar-icon">
-            <span />
-            <span />
-            <span />
-          </span>
-        </Link>
-        {/* Header Menu */}
-        <ul className="nav user-menu">
-          {/* Search */}
-          <li className="nav-item time-nav">
-            <span className="bg-teal text-white d-inline-flex align-items-center">
-              <img
-                src="assets/img/icons/clock-icon.svg"
-                alt="img"
-                className="me-2"
-              />
-              09:25:32
+    <header className="pos-page-header">
+      <div className="pos-page-header__inner">
+        <div className="pos-page-header__left">
+          <div className="pos-page-header__brand">
+            <ImageWithBasePath
+              src={posHeaderAssets.companyLogo}
+              alt="Sortorium"
+              width={128}
+              height={28}
+              className="pos-page-header__logo"
+            />
+            <p className="pos-page-header__date">{headerDate}</p>
+          </div>
+
+          <div className="pos-page-header__nav-toggle">
+            <span className="pos-page-header__nav-item pos-page-header__nav-item--active">
+              POS
             </span>
-          </li>
-          {/* /Search */}
-          <li className="nav-item pos-nav">
             <Link
               href={all_routes.newdashboard}
-              className="btn btn-purple btn-md d-inline-flex align-items-center"
+              className="pos-page-header__nav-item"
             >
-              <i className="ti ti-world me-1" />
               Dashboard
             </Link>
-          </li>
-          {/* Select Store */}
-          <li className="nav-item dropdown has-arrow main-drop select-store-dropdown">
-            <Link
-              href="#"
-              className="dropdown-toggle nav-link select-store"
+          </div>
+
+          <div className="dropdown pos-page-header__location-dropdown">
+            <button
+              type="button"
+              className="pos-page-header__location dropdown-toggle"
               data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              <span className="user-info">
-                <span className="user-letter">
-                  <img
-                    src="assets/img/store/store-01.png"
-                    alt="Store Logo"
-                    className="img-fluid"
-                  />
-                </span>
-                <span className="user-detail">
-                  <span className="user-name">Freshmart</span>
+              <span className="pos-page-header__location-content">
+                <ImageWithBasePath
+                  src={activeStore.imageSrc}
+                  alt=""
+                  width={24}
+                  height={24}
+                  className="pos-page-header__location-icon"
+                />
+                <span className="pos-page-header__location-name">
+                  {activeStore.name}
                 </span>
               </span>
-            </Link>
-            <div className="dropdown-menu dropdown-menu-right">
-              <Link href="#" className="dropdown-item">
-                <img
-                  src="assets/img/store/store-01.png"
-                  alt="Store Logo"
-                  className="img-fluid"
+              <ImageWithBasePath
+                src={posHeaderAssets.chevronDown}
+                alt=""
+                width={16}
+                height={16}
+                className="pos-page-header__chevron"
+              />
+            </button>
+            <ul className="dropdown-menu">
+              {posHeaderStores.map((store) => (
+                <li key={store.id}>
+                  <Link
+                    href="#"
+                    className="dropdown-item"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setActiveStoreId(store.id);
+                    }}
+                  >
+                    <ImageWithBasePath
+                      src={store.imageSrc}
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="me-2"
+                    />
+                    {store.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="pos-page-header__right">
+          <div className="pos-page-header__actions">
+            {posHeaderActions.map((action) => {
+              const icon = (
+                <ImageWithBasePath
+                  src={action.iconSrc}
+                  alt=""
+                  width={action.width}
+                  height={action.height}
+                  className="pos-page-header__action-icon"
                 />
-                Freshmart
-              </Link>
-              <Link href="#" className="dropdown-item">
-                <img
-                  src="assets/img/store/store-02.png"
-                  alt="Store Logo"
-                  className="img-fluid"
-                />
-                Grocery Apex
-              </Link>
-              <Link href="#" className="dropdown-item">
-                <img
-                  src="assets/img/store/store-03.png"
-                  alt="Store Logo"
-                  className="img-fluid"
-                />
-                Grocery Bevy
-              </Link>
-              <Link href="#" className="dropdown-item">
-                <img
-                  src="assets/img/store/store-04.png"
-                  alt="Store Logo"
-                  className="img-fluid"
-                />
-                Grocery Eden
-              </Link>
-            </div>
-          </li>
-          {/* /Select Store */}
-          <li className="nav-item nav-item-box">
-            <Link
-              href="#"
-              data-bs-toggle="modal"
-              data-bs-target="#calculator"
-              className="bg-orange border-orange text-white"
-            >
-              <i className="ti ti-calculator" />
-            </Link>
-          </li>
-          <li className="nav-item nav-item-box">
-            <Tooltip title="Maximize" placement="right">
-              <Link
-                href="#"
-                id="btnFullscreen"
-                // onClick={() => toggleFullscreen()}
-                className={isFullscreen ? "Exit Fullscreen" : "Go Fullscreen"}
-              >
-                <i className="ti ti-maximize" />
-              </Link>
-            </Tooltip>
-          </li>
-          <li
-            className="nav-item nav-item-box"
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            data-bs-title="Cash Register"
-          >
-            <Tooltip title="Cash Register" placement="right">
-              <Link
-                href="#"
-                data-bs-toggle="modal"
-                data-bs-target="#cash-register"
-              >
-                <i className="ti ti-cash" />
-              </Link>
-            </Tooltip>
-          </li>
-          <li
-            className="nav-item nav-item-box"
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            data-bs-title="Print Last Reciept"
-          >
-            <Tooltip title="Print Last Reciept" placement="right">
-              <Link href="#">
-                <i className="ti ti-printer" />
-              </Link>
-            </Tooltip>
-          </li>
-          <li
-            className="nav-item nav-item-box"
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            data-bs-title="Today’s Sale"
-          >
-            <Tooltip title="Today's Sale" placement="right">
-              <Link
-                href="#"
-                data-bs-toggle="modal"
-                data-bs-target="#today-sale"
-              >
-                <i className="ti ti-progress" />
-              </Link>
-            </Tooltip>
-          </li>
-          <li
-            className="nav-item nav-item-box"
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            data-bs-title="Today’s Profit"
-          >
-            <Tooltip title="Today’s Profit" placement="right">
-              <Link
-                href="#"
-                data-bs-toggle="modal"
-                data-bs-target="#today-profit"
-              >
-                <i className="ti ti-chart-infographic" />
-              </Link>
-            </Tooltip>
-          </li>
-          <li
-            className="nav-item nav-item-box"
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            data-bs-title="POS Settings"
-          >
-            <Tooltip title="POS Settings" placement="bottom">
-              <Link href={all_routes.possettings}>
-                <i className="ti ti-settings" />
-              </Link>
-            </Tooltip>
-          </li>
-          <li className="nav-item dropdown has-arrow main-drop profile-nav">
-            <Link
-              href="#"
-              className="nav-link userset"
+              );
+
+              if (action.modalTarget) {
+                return (
+                  <Link
+                    key={action.id}
+                    href="#"
+                    className="pos-page-header__action"
+                    aria-label={action.label}
+                    data-bs-toggle="modal"
+                    data-bs-target={action.modalTarget}
+                  >
+                    {icon}
+                  </Link>
+                );
+              }
+
+              const href =
+                action.id === "settings"
+                  ? all_routes.possettings
+                  : (action.href ?? "#");
+
+              return (
+                <Link
+                  key={action.id}
+                  href={href}
+                  className="pos-page-header__action"
+                  aria-label={action.label}
+                >
+                  {icon}
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="dropdown pos-page-header__profile-dropdown">
+            <button
+              type="button"
+              className="pos-page-header__profile dropdown-toggle"
               data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              <span className="user-info p-0">
-                <span className="user-letter">
-                  <img
-                    src="assets/img/profiles/avator1.jpg"
-                    alt="Img"
-                    className="img-fluid"
-                  />
-                </span>
+              <ImageWithBasePath
+                src={posHeaderUser.avatarSrc}
+                alt=""
+                width={28}
+                height={28}
+                className="pos-page-header__avatar"
+              />
+              <span className="pos-page-header__user-name">
+                {posHeaderUser.name}
               </span>
-            </Link>
-            <div className="dropdown-menu menu-drop-user">
-              <div className="profilename">
-                <div className="profileset">
-                  <span className="user-img">
-                    <img src="assets/img/profiles/avator1.jpg" alt="Img" />
-                    <span className="status online" />
-                  </span>
-                  <div className="profilesets">
-                    <h6>John Smilga</h6>
-                    <h5>Super Admin</h5>
-                  </div>
-                </div>
-                <hr className="m-0" />
+              <ImageWithBasePath
+                src={posHeaderAssets.chevronDown}
+                alt=""
+                width={16}
+                height={16}
+                className="pos-page-header__chevron"
+              />
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              <li className="dropdown-item-text">
+                <strong>{posHeaderUser.name}</strong>
+                <span className="d-block text-muted small">
+                  {posHeaderUser.role}
+                </span>
+              </li>
+              <li>
+                <hr className="dropdown-divider" />
+              </li>
+              <li>
                 <Link className="dropdown-item" href={all_routes.profile}>
-                  <User className="me-2" />
+                  <User className="me-2" size={16} />
                   My Profile
                 </Link>
+              </li>
+              <li>
                 <Link
                   className="dropdown-item"
                   href={all_routes.generalsettings}
                 >
-                  <Settings className="me-2" />
+                  <Settings className="me-2" size={16} />
                   Settings
                 </Link>
-                <hr className="m-0" />
-                <Link
-                  className="dropdown-item logout pb-0"
-                  href={all_routes.signin}
-                >
-                  <img
-                    src="assets/img/icons/log-out.svg"
-                    className="me-2"
-                    alt="img"
-                  />
+              </li>
+              <li>
+                <hr className="dropdown-divider" />
+              </li>
+              <li>
+                <Link className="dropdown-item" href={all_routes.signin}>
                   Logout
                 </Link>
-              </div>
-            </div>
-          </li>
-        </ul>
-        {/* /Header Menu */}
-        {/* Mobile Menu */}
-        <div className="dropdown mobile-user-menu">
-          <Link
-            href="#"
-            className="nav-link dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="fa fa-ellipsis-v" />
-          </Link>
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link className="dropdown-item" href={all_routes.profile}>
-              My Profile
-            </Link>
-            <Link className="dropdown-item" href={all_routes.generalsettings}>
-              Settings
-            </Link>
-            <Link className="dropdown-item" href={all_routes.signin}>
-              Logout
-            </Link>
+              </li>
+            </ul>
           </div>
         </div>
-        {/* /Mobile Menu */}
       </div>
-      {/* Header */}
-    </>
+    </header>
   );
-};
-
-export default PosHeader;
+}
