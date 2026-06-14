@@ -1,4 +1,4 @@
-# CLAUDE.md — DreamsPOS (Next.js, retail-pos)
+# CLAUDE.md — Sortonium (Next.js, retail-pos)
 
 Project primer for AI assistants. Read this first; it's verified against the code (2026-06) so you can
 skip re-scanning the tree. Paths are relative to this folder (`retail-pos/nextjs/`). Alias `@/*` → `./src/*`.
@@ -23,9 +23,9 @@ skip re-scanning the tree. Paths are relative to this folder (`retail-pos/nextjs
 
 ## ⚡ Fast start (read this, then go)
 
-**What it is:** a commercial **admin/POS dashboard UI template** (Dreams Technologies). Front-end **only** —
+**What it is:** the **Sortonium** retail POS / admin front-end. Front-end **only** —
 no backend, API, DB, auth, or real state. Every screen renders from hardcoded JSON arrays. Static export.
-Think "UI kit", not an app. `package.json` → `dreamspos` 0.1.0, private.
+Think "UI kit", not an app. `package.json` → `sortonium` 0.1.0, private.
 
 **To change a screen, edit its component under `src/components/<Domain>/` — NOT `src/app/`.**
 The `app/.../page.tsx` is a 5-line wrapper that just renders the component.
