@@ -272,13 +272,13 @@ export const SidebarData = [
           { label: "POS 5", link: "/pos-5", showSubRoute: false },
           {
             label: "POS 6",
-            link: "https://dreamspos.dreamstechnologies.com/restaurant-pos/nextjs/login",
+            link: "#",
             showSubRoute: false,
             external: true,
           },
           {
             label: "POS 7",
-            link: "https://dreamspos.dreamstechnologies.com/laundry-pos/nextjs/login",
+            link: "#",
             showSubRoute: false,
             external: true,
           },
@@ -1267,13 +1267,13 @@ export const SidebarData = [
     submenuItems: [
       {
         label: "Documentation",
-        link: "https://dreamspos.dreamstechnologies.com/documentation/react.html",
+        link: "#",
         icon: "file-text",
         showSubRoute: false,
       },
       {
         label: "Changelog v2.2.7",
-        link: "https://dreamspos.dreamstechnologies.com/documentation/changelog.html",
+        link: "#",
         icon: "exchange",
         showSubRoute: false,
       },

@@ -31,9 +31,9 @@ const TwostepverificationThree = () => {
               <div className="col-lg-5 mx-auto">
                 <div className="login-content user-login">
                   <div className="login-logo">
-                    <img src="assets/img/logo.png" alt="img" />
+                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                     <Link href={route.dashboard} className="login-logo logo-white">
-                      <img src="assets/img/logo-white.png" alt="Img" />
+                      <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                     </Link>
                   </div>
                   <form className="digit-group">
@@ -117,7 +117,7 @@ const TwostepverificationThree = () => {
               </div>
             </div>
             <div className="my-4 d-flex justify-content-center align-items-center copyright-text">
-              <p>Copyright © 2025 DreamsPOS</p>
+              <p>Copyright © 2025 Sortonium</p>
             </div>
           </div>
         </div>

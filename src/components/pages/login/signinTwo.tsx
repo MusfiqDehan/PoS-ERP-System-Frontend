@@ -24,15 +24,15 @@ export default function SigninTwoComponent () {
                 <form >
                   <div className="login-userset">
                     <div className="login-logo logo-normal">
-                      <img src="assets/img/logo.png" alt="img" />
+                      <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                     </div>
                     <Link href={route.dashboard} className="login-logo logo-white">
-                      <img src="assets/img/logo-white.png" alt="Img" />
+                      <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                     </Link>
                     <div className="login-userheading">
                       <h3>Sign In</h3>
                       <h4>
-                        Access the Dreamspos panel using your email and passcode.
+                        Access the Sortonium panel using your email and passcode.
                       </h4>
                     </div>
                     <div className="mb-3">
@@ -137,7 +137,7 @@ export default function SigninTwoComponent () {
                         </div>
                       </div>
                       <div className="my-4 d-flex justify-content-center align-items-center copyright-text">
-                        <p>Copyright © 2025 DreamsPOS</p>
+                        <p>Copyright © 2025 Sortonium</p>
                       </div>
                     </div>
                   </div>

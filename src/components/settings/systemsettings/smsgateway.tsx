@@ -46,7 +46,7 @@ export default function SmsGatewayComponent () {
                                                             <div>
                                                                 <img
                                                                     src="assets/img/icons/sms-icon-01.svg"
-                                                                    alt="Img" className="sms-img"
+                                                                    alt="Sortonium" className="sms-img"
                                                                 />
                                                             </div>
                                                             <div className="d-flex align-items-center">
@@ -80,7 +80,7 @@ export default function SmsGatewayComponent () {
                                                             <div>
                                                                 <img
                                                                     src="assets/img/icons/sms-icon-02.svg"
-                                                                    alt="Img" className="sms-img"
+                                                                    alt="Sortonium" className="sms-img"
                                                                 />
                                                             </div>
                                                             <div className="d-flex align-items-center">
@@ -114,7 +114,7 @@ export default function SmsGatewayComponent () {
                                                             <div>
                                                                 <img
                                                                     src="assets/img/icons/sms-icon-03.svg"
-                                                                    alt="Img" className="sms-img"
+                                                                    alt="Sortonium" className="sms-img"
                                                                 />
                                                             </div>
                                                             <div className="d-flex align-items-center">

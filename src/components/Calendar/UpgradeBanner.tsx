@@ -17,10 +17,10 @@ export default function UpgradeBanner() {
                         </Link>
                         <div className="box-bg">
                           <span className="bg-right">
-                            <img src="assets/img/bg/email-bg-01.png" alt="Img" />
+                            <img src="assets/img/bg/email-bg-01.png" alt="Sortonium" />
                           </span>
                           <span className="bg-left">
-                            <img src="assets/img/bg/email-bg-02.png" alt="Img" />
+                            <img src="assets/img/bg/email-bg-02.png" alt="Sortonium" />
                           </span>
                         </div>
                       </div>

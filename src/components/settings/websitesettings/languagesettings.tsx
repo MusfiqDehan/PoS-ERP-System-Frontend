@@ -120,7 +120,7 @@ export default function LanguageSettingsComponent ()  {
                                         <img
                                           src="assets/img/icons/flag-01.svg"
                                           className="me-2"
-                                          alt="Img"
+                                          alt="Sortonium"
                                         />
                                         English
                                       </div>
@@ -224,7 +224,7 @@ export default function LanguageSettingsComponent ()  {
                                         <img
                                           src="assets/img/icons/flag-02.svg"
                                           className="me-2"
-                                          alt="Img"
+                                          alt="Sortonium"
                                         />
                                         German
                                       </div>
@@ -328,7 +328,7 @@ export default function LanguageSettingsComponent ()  {
                                         <img
                                           src="assets/img/icons/flag-03.svg"
                                           className="me-2"
-                                          alt="Img"
+                                          alt="Sortonium"
                                         />
                                         Arabic
                                       </div>
@@ -432,7 +432,7 @@ export default function LanguageSettingsComponent ()  {
                                         <img
                                           src="assets/img/icons/flag-04.svg"
                                           className="me-2"
-                                          alt="Img"
+                                          alt="Sortonium"
                                         />
                                         French
                                       </div>
@@ -591,7 +591,7 @@ export default function LanguageSettingsComponent ()  {
                               <img
                                 src="assets/img/icons/flag-03.svg"
                                 className="me-2"
-                                alt="Img"
+                                alt="Sortonium"
                               />
                               Arabic
                             </Link>

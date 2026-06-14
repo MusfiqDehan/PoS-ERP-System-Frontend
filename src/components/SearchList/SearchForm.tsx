@@ -9,7 +9,7 @@ export default function SearchForm() {
                                 <input
                                     type="text"
                                     className="form-control flex-fill me-3"
-                                    defaultValue="DreamsPOS"
+                                    defaultValue="Sortonium"
                                 />
                                 <button type="submit" className="btn btn-primary">
                                     Search

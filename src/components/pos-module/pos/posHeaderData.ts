@@ -1,3 +1,5 @@
+import { brandAssets } from "@/lib/branding";
+
 export type PosHeaderAction = {
   id: string;
   iconSrc: string;
@@ -15,7 +17,7 @@ export type PosHeaderStore = {
 };
 
 export const posHeaderAssets = {
-  companyLogo: "assets/img/pos/header/company-logo.png",
+  companyLogo: brandAssets.logo,
   keyboard: "assets/img/pos/header/keyboard.svg",
   cash: "assets/img/pos/header/cash.svg",
   printer: "assets/img/pos/header/printer.svg",

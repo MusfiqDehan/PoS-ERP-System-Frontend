@@ -169,7 +169,7 @@ const CustomerModal = () => {
                         <div className="profile-pic people-profile-pic">
                           <img
                             src="assets/img/profiles/profile.png"
-                            alt="Img"
+                            alt="Sortonium"
                           />
                           <Link href="#">
                             <i

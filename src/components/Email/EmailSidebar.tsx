@@ -39,7 +39,7 @@ export default function EmailSidebar({
                           <img
                             src="assets/img/profiles/avatar-02.jpg"
                             className="rounded-circle"
-                            alt="Img"
+                            alt="Sortonium"
                           />
                         </Link>
                         <div>
@@ -300,10 +300,10 @@ export default function EmailSidebar({
                       </Link>
                       <div className="box-bg">
                         <span className="bg-right">
-                          <img src="assets/img/bg/email-bg-01.png" alt="Img" />
+                          <img src="assets/img/bg/email-bg-01.png" alt="Sortonium" />
                         </span>
                         <span className="bg-left">
-                          <img src="assets/img/bg/email-bg-02.png" alt="Img" />
+                          <img src="assets/img/bg/email-bg-02.png" alt="Sortonium" />
                         </span>
                       </div>
                     </div>

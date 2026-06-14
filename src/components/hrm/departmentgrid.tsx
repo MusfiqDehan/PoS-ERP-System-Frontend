@@ -190,7 +190,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-01.jpg" alt="Img" />
+                        <img src="assets/img/users/user-01.jpg" alt="Sortonium" />
                       </div>
                       <h4>Mitchum Daniel</h4>
                     </div>
@@ -280,7 +280,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-02.jpg" alt="Img" />
+                        <img src="assets/img/users/user-02.jpg" alt="Sortonium" />
                       </div>
                       <h4>Susan Lopez</h4>
                     </div>
@@ -370,7 +370,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-03.jpg" alt="Img" />
+                        <img src="assets/img/users/user-03.jpg" alt="Sortonium" />
                       </div>
                       <h4>Robert Grossman</h4>
                     </div>
@@ -460,7 +460,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-06.jpg" alt="Img" />
+                        <img src="assets/img/users/user-06.jpg" alt="Sortonium" />
                       </div>
                       <h4>Janet Hembre</h4>
                     </div>
@@ -550,7 +550,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-04.jpg" alt="Img" />
+                        <img src="assets/img/users/user-04.jpg" alt="Sortonium" />
                       </div>
                       <h4>Russell Belle</h4>
                     </div>
@@ -640,7 +640,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-05.jpg" alt="Img" />
+                        <img src="assets/img/users/user-05.jpg" alt="Sortonium" />
                       </div>
                       <h4>Edward Muniz</h4>
                     </div>
@@ -730,7 +730,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-07.jpg" alt="Img" />
+                        <img src="assets/img/users/user-07.jpg" alt="Sortonium" />
                       </div>
                       <h4>Susan Moore</h4>
                     </div>
@@ -820,7 +820,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-08.jpg" alt="Img" />
+                        <img src="assets/img/users/user-08.jpg" alt="Sortonium" />
                       </div>
                       <h4>Lance Jackson</h4>
                     </div>
@@ -910,7 +910,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-11.jpg" alt="Img" />
+                        <img src="assets/img/users/user-11.jpg" alt="Sortonium" />
                       </div>
                       <h4>Travis Marcotte</h4>
                     </div>
@@ -1000,7 +1000,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-12.jpg" alt="Img" />
+                        <img src="assets/img/users/user-12.jpg" alt="Sortonium" />
                       </div>
                       <h4>Malinda Ruiz</h4>
                     </div>
@@ -1090,7 +1090,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-09.jpg" alt="Img" />
+                        <img src="assets/img/users/user-09.jpg" alt="Sortonium" />
                       </div>
                       <h4>David Slater</h4>
                     </div>
@@ -1180,7 +1180,7 @@ export default function DepartmentGridComponent() {
                     </div>
                     <div className="bg-light rounded p-3 text-center mb-4">
                       <div className="avatar avatar-lg mb-2">
-                        <img src="assets/img/users/user-13.jpg" alt="Img" />
+                        <img src="assets/img/users/user-13.jpg" alt="Sortonium" />
                       </div>
                       <h4>Michele Kim</h4>
                     </div>
@@ -1229,11 +1229,11 @@ export default function DepartmentGridComponent() {
           </div>
         </div>
         <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
-          <p className="mb-0">2014-2025 © DreamsPOS. All Right Reserved</p>
+          <p className="mb-0">2014-2025 © Sortonium. All Right Reserved</p>
           <p>
             Designed &amp; Developed By{" "}
             <Link href="#" className="text-primary">
-              Dreams
+              Sortonium
             </Link>
           </p>
         </div>

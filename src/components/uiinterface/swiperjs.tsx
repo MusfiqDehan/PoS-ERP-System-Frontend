@@ -83,13 +83,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper swiper-basic">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                     </div>
@@ -115,13 +115,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper swiper-navigation">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-button-next" />
@@ -150,13 +150,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper pagination">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-04.jpg" alt="Img" />
+                                                <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-pagination" />
@@ -187,13 +187,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper pagination-dynamic">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-04.jpg" alt="Img" />
+                                                <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-pagination" />
@@ -213,13 +213,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper pagination-progress">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-04.jpg" alt="Img" />
+                                                <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-button-next" />
@@ -252,13 +252,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper pagination-fraction">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-04.jpg" alt="Img" />
+                                                <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-button-next" />
@@ -288,13 +288,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper custom-pagination">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-pagination" />
@@ -324,13 +324,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper scrollbar-swiper">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-scrollbar" />
@@ -360,13 +360,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper vertical swiper-vertical">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-04.jpg" alt="Img" />
+                                                <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-pagination" />
@@ -400,13 +400,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper vertical vertical-mouse-control">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-pagination" />
@@ -442,13 +442,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper keyboard-control">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-button-next" />
@@ -481,29 +481,29 @@ const SwiperjsComponent = () => {
                                     <div className="swiper swiper-horizontal1">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <div className="swiper-slide">
                                                 <div className="swiper vertical swiper-vertical1">
                                                     <div className="swiper-wrapper">
                                                         <SwiperSlide className="swiper-slide">
-                                                            <img src="assets/img/img-05.jpg" alt="Img" />
+                                                            <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                                         </SwiperSlide>
                                                         <SwiperSlide className="swiper-slide">
-                                                            <img src="assets/img/img-03.jpg" alt="Img" />
+                                                            <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                                         </SwiperSlide>
                                                         <SwiperSlide className="swiper-slide">
-                                                            <img src="assets/img/img-04.jpg" alt="Img" />
+                                                            <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                                         </SwiperSlide>
                                                     </div>
                                                     <div className="swiper-pagination" />
                                                 </div>
                                             </div>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-pagination" />
@@ -539,13 +539,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper swiper-effect-cube">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-04.jpg" alt="Img" />
+                                                <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-pagination" />
@@ -578,16 +578,16 @@ const SwiperjsComponent = () => {
                                     <div className="swiper swiper-fade">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-04.jpg" alt="Img" />
+                                                <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-button-next" />
@@ -620,13 +620,13 @@ const SwiperjsComponent = () => {
                                     <div className="swiper swiper-flip">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-button-next" />
@@ -671,28 +671,28 @@ const SwiperjsComponent = () => {
                                     <div className="swiper swiper-overflow">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-04.jpg" alt="Img" />
+                                                <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-pagination" />
@@ -726,25 +726,25 @@ const SwiperjsComponent = () => {
                                     <div className="swiper swiper-preview">
                                         <div className="swiper-wrapper">
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-03.jpg" alt="Img" />
+                                                <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-04.jpg" alt="Img" />
+                                                <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-05.jpg" alt="Img" />
+                                                <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-01.jpg" alt="Img" />
+                                                <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                             <SwiperSlide className="swiper-slide">
-                                                <img src="assets/img/img-02.jpg" alt="Img" />
+                                                <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                             </SwiperSlide>
                                         </div>
                                         <div className="swiper-button-next" />
@@ -763,25 +763,25 @@ const SwiperjsComponent = () => {
                                      <div className="swiper swiper-view">
                                     <div className="swiper-wrapper">
                                         <SwiperSlide className="swiper-slide">
-                                            <img src="assets/img/img-01.jpg" alt="Img" />
+                                            <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                         </SwiperSlide>
                                         <SwiperSlide className="swiper-slide">
-                                            <img src="assets/img/img-02.jpg" alt="Img" />
+                                            <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                         </SwiperSlide>
                                         <SwiperSlide className="swiper-slide">
-                                            <img src="assets/img/img-03.jpg" alt="Img" />
+                                            <img src="assets/img/img-03.jpg" alt="Sortonium" />
                                         </SwiperSlide>
                                         <SwiperSlide className="swiper-slide">
-                                            <img src="assets/img/img-04.jpg" alt="Img" />
+                                            <img src="assets/img/img-04.jpg" alt="Sortonium" />
                                         </SwiperSlide>
                                         <SwiperSlide className="swiper-slide">
-                                            <img src="assets/img/img-05.jpg" alt="Img" />
+                                            <img src="assets/img/img-05.jpg" alt="Sortonium" />
                                         </SwiperSlide>
                                         <SwiperSlide className="swiper-slide">
-                                            <img src="assets/img/img-01.jpg" alt="Img" />
+                                            <img src="assets/img/img-01.jpg" alt="Sortonium" />
                                         </SwiperSlide>
                                         <SwiperSlide className="swiper-slide">
-                                            <img src="assets/img/img-02.jpg" alt="Img" />
+                                            <img src="assets/img/img-02.jpg" alt="Sortonium" />
                                         </SwiperSlide>
                                     </div>
                                 </div>

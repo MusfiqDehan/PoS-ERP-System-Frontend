@@ -339,7 +339,7 @@ const CollapsedSidebar = () => {
               </li>
               <li>
                 <Link
-                  href="https://dreamspos.dreamstechnologies.com/food-pos/nextjs/template/login"
+                  href="#"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -1153,12 +1153,12 @@ const CollapsedSidebar = () => {
                 </ul>
               </li>
               <li>
-                <Link href="https://dreamspos.dreamstechnologies.com/documentation/nextjs.html" target="_blank">
+                <Link href="#" target="_blank">
                   <span>Documentation</span>
                 </Link>
               </li>
               <li>
-                <Link href="https://dreamspos.dreamstechnologies.com/documentation/changelog.html" target="_blank">
+                <Link href="#" target="_blank">
                   <span>Changelog v2.2.5</span>
                 </Link>
               </li>

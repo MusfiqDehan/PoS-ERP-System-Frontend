@@ -215,7 +215,7 @@ export default function CompanySettingsComponent () {
                                                     <div className="col-xl-3">
                                                         <div className="new-logo ms-xl-auto">
                                                             <Link href="#">
-                                                                <img src="assets/img/products/company-logo.svg" alt="Logo" />
+                                                                <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                                                                 <span>
                                                                     <i className="ti ti-x" />
                                                                 </span>
@@ -255,7 +255,7 @@ export default function CompanySettingsComponent () {
                                                     <div className="col-xl-3">
                                                         <div className="new-logo ms-xl-auto">
                                                             <Link href="#" className="bg-secondary">
-                                                                <img src="assets/img/products/white-logo.svg" alt="Logo" />
+                                                                <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                                                                 <span>
                                                                     <i className="ti ti-x" />
                                                                 </span>

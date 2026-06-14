@@ -29,14 +29,14 @@ export default function RegisterTwoComponent() {
                 <form>
                   <div className="login-userset">
                     <div className="login-logo logo-normal">
-                      <img src="assets/img/logo.png" alt="img" />
+                      <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                     </div>
                     <Link href={route.dashboard} className="login-logo logo-white">
-                      <img src="assets/img/logo-white.png" alt="Img" />
+                      <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                     </Link>
                     <div className="login-userheading">
                       <h3>Register</h3>
-                      <h4>Create New Dreamspos Account</h4>
+                      <h4>Create New Sortonium Account</h4>
                     </div>
                     <div className="mb-3">
                       <label className="form-label">
@@ -180,7 +180,7 @@ export default function RegisterTwoComponent() {
                       </div>
                     </div>
                     <div className="my-4 d-flex justify-content-center align-items-center copyright-text">
-                      <p>Copyright © 2025 DreamsPOS</p>
+                      <p>Copyright © 2025 Sortonium</p>
                     </div>
                   </div>
                 </form>

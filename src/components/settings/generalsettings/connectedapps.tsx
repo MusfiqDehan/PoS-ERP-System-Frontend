@@ -44,7 +44,7 @@ export default function ConnectedAppsComponent () {
                                                             <div className="app-icon">
                                                                 <img
                                                                     src="assets/img/icons/app-icon-01.svg"
-                                                                    alt="Img"
+                                                                    alt="Sortonium"
                                                                 />
                                                             </div>
                                                             <div className="connect-btn">
@@ -82,7 +82,7 @@ export default function ConnectedAppsComponent () {
                                                             <div className="app-icon">
                                                                 <img
                                                                     src="assets/img/icons/app-icon-02.svg"
-                                                                    alt="Img"
+                                                                    alt="Sortonium"
                                                                 />
                                                             </div>
                                                             <div className="connect-btn">
@@ -120,7 +120,7 @@ export default function ConnectedAppsComponent () {
                                                             <div className="app-icon">
                                                                 <img
                                                                     src="assets/img/icons/app-icon-03.svg"
-                                                                    alt="Img"
+                                                                    alt="Sortonium"
                                                                 />
                                                             </div>
                                                             <div className="connect-btn">
@@ -158,7 +158,7 @@ export default function ConnectedAppsComponent () {
                                                             <div className="app-icon">
                                                                 <img
                                                                     src="assets/img/icons/app-icon-04.svg"
-                                                                    alt="Img"
+                                                                    alt="Sortonium"
                                                                 />
                                                             </div>
                                                             <div className="connect-btn">
@@ -196,7 +196,7 @@ export default function ConnectedAppsComponent () {
                                                             <div className="app-icon">
                                                                 <img
                                                                     src="assets/img/icons/app-icon-05.svg"
-                                                                    alt="Img"
+                                                                    alt="Sortonium"
                                                                 />
                                                             </div>
                                                             <div className="connect-btn">
@@ -234,7 +234,7 @@ export default function ConnectedAppsComponent () {
                                                             <div className="app-icon">
                                                                 <img
                                                                     src="assets/img/icons/app-icon-06.svg"
-                                                                    alt="Img"
+                                                                    alt="Sortonium"
                                                                 />
                                                             </div>
                                                             <div className="connect-btn">

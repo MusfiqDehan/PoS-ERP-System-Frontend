@@ -17,7 +17,7 @@ export default function UndermaintainenceComponent () {
             <img
               src="assets/img/authentication/under-maintenance.png"
               className="img-fluid"
-              alt="Img"
+              alt="Sortonium"
             />
           </div>
           <h3 className="h2 mb-3">We are Under Maintenance</h3>

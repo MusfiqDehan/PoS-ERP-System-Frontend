@@ -39,7 +39,7 @@ export default function PosHeader() {
           <div className="pos-page-header__brand">
             <ImageWithBasePath
               src={posHeaderAssets.companyLogo}
-              alt="Sortorium"
+              alt="Sortonium"
               width={128}
               height={28}
               className="pos-page-header__logo"

@@ -32,7 +32,7 @@ export default function EditBrandModal() {
                       <span>
                         <img
                           src="assets/img/brand/brand-icon-02.png"
-                          alt="Img"
+                          alt="Sortonium"
                         />
                       </span>
                       <Link href="#" className="remove-photo">

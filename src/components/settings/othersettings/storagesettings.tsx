@@ -42,7 +42,7 @@ export default function StorageSettingsComponent () {
                             <div className="d-flex align-items-center justify-content-between">
                               <div className="d-flex align-items-center">
                                 <span className="system-app-icon">
-                                  <img src="assets/img/icons/storage-icon-01.svg" alt="Img" />
+                                  <img src="assets/img/icons/storage-icon-01.svg" alt="Sortonium" />
                                 </span>
                                 <h6>Local Storage</h6>
                               </div>
@@ -72,7 +72,7 @@ export default function StorageSettingsComponent () {
                             <div className="d-flex align-items-center justify-content-between">
                               <div className="d-flex align-items-center">
                                 <span className="system-app-icon">
-                                  <img src="assets/img/icons/storage-icon-02.svg" alt="Img" />
+                                  <img src="assets/img/icons/storage-icon-02.svg" alt="Sortonium" />
                                 </span>
                                 <h6>AWS</h6>
                               </div>
@@ -109,11 +109,11 @@ export default function StorageSettingsComponent () {
           </div>
         </div>
         <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
-          <p className="mb-0">2014-2025 © DreamsPOS. All Right Reserved</p>
+          <p className="mb-0">2014-2025 © Sortonium. All Right Reserved</p>
           <p>
             Designed &amp; Developed By{" "}
             <Link href="#" className="text-primary">
-              Dreams
+              Sortonium
             </Link>
           </p>
         </div>

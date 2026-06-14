@@ -18,9 +18,7 @@ export default function PosComponent() {
       <div className="page-wrapper pos-pg-wrapper ms-0">
         <div className="content pos-design p-0">
           {cart.statusMessage && (
-            <div className="pos-status-toast" role="status">
-              {cart.statusMessage}
-            </div>
+            <output className="pos-status-toast">{cart.statusMessage}</output>
           )}
 
           <div className="pos-wrapper">

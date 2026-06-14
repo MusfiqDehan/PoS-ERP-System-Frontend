@@ -157,16 +157,16 @@ const TwoColumnSidebar = () => {
                             {/* Logo */}
                             <div className="sidebar-logo">
                                 <Link href={route.newdashboard} className="logo logo-normal">
-                                    <img src="assets/img/logo.svg" alt="Img" />
+                                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                                 </Link>
                                 <Link href={route.newdashboard} className="logo logo-white">
-                                    <img src="assets/img/logo-white.svg" alt="Img" />
+                                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                                 </Link>
                                 <Link href={route.newdashboard} className="logo-small">
-                                    <img src="assets/img/logo-small.png" alt="Img" />
+                                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                                 </Link>
                                 <Link href={route.newdashboard} className="logo-small-white">
-                                    <img src="assets/img/logo-small-white.png" alt="Img" />
+                                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                                 </Link>
                             </div>
                             {/* /Logo */}
@@ -177,7 +177,7 @@ const TwoColumnSidebar = () => {
                                 <div className="avatar avatar-lg online mb-3">
                                     <img
                                         src="assets/img/customer/customer15.jpg"
-                                        alt="Img"
+                                        alt="Sortonium"
                                         className="img-fluid rounded-circle"
                                     />
                                 </div>
@@ -487,7 +487,7 @@ const TwoColumnSidebar = () => {
                                                 </li>
                                                 <li>
                                                     <Link
-                                                      href="https://dreamspos.dreamstechnologies.com/food-pos/nextjs/template/login"
+                                                      href="#"
                                                       target="_blank"
                                                       rel="noopener noreferrer"
                                                     >
@@ -1548,12 +1548,12 @@ const TwoColumnSidebar = () => {
                                             <span>Help</span>
                                         </li>
                                         <li>
-                                            <Link href="https://dreamspos.dreamstechnologies.com/documentation/nextjs.html" target="_blank">
+                                            <Link href="#" target="_blank">
                                                 <span>Documentation</span>
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link href="https://dreamspos.dreamstechnologies.com/documentation/changelog.html" target="_blank">
+                                            <Link href="#" target="_blank">
                                                 <span>Changelog v2.2.5</span>
                                             </Link>
                                         </li>

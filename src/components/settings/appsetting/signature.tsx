@@ -64,7 +64,7 @@ export default function SignatureComponent ()  {
                                                         </td>
                                                         <td>
                                                             <div>
-                                                                <img src="assets/img/invoice/signature.svg" alt="Img" />
+                                                                <img src="assets/img/invoice/signature.svg" alt="Sortonium" />
                                                             </div>
                                                         </td>
                                                         <td>
@@ -103,7 +103,7 @@ export default function SignatureComponent ()  {
                                                         </td>
                                                         <td>
                                                             <div>
-                                                                <img src="assets/img/invoice/signature.svg" alt="Img" />
+                                                                <img src="assets/img/invoice/signature.svg" alt="Sortonium" />
                                                             </div>
                                                         </td>
                                                         <td>
@@ -142,7 +142,7 @@ export default function SignatureComponent ()  {
                                                         </td>
                                                         <td>
                                                             <div>
-                                                                <img src="assets/img/invoice/signature.svg" alt="Img" />
+                                                                <img src="assets/img/invoice/signature.svg" alt="Sortonium" />
                                                             </div>
                                                         </td>
                                                         <td>
@@ -181,7 +181,7 @@ export default function SignatureComponent ()  {
                                                         </td>
                                                         <td>
                                                             <div>
-                                                                <img src="assets/img/invoice/signature.svg" alt="Img" />
+                                                                <img src="assets/img/invoice/signature.svg" alt="Sortonium" />
                                                             </div>
                                                         </td>
                                                         <td>
@@ -343,7 +343,7 @@ export default function SignatureComponent ()  {
                                                     <span>
                                                         <img
                                                             src="assets/img/invoice-templates/signature.svg"
-                                                            alt="Img"
+                                                            alt="Sortonium"
                                                         />
                                                     </span>
                                                 </div>

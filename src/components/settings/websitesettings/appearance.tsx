@@ -68,7 +68,7 @@ export default function AppearanceComponent () {
                               >
 
                                 <div className="theme-image-set">
-                                  <img src="assets/img/theme/theme-img-08.jpg" alt="Img" />
+                                  <img src="assets/img/theme/theme-img-08.jpg" alt="Sortonium" />
                                 </div>
                                 <h6>Light</h6>
                               </div>
@@ -79,7 +79,7 @@ export default function AppearanceComponent () {
                               >
 
                                 <div className="theme-image-set">
-                                  <img src="assets/img/theme/theme-img-09.jpg" alt="Img" />
+                                  <img src="assets/img/theme/theme-img-09.jpg" alt="Sortonium" />
                                 </div>
                                 <h6>Dark</h6>
                               </div>
@@ -90,7 +90,7 @@ export default function AppearanceComponent () {
                               >
 
                                 <div className="theme-image-set">
-                                  <img src="assets/img/theme/theme-img-10.jpg" alt="Img" />
+                                  <img src="assets/img/theme/theme-img-10.jpg" alt="Sortonium" />
                                 </div>
                                 <h6>Automatic</h6>
                               </div>

@@ -17,28 +17,28 @@ export default function PopularChannels() {
                       </div>
                       <Slider {...channelSliderSettings} className="channels-slider owl-carousel">
                         <Link href="#">
-                          <img src="assets/img/icons/channel-01.svg" alt="Img" />
+                          <img src="assets/img/icons/channel-01.svg" alt="Sortonium" />
                         </Link>
                         <Link href="#">
-                          <img src="assets/img/icons/channel-02.svg" alt="Img" />
+                          <img src="assets/img/icons/channel-02.svg" alt="Sortonium" />
                         </Link>
                         <Link href="#">
-                          <img src="assets/img/icons/channel-03.svg" alt="Img" />
+                          <img src="assets/img/icons/channel-03.svg" alt="Sortonium" />
                         </Link>
                         <Link href="#">
-                          <img src="assets/img/icons/channel-04.svg" alt="Img" />
+                          <img src="assets/img/icons/channel-04.svg" alt="Sortonium" />
                         </Link>
                         <Link href="#">
-                          <img src="assets/img/icons/channel-05.svg" alt="Img" />
+                          <img src="assets/img/icons/channel-05.svg" alt="Sortonium" />
                         </Link>
                         <Link href="#">
-                          <img src="assets/img/icons/channel-06.svg" alt="Img" />
+                          <img src="assets/img/icons/channel-06.svg" alt="Sortonium" />
                         </Link>
                         <Link href="#">
-                          <img src="assets/img/icons/channel-07.svg" alt="Img" />
+                          <img src="assets/img/icons/channel-07.svg" alt="Sortonium" />
                         </Link>
                         <Link href="#">
-                          <img src="assets/img/icons/channel-08.svg" alt="Img" />
+                          <img src="assets/img/icons/channel-08.svg" alt="Sortonium" />
                         </Link>
                       </Slider>
                     </div>

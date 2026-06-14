@@ -19,11 +19,11 @@ const SuccessTwo = () => {
                                     <div className="login-userset">
                                         <div className="login-userset">
                                             <div className="login-logo logo-normal">
-                                                <img src="assets/img/logo.png" alt="img" />
+                                                <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                                             </div>
                                         </div>
                                         <Link href={all_routes.newdashboard} className="login-logo logo-white">
-                                            <img src="assets/img/logo-white.png" alt="Img" />
+                                            <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
                                         </Link>
                                         <div className="login-userheading text-center">
                                             <img src="assets/img/icons/check-icon.svg" alt="Icon" />
@@ -38,7 +38,7 @@ const SuccessTwo = () => {
                                             </Link>
                                         </div>
                                         <div className="my-4 d-flex justify-content-center align-items-center copyright-text">
-                                            <p>Copyright © 2025 DreamsPOS</p>
+                                            <p>Copyright © 2025 Sortonium</p>
                                         </div>
                                     </div>
                                 </div>

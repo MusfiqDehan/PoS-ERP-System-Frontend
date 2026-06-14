@@ -49,7 +49,7 @@ export default function SocialAuthenticationComponent  ()  {
                                                                     <img
                                                                         src="assets/img/icons/fb-icon.svg"
                                                                         className="w-auto h-auto"
-                                                                        alt="Img"
+                                                                        alt="Sortonium"
                                                                     />
                                                                 </span>
                                                                 <div>
@@ -98,7 +98,7 @@ export default function SocialAuthenticationComponent  ()  {
                                                                     <img
                                                                         src="assets/img/icons/twitter-icon.svg"
                                                                         className="w-auto h-auto"
-                                                                        alt="Img"
+                                                                        alt="Sortonium"
                                                                     />
                                                                 </span>
                                                                 <div>
@@ -147,7 +147,7 @@ export default function SocialAuthenticationComponent  ()  {
                                                                     <img
                                                                         src="assets/img/icons/linkedin-icon.svg"
                                                                         className="w-auto h-auto"
-                                                                        alt="Img"
+                                                                        alt="Sortonium"
                                                                     />
                                                                 </span>
                                                                 <div>
@@ -196,7 +196,7 @@ export default function SocialAuthenticationComponent  ()  {
                                                                     <img
                                                                         src="assets/img/icons/google-icon.svg"
                                                                         className="w-auto h-auto"
-                                                                        alt="Img"
+                                                                        alt="Sortonium"
                                                                     />
                                                                 </span>
                                                                 <div>

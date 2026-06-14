@@ -8,3 +8,11 @@ export {
   parseCurrency,
 } from "@/lib/currency";
 
+export {
+  PRODUCT_NAME,
+  PRODUCT_DESCRIPTION,
+  BRAND_THEME_COLOR,
+  brandAssets,
+  copyrightNotice,
+} from "@/lib/branding";
+

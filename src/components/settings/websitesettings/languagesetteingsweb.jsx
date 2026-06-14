@@ -99,7 +99,7 @@ const Languagesetteingsweb = () => {
                                                                         <img
                                                                             src="assets/img/icons/flag-03.svg"
                                                                             className="me-2"
-                                                                            alt="Img"
+                                                                            alt="Sortonium"
                                                                         />
                                                                         Arabic
                                                                     </Link>
@@ -381,7 +381,7 @@ const Languagesetteingsweb = () => {
                                                         <img
                                                             src="assets/img/icons/flag-03.svg"
                                                             className="me-2"
-                                                            alt="Img"
+                                                            alt="Sortonium"
                                                         />
                                                         Arabic
                                                     </Link>

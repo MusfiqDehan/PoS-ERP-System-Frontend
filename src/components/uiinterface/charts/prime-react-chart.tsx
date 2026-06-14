@@ -228,7 +228,7 @@ const PrimeReactChart = () => {
           <p>
             Designed &amp; Developed By{" "}
             <Link href="#" className="text-primary">
-              Dreams
+              Sortonium
             </Link>
           </p>
         </div>

@@ -73,7 +73,7 @@ export default function AudioCallComponent() {
                 >
                   <img
                     src="assets/img/users/user-05.jpg"
-                    alt="Img"
+                    alt="Sortonium"
                   />
                 </Link>
               </div>
