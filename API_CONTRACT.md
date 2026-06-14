@@ -1,4 +1,4 @@
-# API Contract — GeekPOS (Django DRF ↔ Next.js)
+# API Contract — Sortonium (Django DRF ↔ Next.js)
 
 The frontend already renders these exact shapes from `src/core/json/*`. **Build the DRF serializers to return the same field names**, and the existing antd table columns (`dataIndex`) barely change — that's the whole acceleration strategy.
 
