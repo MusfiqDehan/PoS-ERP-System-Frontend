@@ -33,7 +33,7 @@ const EditRole = () => {
             <div className="d-flex align-items-center justify-content-between">
               <label className="form-label">Status</label>
               <label className="switch">
-                <input type="checkbox" checked />
+                <input type="checkbox" defaultChecked />
                 <span className="slider round" />
               </label>
             </div>
