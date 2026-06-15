@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import CouponFilters from "./CouponFilters";
 import { couponColumns } from "./columns";
-import { useCoupons } from "./useCoupons";
+import { useCoupons } from "@/hooks/promo/useCoupons";
 
 export default function CouponTable() {
   const { dataSource } = useCoupons();

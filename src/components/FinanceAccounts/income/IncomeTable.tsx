@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import IncomeFilters from "./IncomeFilters";
 import { incomeColumns } from "./columns";
-import { useIncomeList } from "./useIncomeList";
+import { useIncomeList } from "@/hooks/finance-accounts/useIncomeList";
 
 export default function IncomeTable() {
   const { dataSource } = useIncomeList();

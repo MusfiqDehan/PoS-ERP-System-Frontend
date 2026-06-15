@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import ManageStockFilters from "./ManageStockFilters";
 import { manageStockColumns } from "./columns";
-import { useManageStocks } from "./useManageStocks";
+import { useManageStocks } from "@/hooks/stock/useManageStocks";
 
 export default function ManageStockTable() {
   const { dataSource } = useManageStocks();

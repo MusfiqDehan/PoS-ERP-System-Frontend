@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import IncomeCategoryFilters from "./IncomeCategoryFilters";
 import { incomeCategoryColumns } from "./columns";
-import { useIncomeCategory } from "./useIncomeCategory";
+import { useIncomeCategory } from "@/hooks/finance-accounts/useIncomeCategory";
 
 export default function IncomeCategoryTable() {
   const { dataSource } = useIncomeCategory();

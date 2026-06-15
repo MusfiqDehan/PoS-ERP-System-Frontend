@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import CategoryListFilters from "./CategoryListFilters";
 import { categoryListColumns } from "./columns";
-import { useCategoryList } from "./useCategoryList";
+import { useCategoryList } from "@/hooks/inventory/useCategoryList";
 
 export default function CategoryListTable() {
   const { dataSource } = useCategoryList();

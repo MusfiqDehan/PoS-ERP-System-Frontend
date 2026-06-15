@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import GiftCardFilters from "./GiftCardFilters";
 import { giftCardColumns } from "./columns";
-import { useGiftCards } from "./useGiftCards";
+import { useGiftCards } from "@/hooks/promo/useGiftCards";
 
 export default function GiftCardTable() {
   const { dataSource } = useGiftCards();

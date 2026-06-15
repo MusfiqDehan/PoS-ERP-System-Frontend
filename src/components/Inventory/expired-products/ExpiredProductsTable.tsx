@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import { expiredProductColumns } from "./columns";
 import ExpiredProductsFilters from "./ExpiredProductsFilters";
-import { useExpiredProducts } from "./useExpiredProducts";
+import { useExpiredProducts } from "@/hooks/inventory/useExpiredProducts";
 
 export default function ExpiredProductsTable() {
   const { dataSource } = useExpiredProducts();

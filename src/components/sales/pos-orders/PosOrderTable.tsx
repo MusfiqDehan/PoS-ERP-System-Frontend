@@ -2,7 +2,7 @@
 
 import Table from "@/core/common/pagination/datatable";
 import { onlineOrderColumns } from "@/components/sales/online-orders/columns";
-import { useOnlineOrders } from "@/components/sales/online-orders/useOnlineOrders";
+import { useOnlineOrders } from "@/hooks/sales/useOnlineOrders";
 import PosOrderFilters from "./PosOrderFilters";
 
 export default function PosOrderTable() {

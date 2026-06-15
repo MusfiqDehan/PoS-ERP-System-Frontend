@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import { productListColumns } from "./columns";
 import ProductListFilters from "./ProductListFilters";
-import { useProductList } from "./useProductList";
+import { useProductList } from "@/hooks/inventory/useProductList";
 
 export default function ProductListTable() {
   const { dataSource } = useProductList();

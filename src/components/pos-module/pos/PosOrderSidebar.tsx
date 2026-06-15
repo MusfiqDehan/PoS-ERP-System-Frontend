@@ -2,7 +2,7 @@
 
 import type { LoyaltyMode } from "./posLoyaltyConfig";
 import type { TransactionCustomer } from "./transactionDetailsData";
-import type { PosSummaryLine } from "./usePosCart";
+import type { PosSummaryLine } from "@/hooks/pos/usePosCart";
 import TransactionActions from "./TransactionActions";
 import TransactionCustomerSection from "./TransactionCustomerSection";
 import TransactionDetailsHeader from "./TransactionDetailsHeader";

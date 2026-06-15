@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { formatOrderCurrency } from "./orderDetailsData";
 import { transactionPaymentMethods } from "./transactionDetailsData";
-import type { PosReceiptSnapshot } from "./usePosCart";
+import type { PosReceiptSnapshot } from "@/hooks/pos/usePosCart";
 
 type PosSaleModalsProps = {
   totalPayable: number;

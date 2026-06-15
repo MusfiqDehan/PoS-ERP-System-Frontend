@@ -1,17 +1,23 @@
 "use client";
 
 import PosModals from "@/core/modals/pos-modal/posModals";
+import PosManageCategoriesModal from "./categories-modal/PosManageCategoriesModal";
 import PosCreateCustomerModal from "./PosCreateCustomerModal";
 import PosSaleModals from "./PosSaleModals";
 import PosOrderDetails from "./PosOrderDetails";
 import PosOrderSidebar from "./PosOrderSidebar";
 import PosProductsPanel from "./PosProductsPanel";
-import { usePosCart } from "./usePosCart";
-import { usePosPage } from "./usePosPage";
+import { usePosCart } from "@/hooks/pos/usePosCart";
+import { usePosCategories } from "@/hooks/pos/usePosCategories";
+import { usePosPage } from "@/hooks/pos/usePosPage";
 
 export default function PosComponent() {
   const { activeTab, setActiveTab } = usePosPage();
   const cart = usePosCart();
+  const categories = usePosCategories({
+    activeTab,
+    onTabChange: setActiveTab,
+  });
 
   return (
     <div className="main-wrapper pos-five">
@@ -23,6 +29,7 @@ export default function PosComponent() {
 
           <div className="pos-wrapper">
             <PosProductsPanel
+              categories={categories.categories}
               activeTab={activeTab}
               onTabChange={setActiveTab}
               onProductSelect={cart.addProduct}
@@ -58,6 +65,13 @@ export default function PosComponent() {
         </div>
       </div>
       <PosCreateCustomerModal onCreateCustomer={cart.createCustomer} />
+      <PosManageCategoriesModal
+        categories={categories.categories}
+        categoryStats={categories.categoryStats}
+        onCreateCategory={categories.createCategory}
+        onUpdateCategory={categories.updateCategory}
+        onDeleteCategory={categories.deleteCategory}
+      />
       <PosSaleModals
         totalPayable={cart.summary.totalPayable}
         invoiceId={cart.invoiceId}

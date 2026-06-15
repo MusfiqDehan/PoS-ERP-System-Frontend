@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import QuotationFilters from "./QuotationFilters";
 import { quotationColumns } from "./columns";
-import { useQuotations } from "./useQuotations";
+import { useQuotations } from "@/hooks/sales/useQuotations";
 
 export default function QuotationTable() {
   const { dataSource } = useQuotations();

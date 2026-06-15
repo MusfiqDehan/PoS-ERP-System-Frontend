@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { formatOrderCurrency } from "./orderDetailsData";
-import type { PosSummaryLine } from "./usePosCart";
+import type { PosSummaryLine } from "@/hooks/pos/usePosCart";
 
 type TransactionPaymentSummaryProps = {
   summaryLines: PosSummaryLine[];

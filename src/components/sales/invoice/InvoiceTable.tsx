@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import InvoiceFilters from "./InvoiceFilters";
 import { invoiceColumns } from "./columns";
-import { useInvoices } from "./useInvoices";
+import { useInvoices } from "@/hooks/sales/useInvoices";
 
 export default function InvoiceTable() {
   const { dataSource } = useInvoices();

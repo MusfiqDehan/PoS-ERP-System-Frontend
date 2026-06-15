@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Urbanist } from "next/font/google";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./global.scss";
@@ -48,6 +48,9 @@ export const metadata: Metadata = {
     apple: `/${brandAssets.favicon}`,
   },
   manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
   themeColor: BRAND_THEME_COLOR,
 };
 

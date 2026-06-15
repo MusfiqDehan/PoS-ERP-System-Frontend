@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import SalesReturnFilters from "./SalesReturnFilters";
 import { salesReturnColumns } from "./columns";
-import { useSalesReturns } from "./useSalesReturns";
+import { useSalesReturns } from "@/hooks/sales/useSalesReturns";
 
 export default function SalesReturnTable() {
   const { dataSource } = useSalesReturns();

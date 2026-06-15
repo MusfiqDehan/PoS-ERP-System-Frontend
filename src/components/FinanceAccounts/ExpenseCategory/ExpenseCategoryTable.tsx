@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import ExpenseCategoryFilters from "./ExpenseCategoryFilters";
 import { expenseCategoryColumns } from "./columns";
-import { useExpenseCategory } from "./useExpenseCategory";
+import { useExpenseCategory } from "@/hooks/finance-accounts/useExpenseCategory";
 
 export default function ExpenseCategoryTable() {
   const { dataSource } = useExpenseCategory();

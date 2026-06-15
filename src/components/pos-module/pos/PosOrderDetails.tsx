@@ -1,7 +1,4 @@
-"use client";
-
-import OrderDetailsHeader from "./OrderDetailsHeader";
-import OrderDetailsList from "./OrderDetailsList";
+import OrderDetailsHeader from "./OrderDetailsHeader"; import OrderDetailsList from "./OrderDetailsList";
 import OrderDetailsTableHead from "./OrderDetailsTableHead";
 import type { OrderDetailItem } from "./orderDetailsData";
 
@@ -19,7 +16,7 @@ export default function PosOrderDetails({
   onIncrease,
   onRemove,
   onClearAll,
-}: PosOrderDetailsProps) {
+}: Readonly<PosOrderDetailsProps>) {
   return (
     <div className="pos-order-details__col">
       <section className="pos-order-details">

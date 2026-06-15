@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import WarrantyFilters from "./WarrantyFilters";
 import { warrantyColumns } from "./columns";
-import { useWarranties } from "./useWarranties";
+import { useWarranties } from "@/hooks/inventory/useWarranties";
 
 export default function WarrantyTable() {
   const { dataSource } = useWarranties();

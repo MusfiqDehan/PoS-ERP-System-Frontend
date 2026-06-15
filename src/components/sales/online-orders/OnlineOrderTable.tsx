@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import OnlineOrderFilters from "./OnlineOrderFilters";
 import { onlineOrderColumns } from "./columns";
-import { useOnlineOrders } from "./useOnlineOrders";
+import { useOnlineOrders } from "@/hooks/sales/useOnlineOrders";
 
 export default function OnlineOrderTable() {
   const { dataSource } = useOnlineOrders();

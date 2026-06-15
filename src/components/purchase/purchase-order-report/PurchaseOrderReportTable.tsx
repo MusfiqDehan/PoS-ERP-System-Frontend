@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import PurchaseOrderReportFilters from "./PurchaseOrderReportFilters";
 import { purchaseOrderReportColumns } from "./columns";
-import { usePurchaseOrderReport } from "./usePurchaseOrderReport";
+import { usePurchaseOrderReport } from "@/hooks/purchase/usePurchaseOrderReport";
 
 export default function PurchaseOrderReportTable() {
   const { dataSource } = usePurchaseOrderReport();

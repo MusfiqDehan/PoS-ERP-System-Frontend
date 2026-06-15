@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import SubCategoryFilters from "./SubCategoryFilters";
 import { subCategoryColumns } from "./columns";
-import { useSubCategories } from "./useSubCategories";
+import { useSubCategories } from "@/hooks/inventory/useSubCategories";
 
 export default function SubCategoryTable() {
   const { dataSource } = useSubCategories();

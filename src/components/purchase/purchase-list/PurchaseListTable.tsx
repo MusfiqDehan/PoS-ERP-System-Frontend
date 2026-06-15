@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import PurchaseListFilters from "./PurchaseListFilters";
 import { purchaseListColumns } from "./columns";
-import { usePurchaseList } from "./usePurchaseList";
+import { usePurchaseList } from "@/hooks/purchase/usePurchaseList";
 
 export default function PurchaseListTable() {
   const { dataSource } = usePurchaseList();

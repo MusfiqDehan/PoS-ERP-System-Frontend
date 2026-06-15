@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import { moneyTransferColumns } from "./columns";
 import MoneyTransferFilters from "./MoneyTransferFilters";
-import { useMoneyTransfer } from "./useMoneyTransfer";
+import { useMoneyTransfer } from "@/hooks/finance-accounts/useMoneyTransfer";
 
 export default function MoneyTransferTable() {
   const { dataSource } = useMoneyTransfer();

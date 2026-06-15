@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import ExpenseListFilters from "./ExpenseListFilters";
 import { expenseListColumns } from "./columns";
-import { useExpenseList } from "./useExpenseList";
+import { useExpenseList } from "@/hooks/finance-accounts/useExpenseList";
 
 export default function ExpenseListTable() {
   const { dataSource } = useExpenseList();

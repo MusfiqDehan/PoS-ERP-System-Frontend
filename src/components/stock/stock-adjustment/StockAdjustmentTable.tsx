@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import StockAdjustmentFilters from "./StockAdjustmentFilters";
 import { stockAdjustmentColumns } from "./columns";
-import { useStockAdjustments } from "./useStockAdjustments";
+import { useStockAdjustments } from "@/hooks/stock/useStockAdjustments";
 
 export default function StockAdjustmentTable() {
   const { dataSource } = useStockAdjustments();

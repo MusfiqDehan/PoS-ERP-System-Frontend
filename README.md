@@ -317,7 +317,8 @@ public/                       # assets/, favicon, manifest, prebuilt index.html
 | Feature chrome (Header+Sidebar+Theme) | `src/app/(features)/layout.tsx` |
 | Root layout (global CSS + Bootstrap JS) | `src/app/layout.tsx` |
 | **POS screen (canonical)** | `src/components/pos-module/pos/index.tsx` |
-| POS cart & loyalty logic | `usePosCart.ts`, `posLoyaltyConfig.ts` |
+| **Custom hooks** | `src/hooks/<domain>/` — e.g. `@/hooks/pos/usePosCart`, `@/hooks/sales/useInvoices` |
+| POS cart & loyalty logic | `@/hooks/pos/usePosCart.ts`, `posLoyaltyConfig.ts` |
 | POS route + chrome | `src/app/(pos)/pos/page.tsx`, `src/app/(pos)/layout.tsx` |
 | Admin dashboard | `src/components/NewDashboard/` · route: `src/app/(features)/(dashboard)/admin-dashboard/page.tsx` |
 | Sales dashboard | `src/components/SalesDashboard/` · route: `src/app/(features)/(dashboard)/sales-dashboard/page.tsx` |

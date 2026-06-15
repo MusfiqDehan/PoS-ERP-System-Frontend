@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import VariantAttributeFilters from "./VariantAttributeFilters";
 import { variantAttributeColumns } from "./columns";
-import { useVariantAttributes } from "./useVariantAttributes";
+import { useVariantAttributes } from "@/hooks/inventory/useVariantAttributes";
 
 export default function VariantAttributeTable() {
   const { dataSource } = useVariantAttributes();

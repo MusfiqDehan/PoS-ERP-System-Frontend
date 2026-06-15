@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import BalanceSheetFilters from "./BalanceSheetFilters";
 import { balanceSheetColumns } from "./columns";
-import { useBalanceSheet } from "./useBalanceSheet";
+import { useBalanceSheet } from "@/hooks/finance-accounts/useBalanceSheet";
 
 export default function BalanceSheetTable() {
   const { dataSource } = useBalanceSheet();

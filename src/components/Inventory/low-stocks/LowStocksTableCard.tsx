@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import type { ReactNode } from "react";
 import { lowStockColumns } from "./columns";
-import { useLowStocks } from "./useLowStocks";
+import { useLowStocks } from "@/hooks/inventory/useLowStocks";
 
 type LowStocksTableCardProps = {
   filters: ReactNode;

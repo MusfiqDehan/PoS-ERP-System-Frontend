@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import UnitsFilters from "./UnitsFilters";
 import { unitsColumns } from "./columns";
-import { useUnits } from "./useUnits";
+import { useUnits } from "@/hooks/inventory/useUnits";
 
 export default function UnitsTable() {
   const { dataSource } = useUnits();

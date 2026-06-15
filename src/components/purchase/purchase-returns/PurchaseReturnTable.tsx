@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import PurchaseReturnFilters from "./PurchaseReturnFilters";
 import { purchaseReturnColumns } from "./columns";
-import { usePurchaseReturns } from "./usePurchaseReturns";
+import { usePurchaseReturns } from "@/hooks/purchase/usePurchaseReturns";
 
 export default function PurchaseReturnTable() {
   const { dataSource } = usePurchaseReturns();

@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import AccountStatementFilters from "./AccountStatementFilters";
 import { accountStatementColumns } from "./columns";
-import { useAccountStatement } from "./useAccountStatement";
+import { useAccountStatement } from "@/hooks/finance-accounts/useAccountStatement";
 
 export default function AccountStatementTable() {
   const { dataSource } = useAccountStatement();

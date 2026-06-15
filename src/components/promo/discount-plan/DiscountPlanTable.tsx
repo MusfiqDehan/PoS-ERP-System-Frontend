@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import DiscountPlanFilters from "./DiscountPlanFilters";
 import { discountPlanColumns } from "./columns";
-import { useDiscountPlans } from "./useDiscountPlans";
+import { useDiscountPlans } from "@/hooks/promo/useDiscountPlans";
 
 export default function DiscountPlanTable() {
   const { dataSource } = useDiscountPlans();

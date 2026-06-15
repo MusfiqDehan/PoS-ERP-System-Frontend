@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import { accountListColumns } from "./columns";
 import AccountListFilters from "./AccountListFilters";
-import { useAccountList } from "./useAccountList";
+import { useAccountList } from "@/hooks/finance-accounts/useAccountList";
 
 export default function AccountListTable() {
   const { accountListData } = useAccountList();

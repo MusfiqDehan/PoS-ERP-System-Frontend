@@ -168,6 +168,11 @@
     height: 16px;
     object-fit: contain;
     flex-shrink: 0;
+
+    &--brand {
+      width: 20px;
+      height: 20px;
+    }
   }
 
   &__notification-btn {
@@ -289,13 +294,26 @@
     background: variables.$white;
     box-shadow: 0 4px 60px rgba(231, 231, 231, 0.48);
     cursor: pointer;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
   }
 
   &__filters-scroll-icon {
     width: 16px;
     height: 16px;
     object-fit: contain;
-    transform: rotate(-90deg);
+
+    &--left {
+      transform: rotate(90deg);
+    }
+
+    &--right {
+      transform: rotate(-90deg);
+    }
   }
 
   &__grid-wrap {

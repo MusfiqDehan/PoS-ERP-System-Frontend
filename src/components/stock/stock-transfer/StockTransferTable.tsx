@@ -3,7 +3,7 @@
 import Table from "@/core/common/pagination/datatable";
 import StockTransferFilters from "./StockTransferFilters";
 import { stockTransferColumns } from "./columns";
-import { useStockTransfers } from "./useStockTransfers";
+import { useStockTransfers } from "@/hooks/stock/useStockTransfers";
 
 export default function StockTransferTable() {
   const { dataSource } = useStockTransfers();
