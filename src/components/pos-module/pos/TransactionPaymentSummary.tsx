@@ -28,7 +28,14 @@ export default function TransactionPaymentSummary({
 
       <div className="pos-transaction-details__summary-lines">
         {summaryLines.map((line) => (
-          <div key={line.id} className="pos-transaction-details__summary-row">
+          <div
+            key={line.id}
+            className={`pos-transaction-details__summary-row${
+              line.variant === "discount"
+                ? " pos-transaction-details__summary-row--discount"
+                : ""
+            }`}
+          >
             <span className="pos-transaction-details__summary-label">
               {line.label}
             </span>

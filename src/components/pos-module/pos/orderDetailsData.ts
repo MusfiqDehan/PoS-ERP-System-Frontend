@@ -10,7 +10,39 @@ export type OrderDetailItem = {
   quantity: number;
   stockLabel: string;
   stockStatus: OrderStockStatus;
+  stockMax: number;
 };
+
+export function parseOrderStockMax(
+  stockLabel: string,
+  stockStatus: OrderStockStatus,
+): number {
+  if (stockStatus === "out-of-stock") {
+    return 0;
+  }
+
+  const normalized = stockLabel.trim().toLowerCase();
+  if (normalized === "no stock") {
+    return 0;
+  }
+
+  const leftMatch = normalized.match(/(\d+)\s*left\b/);
+  if (leftMatch) {
+    return Number(leftMatch[1]);
+  }
+
+  const inStockMatch = normalized.match(/(\d+)\s*in\s*stock\b/);
+  if (inStockMatch) {
+    return Number(inStockMatch[1]);
+  }
+
+  const anyNumber = normalized.match(/(\d+)/);
+  return anyNumber ? Number(anyNumber[1]) : 0;
+}
+
+export function getOrderItemStockMax(item: OrderDetailItem): number {
+  return item.stockMax ?? parseOrderStockMax(item.stockLabel, item.stockStatus);
+}
 
 const PANEL_IMG = "assets/img/pos/order-details";
 
@@ -29,6 +61,7 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
     quantity: 2,
     stockLabel: "5 Left",
     stockStatus: "low-stock",
+    stockMax: 5,
   },
   {
     id: "od-2",
@@ -38,6 +71,7 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
     quantity: 2,
     stockLabel: "5 Left",
     stockStatus: "low-stock",
+    stockMax: 5,
   },
   {
     id: "od-3",
@@ -47,6 +81,7 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
     quantity: 2,
     stockLabel: "5 Left",
     stockStatus: "low-stock",
+    stockMax: 5,
   },
   {
     id: "od-4",
@@ -56,6 +91,7 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
     quantity: 2,
     stockLabel: "5 Left",
     stockStatus: "low-stock",
+    stockMax: 5,
   },
   {
     id: "od-5",
@@ -65,6 +101,7 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
     quantity: 2,
     stockLabel: "5 Left",
     stockStatus: "low-stock",
+    stockMax: 5,
   },
   {
     id: "od-6",
@@ -74,6 +111,7 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
     quantity: 2,
     stockLabel: "5 Left",
     stockStatus: "low-stock",
+    stockMax: 5,
   },
   {
     id: "od-7",
@@ -83,6 +121,7 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
     quantity: 2,
     stockLabel: "5 Left",
     stockStatus: "low-stock",
+    stockMax: 5,
   },
 ];
 

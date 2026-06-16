@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Urbanist } from "next/font/google";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "./tailwind.css";
 import "./global.scss";
 import "../style/css/feather.css";
 import "../style/css/line-awesome.min.css";

@@ -20,7 +20,7 @@ export default function HeaderUtilityActions({
         <>
             <li className="nav-item pos-nav figma-utility-item figma-utility-pos">
                 <Link
-                    href={route.pos2}
+                    href={route.pos}
                     className="btn btn-md d-inline-flex align-items-center"
                 >
                     <i className="ti ti-cash fs-14 me-1" aria-hidden="true" />

@@ -7,6 +7,8 @@ import React, { useState, useEffect } from "react";
 
 import { SidebarData } from "../../json/siderbar_data";
 import { all_routes } from "@/data/all_routes";
+import ImageWithBasePath from "@/core/common/image-with-base-path";
+import { brandAssets, PRODUCT_NAME } from "@/lib/branding";
 import { ChevronsLeft } from "react-feather";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -76,7 +78,15 @@ export default function Sidebar() {
         <>
           <div className="sidebar-branding">
             <div className="sidebar-branding__content">
-              <p className="sidebar-branding__name">Company Name</p>
+              <Link href={route.newdashboard} className="sidebar-branding__logo-link">
+                <ImageWithBasePath
+                  src={brandAssets.logo}
+                  alt={PRODUCT_NAME}
+                  width={128}
+                  height={28}
+                  className="sidebar-branding__logo"
+                />
+              </Link>
               <p className="sidebar-branding__date">{sidebarDateLabel}</p>
             </div>
             <Link

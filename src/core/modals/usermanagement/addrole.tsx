@@ -51,40 +51,6 @@ const AddRole = () => {
     </div>
   </div>
   {/* /Add Role */}
- 
-  {/* Delete Product */}
-  <div className="modal fade modal-default" id="delete_modal">
-    <div className="modal-dialog modal-dialog-centered">
-      <div className="modal-content">
-        <div className="modal-body p-0">
-          <div className="success-wrap text-center">
-            <form >
-              <div className="icon-success bg-danger-transparent text-danger mb-2">
-                <i className="ti ti-trash" />
-              </div>
-              <h3 className="mb-2">Delete Role</h3>
-              <p className="fs-16 mb-3">
-                Are you sure you want to delete role?
-              </p>
-              <div className="d-flex align-items-center justify-content-center gap-2 flex-wrap">
-                <button
-                  type="button"
-                  className="btn btn-md btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  No, Cancel
-                </button>
-                <button type="button" data-bs-dismiss="modal" className="btn btn-md btn-primary">
-                  Yes, Delete
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  {/* /Delete Product */}
 </>
 
     )

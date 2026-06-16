@@ -24,9 +24,8 @@ export default function PosOrderDetails({
           itemCount={items.length}
           onClearAll={onClearAll}
         />
-        <OrderDetailsTableHead />
-
         <div className="pos-order-details__scroll">
+          <OrderDetailsTableHead />
           <OrderDetailsList
             items={items}
             onDecrease={onDecrease}

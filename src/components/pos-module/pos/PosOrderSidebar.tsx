@@ -47,7 +47,7 @@ export default function PosOrderSidebar({
   loyaltyMode,
   onLoyaltyModeChange,
   cartSubtotal,
-}: PosOrderSidebarProps) {
+}: Readonly<PosOrderSidebarProps>) {
   return (
     <div className="pos-transaction-details__col">
       <section className="pos-transaction-details">
@@ -69,7 +69,7 @@ export default function PosOrderSidebar({
           summaryLines={summaryLines}
           totalPayable={totalPayable}
         />
-        <TransactionPaymentMethods
+        {/* <TransactionPaymentMethods
           selectedPaymentId={selectedPaymentId}
           onSelectPayment={onSelectPayment}
         />
@@ -78,7 +78,7 @@ export default function PosOrderSidebar({
           canCheckout={canCheckout}
           onSaveDraft={onSaveDraft}
           onCompleteOrder={onCompleteOrder}
-        />
+        /> */}
       </section>
     </div>
   );

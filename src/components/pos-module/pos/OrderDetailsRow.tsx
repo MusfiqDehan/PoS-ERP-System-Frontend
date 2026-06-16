@@ -3,6 +3,7 @@
 import ImageWithBasePath from "@/core/common/image-with-base-path";
 import {
   formatOrderCurrency,
+  getOrderItemStockMax,
   getOrderSubtotal,
   orderDetailsAssets,
   type OrderDetailItem,
@@ -21,6 +22,9 @@ export default function OrderDetailsRow({
   onIncrease,
   onRemove,
 }: OrderDetailsRowProps) {
+  const stockMax = getOrderItemStockMax(item);
+  const atStockLimit = item.quantity >= stockMax;
+
   return (
     <article className="pos-order-details__row">
       <div className="pos-order-details__row-main">
@@ -50,7 +54,9 @@ export default function OrderDetailsRow({
             type="button"
             className="pos-order-details__qty-btn"
             onClick={() => onIncrease(item.id)}
+            disabled={atStockLimit}
             aria-label={`Increase quantity for ${item.name}`}
+            aria-disabled={atStockLimit}
           >
             <ImageWithBasePath
               src={orderDetailsAssets.plus}

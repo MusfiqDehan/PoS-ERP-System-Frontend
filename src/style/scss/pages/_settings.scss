@@ -422,7 +422,7 @@ textarea {
 .bank-box {
     position: relative;
     &.active {
-        @apply border-2 border-success;
+        border: 2px solid variables.$success;
         &::after {
             position: absolute;
             top: -8px;

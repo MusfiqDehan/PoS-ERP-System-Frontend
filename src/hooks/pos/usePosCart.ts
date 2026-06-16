@@ -4,6 +4,8 @@ import { useCallback, useMemo, useState } from "react";
 import { parseCurrency } from "@/lib/currency";
 import {
   formatOrderCurrency,
+  getOrderItemStockMax,
+  parseOrderStockMax,
   type OrderDetailItem,
 } from "@/components/pos-module/pos/orderDetailsData";
 import type { PosProduct } from "@/components/pos-module/pos/posProductsData";
@@ -56,16 +58,16 @@ export function parseProductPrice(price: string): number {
 export function parseStockLimit(
   stockLabel: string,
   stockStatus: string,
-): number | null {
-  if (stockStatus === "out-of-stock") {
-    return 0;
-  }
-
-  const match = stockLabel.match(/(\d+)\s*left/i);
-  return match ? Number(match[1]) : null;
+): number {
+  return parseOrderStockMax(
+    stockLabel,
+    stockStatus as OrderDetailItem["stockStatus"],
+  );
 }
 
 export function productToOrderItem(product: PosProduct): OrderDetailItem {
+  const stockMax = parseOrderStockMax(product.stockLabel, product.stockStatus);
+
   return {
     id: product.id,
     name: product.name,
@@ -74,6 +76,7 @@ export function productToOrderItem(product: PosProduct): OrderDetailItem {
     quantity: 1,
     stockLabel: product.stockLabel,
     stockStatus: product.stockStatus,
+    stockMax,
   };
 }
 
@@ -200,15 +203,11 @@ export function usePosCart() {
 
       setItems((current) => {
         const existing = current.find((item) => item.id === product.id);
-        const stockLimit = parseStockLimit(
-          product.stockLabel,
-          product.stockStatus,
-        );
-
         if (existing) {
           const nextQty = existing.quantity + 1;
-          if (stockLimit !== null && nextQty > stockLimit) {
-            showStatus(`Only ${stockLimit} left in stock`);
+          const maxStock = getOrderItemStockMax(existing);
+          if (nextQty > maxStock) {
+            showStatus(`Only ${maxStock} left in stock`);
             return current;
           }
 
@@ -241,11 +240,11 @@ export function usePosCart() {
             return item;
           }
 
-          const stockLimit = parseStockLimit(item.stockLabel, item.stockStatus);
+          const maxStock = getOrderItemStockMax(item);
           const nextQty = item.quantity + 1;
 
-          if (stockLimit !== null && nextQty > stockLimit) {
-            showStatus(`Only ${stockLimit} left in stock`);
+          if (nextQty > maxStock) {
+            showStatus(`Only ${maxStock} left in stock`);
             return item;
           }
 
