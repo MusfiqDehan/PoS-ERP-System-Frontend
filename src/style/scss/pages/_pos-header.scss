@@ -70,6 +70,11 @@
     min-height: 0;
     overflow: hidden;
 
+    @media (max-width: 1599.98px) {
+      grid-template-columns: minmax(0, 620fr) minmax(0, 340fr) minmax(0, 400fr);
+      gap: 12px;
+    }
+
     @media (max-width: 1199.98px) {
       grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
 

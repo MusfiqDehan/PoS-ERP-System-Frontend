@@ -1,6 +1,6 @@
 @use "../utils/variables";
 
-// Product fixed min + flex; price/qty/subtotal scale with panel width; gap uses clamp(vw).
+// Product fixed min + flex; price/qty/subtotal scale with panel width; per-column padding gaps.
 
 .pos-order-details__col {
   display: flex;
@@ -11,9 +11,12 @@
 }
 
 .pos-order-details {
-  --od-col-gap: clamp(4px, 0.45vw, 14px);
-  --od-grid-cols: minmax(130px, 1fr) minmax(48px, 0.5fr) minmax(84px, 0.8fr)
-    minmax(68px, 0.6fr) 16px;
+  --od-gap-after-product: clamp(4px, 0.45vw, 14px);
+  --od-gap-after-price: clamp(14px, 0.72vw, 22px);
+  --od-gap-after-qty: clamp(2px, 0.12vw, 4px);
+  --od-gap-after-subtotal: clamp(4px, 0.3vw, 8px);
+  --od-grid-cols: minmax(130px, 1fr) minmax(52px, 0.52fr) minmax(86px, 0.78fr)
+    minmax(62px, 0.52fr) 16px;
 
   display: flex;
   flex: 1 1 auto;
@@ -99,7 +102,7 @@
   &__table-head {
     display: grid;
     grid-template-columns: var(--od-grid-cols);
-    column-gap: var(--od-col-gap);
+    column-gap: 0;
     align-items: center;
     justify-items: start;
     width: 100%;
@@ -135,6 +138,8 @@
     min-width: 0;
     width: 100%;
     max-width: 100%;
+    padding-right: var(--od-gap-after-product);
+    box-sizing: border-box;
   }
 
   &__col-price,
@@ -143,6 +148,7 @@
     justify-self: start;
     text-align: left;
     white-space: nowrap;
+    padding-right: var(--od-gap-after-price);
     box-sizing: border-box;
   }
 
@@ -152,6 +158,7 @@
     justify-self: start;
     text-align: left;
     white-space: nowrap;
+    padding-right: var(--od-gap-after-qty);
     box-sizing: border-box;
   }
 
@@ -161,6 +168,8 @@
     justify-self: start;
     text-align: left;
     white-space: nowrap;
+    padding-right: var(--od-gap-after-subtotal);
+    box-sizing: border-box;
   }
 
   &__col-action {
@@ -210,7 +219,7 @@
   &__row {
     display: grid;
     grid-template-columns: var(--od-grid-cols);
-    column-gap: var(--od-col-gap);
+    column-gap: 0;
     row-gap: 2px;
     align-items: center;
     width: 100%;
@@ -330,6 +339,8 @@
     grid-column: 1;
     min-width: 0;
     overflow: hidden;
+    padding-right: var(--od-gap-after-product);
+    box-sizing: border-box;
   }
 
   &__sku {
@@ -389,9 +400,12 @@
 
 @media (max-width: 1599.98px) {
   .pos-order-details {
-    --od-col-gap: clamp(4px, 0.35vw, 10px);
-    --od-grid-cols: minmax(110px, 1fr) minmax(44px, 0.45fr) minmax(84px, 0.7fr)
-      minmax(64px, 0.5fr) 16px;
+    --od-gap-after-product: clamp(4px, 0.35vw, 10px);
+    --od-gap-after-price: clamp(12px, 0.6vw, 18px);
+    --od-gap-after-qty: clamp(2px, 0.1vw, 3px);
+    --od-gap-after-subtotal: clamp(3px, 0.25vw, 6px);
+    --od-grid-cols: minmax(110px, 1fr) minmax(48px, 0.48fr) minmax(84px, 0.72fr)
+      minmax(58px, 0.48fr) 16px;
 
     padding: 10px;
 

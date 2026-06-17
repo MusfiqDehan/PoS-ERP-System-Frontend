@@ -69,7 +69,7 @@ export default function PosOrderSidebar({
           summaryLines={summaryLines}
           totalPayable={totalPayable}
         />
-        {/* <TransactionPaymentMethods
+        <TransactionPaymentMethods
           selectedPaymentId={selectedPaymentId}
           onSelectPayment={onSelectPayment}
         />
@@ -78,7 +78,7 @@ export default function PosOrderSidebar({
           canCheckout={canCheckout}
           onSaveDraft={onSaveDraft}
           onCompleteOrder={onCompleteOrder}
-        /> */}
+        />
       </section>
     </div>
   );
