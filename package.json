@@ -17,6 +17,7 @@
     "@fullcalendar/react": "^6.1.19",
     "@fullcalendar/timegrid": "^6.1.19",
     "@hello-pangea/dnd": "^18.0.1",
+    "@lottiefiles/dotlottie-react": "^0.19.4",
     "@react-latest-ui/react-sticky-notes": "^0.2.6",
     "@reduxjs/toolkit": "^2.10.1",
     "@tabler/icons-react": "^3.35.0",
