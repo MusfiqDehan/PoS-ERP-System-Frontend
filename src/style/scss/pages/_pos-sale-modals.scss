@@ -347,3 +347,240 @@
     width: 100%;
   }
 }
+
+.pos-calculator {
+  &__display {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    min-height: 64px;
+    padding: 12px 14px;
+    border-radius: 6px;
+    background: #f3faf8;
+    border: 1px solid #e7fbf7;
+  }
+
+  &__expression {
+    font-family: "Urbanist", sans-serif;
+    font-size: 13px;
+    font-weight: variables.$font-weight-medium;
+    color: #999999;
+    word-break: break-all;
+  }
+
+  &__result {
+    font-family: "Urbanist", sans-serif;
+    font-size: 24px;
+    font-weight: variables.$font-weight-bold;
+    color: #333333;
+    word-break: break-all;
+  }
+
+  &__keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  &__key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border: 1px solid #e7e7e7;
+    border-radius: 6px;
+    background: variables.$white;
+    font-family: "Urbanist", sans-serif;
+    font-size: 16px;
+    font-weight: variables.$font-weight-semibold;
+    color: #333333;
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      background: #f3faf8;
+      border-color: #b3f4e6;
+    }
+
+    &--operator {
+      color: #089b7c;
+      border-color: #b3f4e6;
+      background: #f8fffd;
+    }
+
+    &--action {
+      color: #c80000;
+    }
+
+    &--zero {
+      grid-column: span 2;
+    }
+  }
+}
+
+.pos-cash-toggle {
+  display: flex;
+  gap: 8px;
+
+  &__btn {
+    flex: 1 1 0;
+    padding: 9px 12px;
+    border: 1px solid #e7e7e7;
+    border-radius: 6px;
+    background: variables.$white;
+    font-family: "Urbanist", sans-serif;
+    font-size: 13px;
+    font-weight: variables.$font-weight-semibold;
+    color: #666666;
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease;
+
+    &--active {
+      border-color: #089b7c;
+      background: #e7fbf7;
+      color: #089b7c;
+    }
+  }
+}
+
+.pos-cash-confirm {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #e7fbf7;
+  font-family: "Urbanist", sans-serif;
+  font-size: 12px;
+  font-weight: variables.$font-weight-medium;
+  color: #089b7c;
+}
+
+.pos-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f3faf8;
+    border: 1px solid #e7fbf7;
+  }
+
+  &__label {
+    font-family: "Urbanist", sans-serif;
+    font-size: 12px;
+    font-weight: variables.$font-weight-medium;
+    color: #666666;
+  }
+
+  &__value {
+    font-family: "Urbanist", sans-serif;
+    font-size: 18px;
+    font-weight: variables.$font-weight-bold;
+    color: #089b7c;
+  }
+}
+
+.pos-shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: #f8fffd;
+  }
+
+  &__desc {
+    font-family: "Urbanist", sans-serif;
+    font-size: 13px;
+    font-weight: variables.$font-weight-medium;
+    color: #333333;
+  }
+
+  &__keys {
+    flex-shrink: 0;
+    padding: 3px 8px;
+    border: 1px solid #b3f4e6;
+    border-radius: 4px;
+    background: variables.$white;
+    font-family: "Urbanist", sans-serif;
+    font-size: 12px;
+    font-weight: variables.$font-weight-semibold;
+    color: #089b7c;
+  }
+}
+
+.pos-receipt {
+  padding: 14px 16px;
+  border: 1px dashed #d9e7e3;
+  border-radius: 8px;
+  background: #fdfffe;
+
+  &__store {
+    margin: 0;
+    font-family: "Urbanist", sans-serif;
+    font-size: 14px;
+    font-weight: variables.$font-weight-bold;
+    color: #333333;
+    text-align: center;
+  }
+
+  &__meta {
+    margin: 2px 0 0;
+    font-family: "Urbanist", sans-serif;
+    font-size: 12px;
+    font-weight: variables.$font-weight-medium;
+    color: #666666;
+    text-align: center;
+  }
+
+  &__divider {
+    height: 1px;
+    margin: 10px 0;
+    background: repeating-linear-gradient(
+      to right,
+      #d9e7e3,
+      #d9e7e3 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: "Urbanist", sans-serif;
+    font-size: 13px;
+    font-weight: variables.$font-weight-medium;
+    color: #333333;
+
+    & + & {
+      margin-top: 6px;
+    }
+
+    &--total {
+      font-weight: variables.$font-weight-bold;
+      color: #089b7c;
+    }
+  }
+}

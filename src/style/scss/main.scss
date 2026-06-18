@@ -23,6 +23,7 @@
 @use "components/alerts";
 @use "components/popovers";
 @use "components/forms";
+@use "components/auth-form";
 @use "components/tables";
 @use "components/accordion";
 @use "components/breadcrumb";
@@ -59,6 +60,9 @@
 @use "pages/sales-dashboard";
 @use "pages/admin-dashboard";
 @use "pages/roles-permissions";
+@use "pages/two-step-verification";
+@use "pages/auth-split-page";
+@use "pages/register";
 @use "pages/email";
 @use "pages/error";
 @use "pages/login";
