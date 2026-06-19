@@ -1,11 +1,14 @@
-# Your first CI pipeline.
-# It runs automatically on GitHub whenever you push to `main` or open a Pull Request.
-# Right now it does one meaningful check: install dependencies and build the app.
-# We'll add lint, type-check, and tests as next steps.
+# Continuous Integration (CI)
+#
+# Validates every change before it reaches the main branch: installs dependencies
+# against the committed lockfile and verifies the application builds successfully.
+# Required to pass before merging (enforce via branch protection on `main`).
 
 name: CI
 
-# TRIGGER: when should this pipeline run?
+# When this pipeline runs:
+#   - push to main: validates the integrated branch after a merge
+#   - pull_request: validates proposed changes before they are merged
 on:
   push:
     branches: [main]
@@ -14,19 +17,25 @@ on:
 jobs:
   build:
     name: Install & Build
-    runs-on: ubuntu-latest   # GitHub gives us a fresh Ubuntu machine
+    runs-on: ubuntu-latest
     steps:
-      - name: Check out the repository
+      # Fetch the repository contents at the commit that triggered this run.
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 20
+      # Pin the Node.js version to match production and enable npm caching
+      # so dependency installs are reused across runs for faster pipelines.
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm          # caches dependencies so future runs are faster
+          cache: npm
 
+      # Clean, reproducible install strictly from package-lock.json.
+      # Fails if the lockfile is out of sync with package.json.
       - name: Install dependencies
         run: npm ci
 
-      - name: Build the app
+      # Production build. Catches compilation and bundling errors early.
+      - name: Build application
         run: npm run build
