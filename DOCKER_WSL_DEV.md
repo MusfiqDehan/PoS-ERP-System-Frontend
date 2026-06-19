@@ -1,286 +1,291 @@
-# Docker + WSL2 Live-Reload Dev Guide
+# Running Sortonium on Windows with Docker + WSL2 (Live Reload)
 
-A step-by-step guide to run this Next.js project inside a Docker container with
-**instant live reload**, using the **WSL2 Linux filesystem** for fast compile
-times, and editing the code through **Cursor's WSL remote**.
+This guide gets the **Sortonium** Next.js front-end running on a **Windows** machine using
+**Docker** inside **WSL2**, with **instant live reload** — you edit a file in your IDE and the
+website updates automatically in the browser, **with no need to rebuild or restart the container**.
 
-> **Why this setup?**
-> Running the dev server in Docker keeps everyone's environment identical.
-> Putting the code on the WSL2 (Linux) filesystem — instead of a Windows path
-> like `C:\Users\...` or a OneDrive folder — makes file I/O near-native, so
-> Webpack compiles in seconds instead of minutes. Editing through Cursor's WSL
-> remote means your edits land in the exact folder the container watches, so
-> hot reload "just works".
+It is written so you can follow it top-to-bottom and **avoid the bugs that were hit during initial
+setup** (Docker credential errors, IDE "JSX" errors, a corrupted `.git`, and thousands of fake
+"modified" files). Each of those has a fix or prevention built into the steps below.
 
----
-
-## What you get
-
-- Edit code locally in Cursor → changes appear in the browser automatically.
-- A Docker **bind mount** maps your project into the container at `/app`.
-- An **anonymous/named volume** keeps the container's `node_modules` isolated
-  from the host.
-- The Next.js dev server runs in **watch mode** on **port 3000**.
-- A persistent `.next` cache so cold starts get faster after the first run.
+> TL;DR: **Put the project inside the WSL2 Linux filesystem (`~/projects/...`), not in
+> `C:\` / `/mnt/c`.** Then `docker compose up`. That single decision prevents most of the pain.
 
 ---
 
-## Prerequisites
+## 0. Why the project MUST live inside WSL (read this first)
 
-1. **Docker Desktop** installed and running (with the **WSL 2 based engine**).
-2. **WSL2** with a Linux distro (e.g. Ubuntu). To install:
+Do **NOT** keep the project under `C:\Users\...` or open it from `/mnt/c/...` in WSL.
+
+Running from the Windows filesystem (`/mnt/c`) through Docker causes:
+
+- **Extremely slow file watching / HMR** (cross-OS filesystem is slow).
+- **CRLF line-ending corruption** → git shows *every* file as "modified".
+- **Permission / ownership churn** → git shows fake changes and can corrupt `.git`.
+- **OneDrive / antivirus** can silently delete or lock git pack files → a broken repository.
+
+Keeping the repo on the **native Linux filesystem** (e.g. `/home/<you>/projects/geekpos-frontend`)
+makes the bind mount Linux→Linux, so file watching, permissions, and line endings all behave.
+
+---
+
+## 1. Prerequisites (install once)
+
+1. **Windows 10 (21H2+) or Windows 11.**
+2. **WSL2** with a Linux distro (Ubuntu recommended).
+   Open **PowerShell as Administrator** and run:
    ```powershell
-   # Run in PowerShell as Administrator, then reboot:
    wsl --install -d Ubuntu
    ```
-3. **Cursor** with the **WSL** extension (Cursor will prompt to install it the
-   first time you connect).
+   Reboot if prompted, then open **Ubuntu** from the Start menu and create your Linux user.
+   Confirm you are on **WSL version 2**:
+   ```powershell
+   wsl -l -v
+   ```
+   The `VERSION` column must say `2`. If it says `1`, run:
+   ```powershell
+   wsl --set-version Ubuntu 2
+   ```
+3. **Docker Desktop for Windows** — install from docker.com, then:
+   - Open **Docker Desktop → Settings → General** → ensure **"Use the WSL 2 based engine"** is ON.
+   - **Settings → Resources → WSL Integration** → toggle **ON** for your distro (e.g. Ubuntu).
+   - Click **Apply & Restart**.
+
+You do **not** need to install Node.js on Windows. Docker provides Node inside the container.
 
 ---
 
-## One-time setup
+## 2. Get the project onto the WSL Linux filesystem
 
-### Step 1 — Enable Docker's WSL integration
-
-Without this, `docker` commands inside WSL fail with errors like
-`error getting credentials - err: exit status 1`.
-
-1. Open **Docker Desktop → Settings (gear) → Resources → WSL Integration**.
-2. Turn on **"Enable integration with my default WSL distro"**.
-3. Toggle **ON** the switch for your distro (e.g. **Ubuntu**).
-4. Click **Apply & Restart**.
-5. In PowerShell, restart WSL so it picks up the change:
-   ```powershell
-   wsl --shutdown
-   ```
-6. Reopen the Ubuntu terminal and verify Docker works inside WSL:
-   ```bash
-   docker run --rm hello-world
-   ```
-   You should see "Hello from Docker!".
-
-### Step 2 — Move the project into the WSL2 filesystem
-
-Editing/compiling from a Windows path (`/mnt/c/...`) or a OneDrive folder is
-slow because every file read crosses the Windows↔Linux boundary. Copy the
-project into the Linux home directory instead.
-
-Open the **Ubuntu (WSL)** terminal and run:
+Open your **Ubuntu (WSL)** terminal (not PowerShell) and clone into your Linux home:
 
 ```bash
 mkdir -p ~/projects
-
-# Copy the working files (skip folders that are large or rebuilt anyway).
-rsync -a \
-  --exclude='node_modules' \
-  --exclude='.next' \
-  --exclude='out' \
-  --exclude='.git' \
-  "/mnt/c/Users/<YOUR_WINDOWS_USER>/path/to/geekpos-frontend/" \
-  ~/projects/geekpos-frontend/
-
-cd ~/projects/geekpos-frontend
+cd ~/projects
+git clone https://github.com/GeekSSort/geekpos_frontend.git geekpos-frontend
+cd geekpos-frontend
 ```
 
-> Replace `/mnt/c/Users/<YOUR_WINDOWS_USER>/path/to/geekpos-frontend` with your
-> real Windows path. Example: `/mnt/c/Users/user/OneDrive/Desktop/geekpos-frontend`.
-
-#### Copy the Git history (`.git`)
-
-`rsync` can fail on large Git pack files over `/mnt/c` with
-`Cannot allocate memory`. Use `tar` instead, which reads sequentially:
-
-```bash
-cd "/mnt/c/Users/<YOUR_WINDOWS_USER>/path/to/geekpos-frontend"
-tar cf - .git | (cd ~/projects/geekpos-frontend && tar xf -)
-
-cd ~/projects/geekpos-frontend
-git status   # confirm the repo and your branch are intact
-```
-
-**If `tar` also fails** (OneDrive may store files as cloud-only placeholders),
-either:
-
-- In Windows, right-click the project folder → **"Always keep on this device"**,
-  wait for sync, then retry the `tar` command; **or**
-- Get a fresh `.git` from the remote:
-  ```bash
-  cd ~/projects
-  git clone <YOUR_REMOTE_URL> _gittmp
-  mv _gittmp/.git ~/projects/geekpos-frontend/.git
-  rm -rf _gittmp
-  cd ~/projects/geekpos-frontend
-  git status
-  ```
-
-> ⚠️ **From now on, the WSL copy (`~/projects/geekpos-frontend`) is your source
-> of truth.** Stop editing the old Windows/OneDrive copy or you'll end up with
-> two diverging versions.
+> Tip: To open this folder in your IDE, from the WSL terminal run `cursor .` (or `code .`).
+> The path should look like `/home/<you>/projects/geekpos-frontend` — **never** `/mnt/c/...`.
 
 ---
 
-## Running the dev server
+## 3. One-time Git setup (prevents fake "modified" files)
 
-From `~/projects/geekpos-frontend` in the WSL terminal:
+Run these **inside the project folder** so git doesn't flag permission/line-ending noise:
 
 ```bash
-# First run (builds the image: installs dependencies inside the container)
-docker compose up --build
+# Don't track the Unix executable bit (Docker can flip it and create fake "modified" files)
+git config core.filemode false
 
-# Subsequent runs (no dependency changes)
+# Keep line endings as LF (this is a Linux/Docker project)
+git config core.autocrlf false
+```
+
+Also tell your editor to save files as **LF**. Create/update `.vscode/settings.json`:
+
+```json
+{
+  "files.eol": "\n"
+}
+```
+
+---
+
+## 4. Fix the Docker credential error (do this if the build fails)
+
+If `docker compose up --build` fails with:
+
+```
+failed to solve: error getting credentials - err: exit status 1
+```
+
+…it's because Docker is configured to use the Windows credential helper, which can't run inside
+WSL. Fix it by editing `~/.docker/config.json` **in WSL**:
+
+```bash
+cat ~/.docker/config.json
+```
+
+If it contains `"credsStore": "desktop.exe"` (or similar), replace the file contents with:
+
+```json
+{}
+```
+
+(You only need a real `credsStore` if you log in to a **private** image registry. Pulling public
+images like `node:20-alpine` does not.)
+
+If WSL ever throws `accept4 failed` / interop errors, reset it from **PowerShell**:
+
+```powershell
+wsl --shutdown
+```
+
+then reopen Ubuntu.
+
+---
+
+## 5. Start the app
+
+From the project folder in WSL:
+
+```bash
+# First time, or after dependency/Dockerfile changes — builds the image:
+docker compose up --build
+```
+
+Wait for the log line similar to:
+
+```
+✓ Ready in ... ready - started server on 0.0.0.0:3000
+```
+
+Then open the site in your **Windows browser**:
+
+👉 **http://localhost:3000**
+
+To stop the app: press **Ctrl+C**, then (optionally) `docker compose down`.
+
+On subsequent days you usually **don't** need `--build`:
+
+```bash
 docker compose up
 ```
 
-Wait for:
+---
 
-```
-✓ Ready in ...s
-- Local:   http://localhost:3000
-```
+## 6. Live reload — edit and see changes instantly (no rebuild!)
 
-Open **http://localhost:3000** in your browser.
+This is the whole point of the setup. Once the container is running:
 
-> The **first** visit to each page compiles on demand and may take a while.
-> This is a **one-time** cost per page — after it's compiled, edits hot-reload
-> quickly, and the `.next` cache persists across restarts.
+1. Edit any file under `src/` in your IDE (e.g. a component, style, or page).
+2. **Save.**
+3. The browser at `http://localhost:3000` updates automatically (Hot Module Reload).
+
+**You do NOT rebuild or restart the container for normal code changes.** This works because
+`docker-compose.yml` bind-mounts your project into the container (`.:/app`) and Next.js watches
+for file changes.
+
+### When DO you need to rebuild?
+
+Only for things baked into the image or read at startup:
+
+| Change you made | What to run |
+|---|---|
+| Edited a component / page / style / JSON (anything in `src/`) | Nothing — just save (live reload) |
+| Added/removed an npm dependency (`package.json`) | `docker compose up --build` |
+| Changed the `Dockerfile` | `docker compose up --build` |
+| Changed `docker-compose.yml` | `docker compose up` (recreates container) |
+| Changed env vars | `docker compose up` (recreates container) |
 
 ---
 
-## Editing with live reload (Cursor + WSL)
+## 7. How it works (so the magic isn't mysterious)
 
-To make sure your edits land in the folder Docker watches, open the **WSL copy**
-in Cursor — not the Windows copy.
+`docker-compose.yml` sets up three things that make this safe and fast:
 
-**Option A — from the WSL terminal:**
-
-```bash
-cd ~/projects/geekpos-frontend
-cursor .
-```
-
-This opens a new Cursor window connected to WSL. The bottom-left corner shows
-**"WSL: Ubuntu"**.
-
-**Option B — from the Cursor UI:**
-
-1. `Ctrl+Shift+P` → **"WSL: Open Folder in WSL…"** (install the WSL extension if
-   prompted).
-2. Open `/home/<your-user>/projects/geekpos-frontend`.
-
-### Test it
-
-1. Edit a file, e.g. `src/components/pages/signin/SignInFormHeader.tsx`.
-2. Save.
-3. The Docker logs show a quick recompile and the browser updates automatically.
-
----
-
-## Everyday commands
-
-```bash
-docker compose up            # start
-docker compose up -d         # start in background (detached)
-docker compose logs -f web   # follow logs when detached
-docker compose down          # stop and remove the container
-docker compose exec web sh   # open a shell inside the container
-```
-
-## Adding or updating dependencies
-
-`node_modules` lives **inside the container** (in a volume), so installing on the
-host isn't enough. Do one of:
-
-```bash
-# Install inside the running container (takes effect immediately)
-docker compose exec web npm install <package>
-
-# OR rebuild the image so it re-runs the install from the lockfile
-docker compose up --build
-```
-
----
-
-## How the config files work
-
-### `Dockerfile`
-- Based on `node:20-alpine`.
-- Copies `package.json` + `package-lock.json` and runs `npm ci` (cached layer).
-- Exposes port `3000`.
-- Default command runs `next dev` bound to `0.0.0.0`.
-
-### `docker-compose.yml`
-- `volumes`:
-  - `.:/app` — **bind mount** of your project into the container.
-  - `node_modules:/app/node_modules` — keeps the container's dependencies,
-    prevents the host from shadowing them.
-  - `next_cache:/app/.next` — persists the dev build cache across restarts.
-- `ports: ["3000:3000"]` — maps the dev server to your host.
-- `command: npm run dev -- -H 0.0.0.0 -p 3000` — starts the dev server in watch
-  mode, reachable from the host.
-- `environment`:
-  - `NODE_OPTIONS=--max-old-space-size=4096` — more heap for big route compiles.
-  - On the WSL2 native filesystem, **polling is off** (native file events work).
-    If you ever run from a Windows/OneDrive path, re-enable polling:
-    `WATCHPACK_POLLING=1000` and `CHOKIDAR_USEPOLLING=true`.
-
-### `next.config.ts`
-- `experimental.optimizePackageImports` — tree-shakes large UI/icon libraries
-  (antd, primereact, Tabler/Feather icons, ApexCharts) so fewer modules compile
-  per route.
-
----
-
-## Troubleshooting
-
-### Live edits don't show in the browser
-You're almost certainly editing the **wrong copy**. Make sure Cursor is open on
-the **WSL** folder (`~/projects/geekpos-frontend`, status bar shows "WSL: Ubuntu"),
-not the Windows/OneDrive path. The container only watches the WSL copy.
-
-### `error getting credentials - err: exit status 1`
-Docker's WSL integration isn't enabled (see **Step 1**). If it persists, reset
-the Docker config inside WSL:
-```bash
-mkdir -p ~/.docker
-echo '{}' > ~/.docker/config.json
-```
-
-### `rsync: Cannot allocate memory (12)` on `.git` pack files
-A WSL bug reading large memory-mapped files over `/mnt/c`. Use the `tar` method
-or fresh clone shown in **Step 2**.
-
-### Compiles are still slow
-- Confirm the project is under `~/projects/...` (Linux FS), **not** `/mnt/c/...`.
-- Each page compiles once on first visit — warm up your main pages, then edits
-  are fast.
-- Give WSL2 more resources. Create `C:\Users\<YOUR_WINDOWS_USER>\.wslconfig`:
-  ```ini
-  [wsl2]
-  memory=8GB
-  processors=4
-  ```
-  Then `wsl --shutdown` in PowerShell and restart.
-
-### Port 3000 already in use
-Stop whatever uses it, or change the host port in `docker-compose.yml`:
 ```yaml
-ports:
-  - "3001:3000"   # browse http://localhost:3001
+volumes:
+  - .:/app                          # your live source is mounted into the container
+  - /app/.git                       # shadow .git so the container can't corrupt your repo
+  - node_modules:/app/node_modules  # deps live in a volume (installed in the image, not your host)
+  - next_cache:/app/.next           # persist the dev build cache for faster restarts
 ```
 
-### `⚠ Specified "rewrites" will not automatically work with "output: export"`
-Harmless in development — it only affects static export (`next build`).
+- **`.:/app`** — local edits appear instantly inside the container → live reload.
+- **`/app/.git`** — an empty in-container folder hides your real `.git`, so the container's root
+  user can never touch or corrupt your git history. (This was a real bug that this prevents.)
+- **`node_modules` volume** — the container uses the dependencies installed during `docker build`,
+  and your host `node_modules` never shadows them. This is also why you don't need Node on Windows.
 
 ---
 
-## Quick reference
+## 8. Optional: make your IDE (TypeScript) happy
 
-| Task | Command (in `~/projects/geekpos-frontend`) |
-|------|--------------------------------------------|
-| Start dev server | `docker compose up` |
-| Rebuild after dep change | `docker compose up --build` |
-| Stop | `docker compose down` |
-| Logs | `docker compose logs -f web` |
-| Shell in container | `docker compose exec web sh` |
-| Open in Cursor (WSL) | `cursor .` |
-| App URL | http://localhost:3000 |
+Because `node_modules` lives in a Docker volume, your **host** may not have it, so the IDE can show
+errors like `JSX element implicitly has type 'any' ... JSX.IntrinsicElements`. This is **only an
+editor IntelliSense issue** — the app still runs fine in Docker.
+
+To fix IntelliSense, install dependencies on the host too:
+
+```bash
+# If you have Linux Node/npm in WSL:
+npm ci
+
+# Or, if you have Bun installed in WSL:
+bun install
+```
+
+Then in your IDE run **"TypeScript: Restart TS Server"** (Ctrl+Shift+P).
+
+> Don't have Node in WSL? Install it once with nvm:
+> ```bash
+> curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+> source ~/.bashrc
+> nvm install 20
+> ```
+
+---
+
+## 9. Troubleshooting (the exact issues hit during setup)
+
+**`error getting credentials - err: exit status 1` during build**
+→ See [Step 4](#4-fix-the-docker-credential-error-do-this-if-the-build-fails). Set
+`~/.docker/config.json` to `{}`.
+
+**IDE shows `JSX.IntrinsicElements` / `ts(7026)` on every file**
+→ Host `node_modules` is empty. See [Step 8](#8-optional-make-your-ide-typescript-happy), then
+restart the TS Server.
+
+**Source Control / Git Graph shows nothing, or `fatal: unable to read tree ...`**
+→ Your `.git` is corrupted (often from running on `/mnt/c` or a container writing to it). Recover
+from the remote without losing local edits:
+```bash
+cd ~/projects
+git clone https://github.com/GeekSSort/geekpos_frontend.git geekpos-fresh
+mv geekpos-frontend/.git geekpos-frontend/.git.broken   # backup
+mv geekpos-fresh/.git    geekpos-frontend/.git
+rm -rf geekpos-fresh
+cd geekpos-frontend && git status
+```
+The `/app/.git` shadow volume now in `docker-compose.yml` prevents this from recurring.
+
+**Thousands of files show as "modified" but you didn't change them**
+→ Permission (executable bit) or CRLF/LF line-ending noise. Apply [Step 3](#3-one-time-git-setup-prevents-fake-modified-files). To clean existing CRLF differences:
+```bash
+git config core.filemode false
+# convert only line-ending-only files back to LF:
+for f in $(git diff --name-only); do
+  [ -f "$f" ] && [ -z "$(git diff -w -- "$f")" ] && sed -i 's/\r$//' "$f"
+done
+```
+
+**Edits aren't live-reloading**
+→ Confirm the project is on the WSL filesystem (`~/...`, not `/mnt/c`). If you must use a Windows
+path, enable polling by adding to the `environment:` block in `docker-compose.yml`:
+```yaml
+- WATCHPACK_POLLING=1000
+- CHOKIDAR_USEPOLLING=true
+```
+
+**Port 3000 already in use**
+→ Stop the other process, or change the host port mapping in `docker-compose.yml`
+(`"3001:3000"`) and open `http://localhost:3001`.
+
+---
+
+## 10. Quick command reference
+
+```bash
+docker compose up --build   # build image + start (first run / after dep or Dockerfile changes)
+docker compose up           # start (normal day-to-day)
+docker compose up -d        # start in background (detached)
+docker compose logs -f      # follow logs
+docker compose down         # stop & remove the container
+docker compose down -v      # also remove the node_modules / .next volumes (forces clean reinstall)
+docker compose build --no-cache   # rebuild from scratch if the image seems stale
+```
+
+Open the app at **http://localhost:3000**.
