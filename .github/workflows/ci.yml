@@ -1,0 +1,32 @@
+# Your first CI pipeline.
+# It runs automatically on GitHub whenever you push to `main` or open a Pull Request.
+# Right now it does one meaningful check: install dependencies and build the app.
+# We'll add lint, type-check, and tests as next steps.
+
+name: CI
+
+# TRIGGER: when should this pipeline run?
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Install & Build
+    runs-on: ubuntu-latest   # GitHub gives us a fresh Ubuntu machine
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm          # caches dependencies so future runs are faster
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the app
+        run: npm run build
