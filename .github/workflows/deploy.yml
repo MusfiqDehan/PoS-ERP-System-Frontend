@@ -113,7 +113,7 @@ jobs:
                 container_name: sortonium-frontend
                 restart: unless-stopped
                 ports:
-                  - "3000:3000"
+                  - "3001:3000"
             COMPOSE
 
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
