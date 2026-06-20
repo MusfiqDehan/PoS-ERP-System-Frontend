@@ -101,7 +101,7 @@ jobs:
           envs: IMAGE,GHCR_USER,GHCR_TOKEN
           script: |
             set -e
-            APP_DIR=/opt/apps/sortonium-frontend
+            APP_DIR=/opt/apps/sortorium-frontend
             mkdir -p "$APP_DIR"
             cd "$APP_DIR"
 
@@ -110,7 +110,7 @@ jobs:
             services:
               frontend:
                 image: ${IMAGE}
-                container_name: sortonium-frontend
+                container_name: sortorium-frontend
                 restart: unless-stopped
                 ports:
                   - "3001:3000"
@@ -118,6 +118,7 @@ jobs:
 
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             docker compose pull
+            docker rm -f sortonium-frontend 2>/dev/null || true  # remove pre-rename container
             docker compose up -d
             docker image prune -f
         env:
