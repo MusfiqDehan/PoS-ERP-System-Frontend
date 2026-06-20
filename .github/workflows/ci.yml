@@ -36,6 +36,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Static type-check (tsc --noEmit). Runs before the build because it is
+      # much faster and surfaces type errors without waiting on a full bundle.
+      - name: Type-check
+        run: npm run typecheck
+
       # Production build. Catches compilation and bundling errors early.
       - name: Build application
         run: npm run build
