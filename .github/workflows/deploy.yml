@@ -89,9 +89,9 @@ jobs:
         id: img
         run: echo "image=ghcr.io/${GITHUB_REPOSITORY,,}:latest" >> "$GITHUB_OUTPUT"
 
-      # SSH into the server, log in to GHCR, pull the new image and restart the
-      # container. Uses password auth (VPS_PASSWORD); swap to key auth later for
-      # better security.
+      # SSH into the server and deploy from a fixed app directory using a
+      # docker-compose file written on the server. Uses password auth
+      # (VPS_PASSWORD); swap to key auth later for better security.
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -101,10 +101,24 @@ jobs:
           envs: IMAGE,GHCR_USER,GHCR_TOKEN
           script: |
             set -e
+            APP_DIR=/opt/apps/sortonium-frontend
+            mkdir -p "$APP_DIR"
+            cd "$APP_DIR"
+
+            # Write the compose file (IMAGE expands here from the passed env).
+            cat > docker-compose.yml <<COMPOSE
+            services:
+              frontend:
+                image: ${IMAGE}
+                container_name: sortonium-frontend
+                restart: unless-stopped
+                ports:
+                  - "3000:3000"
+            COMPOSE
+
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-            docker pull "$IMAGE"
-            docker rm -f sortonium 2>/dev/null || true
-            docker run -d --name sortonium --restart unless-stopped -p 3000:3000 "$IMAGE"
+            docker compose pull
+            docker compose up -d
             docker image prune -f
         env:
           IMAGE: ${{ steps.img.outputs.image }}
