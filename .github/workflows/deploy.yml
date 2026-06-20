@@ -1,11 +1,18 @@
-# Continuous Delivery (CD) — Build & Publish Image
+# Continuous Deployment (CD) — Build, Publish & Deploy
 #
-# Builds the production Docker image (Dockerfile.prod -> Next.js standalone) and
-# pushes it to the GitHub Container Registry (GHCR). Runs on GitHub's hosted
-# runners (ample RAM), so the production build never depends on a developer's
-# local machine. A later job/workflow can pull this image and deploy it to the VPS.
+# 1. build-image: builds the production Docker image (Dockerfile.prod ->
+#    Next.js standalone) and pushes it to the GitHub Container Registry (GHCR),
+#    on GitHub's hosted runners (ample RAM) — never the developer's machine.
+# 2. deploy: SSHes into the VPS, pulls the freshly published image and
+#    (re)starts the container.
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   VPS_HOST     - server IP or hostname
+#   VPS_USER     - SSH username
+#   VPS_PASSWORD - SSH password
+# The VPS must already have Docker installed.
 
-name: Build & Publish Image
+name: Build, Publish & Deploy
 
 # When this pipeline runs:
 #   - push to main: publish a fresh image after changes are merged
@@ -64,3 +71,42 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to VPS
+    needs: build-image
+    runs-on: ubuntu-latest
+    # Only auto-deploy from the default branch, not from manual test runs on
+    # other refs. GITHUB_TOKEN needs read access to pull the package on the VPS.
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      # Compute the lowercase image reference (GHCR/Docker require lowercase).
+      - name: Resolve image name
+        id: img
+        run: echo "image=ghcr.io/${GITHUB_REPOSITORY,,}:latest" >> "$GITHUB_OUTPUT"
+
+      # SSH into the server, log in to GHCR, pull the new image and restart the
+      # container. Uses password auth (VPS_PASSWORD); swap to key auth later for
+      # better security.
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          envs: IMAGE,GHCR_USER,GHCR_TOKEN
+          script: |
+            set -e
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+            docker pull "$IMAGE"
+            docker rm -f sortonium 2>/dev/null || true
+            docker run -d --name sortonium --restart unless-stopped -p 3000:3000 "$IMAGE"
+            docker image prune -f
+        env:
+          IMAGE: ${{ steps.img.outputs.image }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
