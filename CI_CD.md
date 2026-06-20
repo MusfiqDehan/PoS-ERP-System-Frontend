@@ -4,34 +4,42 @@ This document explains the **Continuous Integration (CI)** and **Continuous Depl
 pipeline for this Next.js app, end to end. It is written so that **anyone can reproduce it from
 scratch** — on this repo or a new one.
 
-- **CI** (`.github/workflows/ci.yml`): on every push/PR, install → type-check → unit tests → build.
-- **CD** (`.github/workflows/deploy.yml`): on every push to `main`, build a production Docker image →
-  push it to the GitHub Container Registry (GHCR) → SSH into the VPS → pull & restart the container.
+Everything lives in **one gated workflow** (`.github/workflows/ci-cd.yml`) so that deployment only
+happens **after CI passes**. The jobs run strictly in order:
 
-Result: **push to `main` → app is live on the server automatically.**
+```
+ci  →  build-image (GHCR)  →  deploy (VPS)
+```
+
+- On **pull request**: only `ci` runs (type-check + tests + build). No image is built, nothing deploys.
+- On **push to `main`**: `ci` → `build-image` → `deploy`. If `ci` fails, the image is never built and
+  nothing is deployed.
+
+Result: **a green push to `main` → app is live on the server automatically.**
+
+> **Why one workflow instead of two?** If CI and CD are separate workflows both triggered on push,
+> GitHub runs them **in parallel** — the deploy would not wait for tests to pass (and could even finish
+> first). Putting them in one workflow with `needs:` makes deployment strictly gated on CI.
 
 ---
 
 ## 1. Architecture at a glance
 
 ```
-   ┌─────────────┐   git push main    ┌──────────────────────── GitHub Actions ────────────────────────┐
-   │  Developer  │ ─────────────────▶ │                                                                 │
-   └─────────────┘                    │  CI (ci.yml)                                                    │
-                                       │   install → typecheck → test → build  (gate)                    │
-                                       │                                                                 │
-                                       │  CD (deploy.yml)                                                │
-                                       │   ┌── build-image ──────────────┐   ┌── deploy ──────────────┐  │
-                                       │   │ docker build -f             │   │ ssh → docker login     │  │
-                                       │   │   Dockerfile.prod           │──▶│ docker compose pull    │  │
-                                       │   │ push → ghcr.io/<repo>:latest│   │ docker compose up -d   │  │
-                                       │   └─────────────────────────────┘   └───────────┬────────────┘  │
-                                       └──────────────────────────────────────────────────┼─────────────┘
-                                                                                           ▼
-                                                                                 ┌──────────────────┐
-                                                                                 │   VPS (Docker)   │
-                                                                                 │ container :3001  │
-                                                                                 └──────────────────┘
+   ┌─────────────┐   git push main    ┌──────────── GitHub Actions: ci-cd.yml ───────────┐
+   │  Developer  │ ─────────────────▶ │                                                   │
+   └─────────────┘                    │  ci ──▶ build-image ──▶ deploy                    │
+                                       │   │         │              │                      │
+                                       │   │         │              └─ ssh → compose up    │
+                                       │   │         └─ docker build -f Dockerfile.prod     │
+                                       │   │            push → ghcr.io/<repo>:latest        │
+                                       │   └─ npm ci → typecheck → test (gate)              │
+                                       └──────────────────────────────────────┬────────────┘
+                                                                               ▼
+                                                                     ┌──────────────────┐
+                                                                     │   VPS (Docker)   │
+                                                                     │ container :3001  │
+                                                                     └──────────────────┘
 ```
 
 **Why build the image in CI and not on the server / laptop?**
@@ -48,7 +56,7 @@ keeps deploys fast (the server only *pulls* a finished image).
 | GitHub repository | The pipeline uses the built-in `GITHUB_TOKEN` and GHCR (no extra registry account needed). |
 | A Linux VPS with Docker | Any provider (Contabo, DigitalOcean, …). Install Docker: `curl -fsSL https://get.docker.com \| sh`. The Docker Compose plugin is included. |
 | SSH access to the VPS | Host/IP, username, and password (or, better, an SSH key — see [§9](#9-hardening-recommended-next-steps)). |
-| Node.js 20 + npm scripts | `package.json` must define `typecheck`, `test`, and `build` scripts (see [§4](#4-ci-cijyml)). |
+| Node.js 20 + npm scripts | `package.json` must define `typecheck`, `test`, and `build` scripts (see [§4](#4-the-ci-job)). |
 | `output: "standalone"` in `next.config.ts` | Required so the Docker image can run a self-contained Node server. See [§6](#6-nextjs-standalone-output). |
 
 ---
@@ -57,28 +65,31 @@ keeps deploys fast (the server only *pulls* a finished image).
 
 | File | Purpose |
 |---|---|
-| `.github/workflows/ci.yml` | CI: validate every change (typecheck, tests, build). |
-| `.github/workflows/deploy.yml` | CD: build image → push to GHCR → deploy to VPS. |
+| `.github/workflows/ci-cd.yml` | The whole pipeline: `ci` → `build-image` → `deploy`. |
 | `Dockerfile.prod` | Multi-stage production image (Next.js standalone). |
 | `Dockerfile` | Dev image (live-reload). **Not** used by CD. |
 | `next.config.ts` | Must set `output: "standalone"`. |
 | `package.json` | Defines `typecheck` / `test` / `build` scripts. |
 
----
-
-## 4. CI (`ci.yml`)
-
-Runs on **push to `main`** and on **every pull request**. It is the quality gate.
+The `ci-cd.yml` triggers:
 
 ```yaml
-name: CI
 on:
   push:
     branches: [main]
   pull_request:
+```
+
+---
+
+## 4. The `ci` job
+
+The quality gate. Runs on **push to `main`** and on **every pull request**.
+
+```yaml
 jobs:
-  build:
-    name: Install & Build
+  ci:
+    name: Lint, Type-check & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -86,10 +97,12 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm ci          # clean install strictly from package-lock.json
-      - run: npm run typecheck # tsc --noEmit  (fast, fails on type errors)
+      - run: npm ci            # clean install strictly from package-lock.json
+      - run: npm run typecheck # tsc --noEmit (fast, fails on type errors)
       - run: npm run test      # Vitest + React Testing Library
-      - run: npm run build     # production build catches bundling errors
+      # Full build only on PRs — on main, build-image's Docker build covers it.
+      - if: github.event_name == 'pull_request'
+        run: npm run build
 ```
 
 The matching `package.json` scripts:
@@ -108,23 +121,24 @@ The matching `package.json` scripts:
 ```
 
 **Order matters:** type-check and tests run *before* the expensive build so failures surface fast.
+**No double build:** on `main`, the `npm run build` step is skipped because the image build (next job)
+already compiles the app inside Docker.
 
 ---
 
-## 5. CD (`deploy.yml`)
+## 5. The `build-image` and `deploy` jobs
 
-Runs on **push to `main`** (and can be triggered manually via *workflow_dispatch*). Two jobs:
-
-### Job 1 — `build-image`: build & publish to GHCR
+### Job 2 — `build-image`: build & publish to GHCR (gated on `ci`)
 
 ```yaml
-jobs:
   build-image:
     name: Build & Push (GHCR)
+    needs: ci                                  # only runs if ci passed
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write            # needed to push to GHCR
+      packages: write                          # needed to push to GHCR
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
@@ -132,7 +146,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}   # built-in, no PAT needed
+          password: ${{ secrets.GITHUB_TOKEN }} # built-in, no PAT needed
       - id: meta
         uses: docker/metadata-action@v5
         with:
@@ -153,14 +167,13 @@ jobs:
 
 Produces two tags: `ghcr.io/<owner>/<repo>:latest` and `…:sha-<commit>`.
 
-### Job 2 — `deploy`: ship it to the VPS
+### Job 3 — `deploy`: ship it to the VPS (gated on `build-image`)
 
 ```yaml
   deploy:
     name: Deploy to VPS
-    needs: build-image                # only runs if the image built & pushed
+    needs: build-image                # runs only if the image built & pushed
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
       packages: read                  # to pull the image during deploy
@@ -196,6 +209,9 @@ Produces two tags: `ghcr.io/<owner>/<repo>:latest` and `…:sha-<commit>`.
           GHCR_USER: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+**Gating recap:** `deploy` `needs: build-image`, which `needs: ci`. If `ci` fails, both downstream jobs
+are skipped. On a pull request, `build-image` is skipped by its `if:` and `deploy` is therefore skipped too.
 
 **Key points**
 - The compose file is written **on the server** into a fixed directory (`/opt/apps/<app>`), so the
@@ -289,7 +305,7 @@ it with `GITHUB_TOKEN`, which works for packages linked to the same repo. If a p
 ```bash
 git push origin main
 ```
-Watch **GitHub → Actions**. When both workflows are green, the app is live at `http://<server-ip>:3001`.
+Watch **GitHub → Actions**. When the pipeline is green, the app is live at `http://<server-ip>:3001`.
 
 ---
 
@@ -312,8 +328,8 @@ docker compose down        # stop & remove
    `password:` with `key: ${{ secrets.VPS_SSH_KEY }}` in the `appleboy/ssh-action` step.
 2. **Reverse proxy + HTTPS.** Put Nginx (or Caddy/Traefik) in front of port 3001, point a domain at the
    server, and terminate TLS (Let's Encrypt) so users hit `https://yourdomain` instead of `:3001`.
-3. **Branch protection.** Repo → Settings → Branches → require the **CI** check to pass before merging to
-   `main`.
+3. **Branch protection.** Repo → Settings → Branches → require the **`Lint, Type-check & Test`** check to
+   pass before merging to `main`.
 4. **Pin the deployed tag.** Deploy `…:sha-<commit>` instead of `:latest` for traceable, rollback-able
    releases.
 
@@ -325,17 +341,18 @@ docker compose down        # stop & remove
 |---|---|---|
 | Local `next build` prints **`Killed`** and dies mid-compile; WSL/SSH connection also drops | Out-of-memory (OOM killer); the build also kills the agent/server process | Give the machine more RAM + swap. For **WSL**, create `C:\Users\<you>\.wslconfig` with `[wsl2]` `memory=6GB` / `swap=12GB`, then `wsl --shutdown`. (In CI this never happens — runners have enough RAM.) |
 | Build fails: **`Error occurred prerendering page … jQuery requires a window with a document`** | A jQuery-based library (e.g. `react-bootstrap-daterangepicker`) is imported at module load and evaluated during server prerender | Load it **browser-only**: `const X = dynamic(() => import("lib"), { ssr: false })` via `next/dynamic`. Component must be a client component (`"use client"`). |
-| Deploy fails: **`Bind for 0.0.0.0:3000 failed: port is already allocated`** | The host port is already used by another process/container | Map a different host port in the compose file (e.g. `"3001:3000"`). |
+| Deploy fails: **`Bind for 0.0.0.0:3000 failed: port is already allocated`** | The host port is already used by another process/container | Map a different host port in the compose file (e.g. `"3001:3000"`). If an old/renamed container is holding it, remove it once: `docker rm -f <old-container>`. |
 | Deploy fails on `docker pull`: **`denied` / `unauthorized`** | GHCR package not readable by the token | Make the package public, or use a `read:packages` PAT (see [§7.4](#74-make-the-ghcr-package-pullable)). |
 | Deploy fails at SSH connect/auth | Root password login disabled, wrong secret, or firewall | Verify `VPS_HOST/USER/PASSWORD` secrets; check `sshd_config` (`PermitRootLogin`, `PasswordAuthentication`); switch to SSH keys ([§9](#9-hardening-recommended-next-steps)). |
 | `npm ci` fails: **lockfile out of sync** | `package.json` and `package-lock.json` disagree | Run `npm install` locally, commit the updated `package-lock.json`. |
+| Deploy ran but app didn't update | Deploy raced ahead of CI (when CI/CD were separate workflows) | Use a **single workflow** with `needs:` so `deploy` is gated on `ci` — as configured here. |
 
 ---
 
 ## 11. Adapting this to another project
 
 Change these and you're done:
-- **App directory / container name** in `deploy.yml` (`/opt/apps/<app>`, `container_name`).
+- **App directory / container name** in `ci-cd.yml` (`/opt/apps/<app>`, `container_name`).
 - **Host port** mapping (`"<hostPort>:3000"`).
 - **Image name** is automatic from `${{ github.repository }}` (lowercased).
 - Ensure `next.config.ts` has `output: "standalone"` and `package.json` has `typecheck`/`test`/`build`.
