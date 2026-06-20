@@ -66,7 +66,7 @@ export const posHeaderActions: PosHeaderAction[] = [
     width: 24,
     height: 24,
     label: "Keyboard shortcuts",
-    href: "#",
+    modalTarget: "#pos-keyboard-shortcuts",
   },
   {
     id: "cash",
@@ -74,7 +74,7 @@ export const posHeaderActions: PosHeaderAction[] = [
     width: 28,
     height: 28,
     label: "Cash register",
-    modalTarget: "#cash-register",
+    modalTarget: "#pos-cash-register",
   },
   {
     id: "printer",
@@ -82,7 +82,7 @@ export const posHeaderActions: PosHeaderAction[] = [
     width: 20,
     height: 20,
     label: "Print last receipt",
-    href: "#",
+    modalTarget: "#pos-print-receipt",
   },
   {
     id: "clock",
@@ -90,7 +90,7 @@ export const posHeaderActions: PosHeaderAction[] = [
     width: 20,
     height: 20,
     label: "Today's sale",
-    modalTarget: "#today-sale",
+    modalTarget: "#pos-today-sale",
   },
   {
     id: "chart",
@@ -98,7 +98,7 @@ export const posHeaderActions: PosHeaderAction[] = [
     width: 20,
     height: 20,
     label: "Today's profit",
-    modalTarget: "#today-profit",
+    modalTarget: "#pos-today-profit",
   },
   {
     id: "calculator",
@@ -106,7 +106,7 @@ export const posHeaderActions: PosHeaderAction[] = [
     width: 20,
     height: 20,
     label: "Calculator",
-    modalTarget: "#calculator",
+    modalTarget: "#pos-calculator",
   },
   {
     id: "settings",
@@ -115,4 +115,38 @@ export const posHeaderActions: PosHeaderAction[] = [
     height: 20,
     label: "POS settings",
   },
+];
+
+export type PosTodayStat = {
+  label: string;
+  value: string;
+};
+
+export const posTodaySaleStats: PosTodayStat[] = [
+  { label: "Total Sales", value: "$12,480.00" },
+  { label: "Transactions", value: "86" },
+  { label: "Items Sold", value: "342" },
+  { label: "Avg. Order Value", value: "$145.12" },
+];
+
+export const posTodayProfitStats: PosTodayStat[] = [
+  { label: "Gross Profit", value: "$3,920.00" },
+  { label: "Net Profit", value: "$3,145.00" },
+  { label: "Profit Margin", value: "25.2%" },
+  { label: "Expenses", value: "$775.00" },
+];
+
+export type PosKeyboardShortcut = {
+  keys: string;
+  description: string;
+};
+
+export const posKeyboardShortcuts: PosKeyboardShortcut[] = [
+  { keys: "F1", description: "Open keyboard shortcuts" },
+  { keys: "F2", description: "Focus product search" },
+  { keys: "F4", description: "Open cash register" },
+  { keys: "F8", description: "Hold current order" },
+  { keys: "F9", description: "Start new order" },
+  { keys: "Ctrl + P", description: "Print last receipt" },
+  { keys: "Ctrl + Enter", description: "Complete sale" },
 ];

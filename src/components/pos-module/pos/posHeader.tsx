@@ -11,6 +11,7 @@ import {
   posHeaderStores,
   posHeaderUser,
 } from "./posHeaderData";
+import PosHeaderModals from "./PosHeaderModals";
 
 const formatHeaderDate = (date: Date) =>
   date.toLocaleDateString("en-US", {
@@ -220,6 +221,8 @@ export default function PosHeader() {
           </div>
         </div>
       </div>
+
+      <PosHeaderModals />
     </header>
   );
 }
