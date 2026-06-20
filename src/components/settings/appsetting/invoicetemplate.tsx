@@ -100,7 +100,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-01.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -122,7 +122,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-01.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -144,7 +144,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-01.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -166,7 +166,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-01.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -188,7 +188,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-01.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -219,7 +219,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-01.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -241,7 +241,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-01.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -263,7 +263,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-01.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -285,7 +285,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-01.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -307,7 +307,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-01.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -338,7 +338,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-02.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -360,7 +360,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-02.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -382,7 +382,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-02.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">
@@ -404,7 +404,7 @@ export default function InvoiceTemplateComponent () {
                                                                         <img
                                                                             src="assets/img/invoice-templates/invoice-02.svg"
                                                                             className="w-100"
-                                                                            alt="Sortonium"
+                                                                            alt="Sortorium"
                                                                         />
                                                                     </span>
                                                                     <div className="d-flex align-items-center justify-content-between">

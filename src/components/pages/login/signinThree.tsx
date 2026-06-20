@@ -23,9 +23,9 @@ export default function SigninThreeComponent () {
               <div className="col-lg-5 mx-auto">
                 <div className="login-content user-login">
                   <div className="login-logo">
-                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                    <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                     <Link href={route.dashboard} className="login-logo logo-white">
-                      <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                      <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                     </Link>
                   </div>
                   <form >
@@ -34,7 +34,7 @@ export default function SigninThreeComponent () {
                         <div className="login-userheading">
                           <h3>Sign In</h3>
                           <h4>
-                            Access the Sortonium panel using your email and
+                            Access the Sortorium panel using your email and
                             passcode.
                           </h4>
                         </div>
@@ -152,7 +152,7 @@ export default function SigninThreeComponent () {
                   </form>
                 </div>
                 <div className="my-4 d-flex justify-content-center align-items-center copyright-text">
-                  <p>Copyright © 2025 Sortonium</p>
+                  <p>Copyright © 2025 Sortorium</p>
                 </div>
               </div>
             </div>

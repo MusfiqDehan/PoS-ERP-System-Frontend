@@ -7,4 +7,4 @@ export const MASKED_CONTACT = "******doe@example.com";
 export const OTP_LOTTIE_SRC = "/animations/otp-verify.lottie";
 
 /** Full wordmark at 4x — lives at public root. */
-export const OTP_BRAND_LOGO_SRC = "sortonium-icon-4x.png";
+export const OTP_BRAND_LOGO_SRC = "sortorium-icon-4x.png";

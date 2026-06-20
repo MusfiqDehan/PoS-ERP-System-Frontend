@@ -13,7 +13,7 @@ describe("SignInFormHeader", () => {
   it("renders the helper subtitle", () => {
     render(<SignInFormHeader />);
     expect(
-      screen.getByText(/access the sortonium panel/i),
+      screen.getByText(/access the sortorium panel/i),
     ).toBeInTheDocument();
   });
 });

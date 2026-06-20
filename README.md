@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛒 Sortonium — Frontend
+# 🛒 Sortorium — Frontend
 
 **Retail POS & admin dashboard front-end for a multi-tenant SaaS product**
 Built on **Next.js 15** (App Router) + **React 19**
@@ -8,9 +8,9 @@ Built on **Next.js 15** (App Router) + **React 19**
 </div>
 
 > [!WARNING]
-> **Read this before you touch anything.** This repo is the **Sortonium front-end** — no backend, API,
+> **Read this before you touch anything.** This repo is the **Sortorium front-end** — no backend, API,
 > database, auth, or persisted state yet. Most screens still render from **hardcoded JSON fixtures**;
-> a few modules (POS, dashboards, sales/stock/purchase/promo) have active Sortonium development with
+> a few modules (POS, dashboards, sales/stock/purchase/promo) have active Sortorium development with
 > working front-end logic. SaaS migration plan: [`SAAS_PLAN.md`](SAAS_PLAN.md) — **plan only, no backend code yet.**
 
 ---
@@ -104,7 +104,7 @@ npm run build    # 3. production build → static export to /out
 
 | ✅ It IS | ❌ It is NOT (yet) |
 |---|---|
-| A polished admin + POS **UI** with active Sortonium development | Fully connected to a backend / API *(in progress)* |
+| A polished admin + POS **UI** with active Sortorium development | Fully connected to a backend / API *(in progress)* |
 | ~258 routes, hundreds of components, fully styled | All modules wired to Django |
 | **`/pos` — Figma checkout with live cart + loyalty** | Persisted sales data (DB) |
 | **Admin & sales dashboards — Figma-aligned, modular** | Real-time analytics from API |
@@ -114,7 +114,7 @@ npm run build    # 3. production build → static export to /out
 | Static-export capable (`output: "export"`) | Authenticated / state-managed |
 | The front-end of a SaaS product | Multi-tenant *yet* (see SAAS_PLAN.md) |
 
-### Sortonium work completed (vs. template filler)
+### Sortorium work completed (vs. template filler)
 
 | Area | Route(s) | Status |
 |---|---|---|
@@ -305,7 +305,7 @@ public/                       # assets/, favicon, manifest, prebuilt index.html
 | Sidebar menu data | `src/core/json/siderbar_data.tsx` *(note misspelling "**sider**bar")* |
 | Sidebar / Header / Footer | `src/core/common/sidebar/sidebar.tsx`, `…/header/header.tsx` (+ subcomponents in `header/header/`), `…/footer/commonFooter.tsx` |
 | Currency (BDT) | `src/lib/currency.ts` — `formatCurrency()`, `parseCurrency()`; also re-exported from `environment.tsx` |
-| **Branding (Sortonium)** | `src/lib/branding.ts` — `PRODUCT_NAME`, `brandAssets`, `copyrightNotice()` |
+| **Branding (Sortorium)** | `src/lib/branding.ts` — `PRODUCT_NAME`, `brandAssets`, `copyrightNotice()` |
 | **Brand logo component** | `src/components/brand/BrandLogo.tsx` |
 | Archived legacy monoliths | `src/old-codes/` — not imported by active routes |
 | DataTable (antd + search) | `src/core/common/pagination/datatable.tsx` — props: `columns`, `dataSource`, `props` |
@@ -521,7 +521,7 @@ The primary POS route (`http://localhost:3000/pos`) is a **Figma-aligned checkou
 
 | Route | Component | Notes |
 |---|---|---|
-| **`/pos`** | `pos/index.tsx` | **Canonical Sortonium checkout** — edit this tree |
+| **`/pos`** | `pos/index.tsx` | **Canonical Sortorium checkout** — edit this tree |
 | `/pos-2` … `/pos-5` | `pos2.tsx` … `pos5.tsx` | Legacy template variants (comparison / fallback) |
 | Header **POS** button | `all_routes.pos2` → `/pos-2` | Opens legacy variant; change to `all_routes.pos` when ready to default to the new screen |
 
@@ -660,7 +660,7 @@ When wiring Django, the API should own:
 
 Front-end: replace `transactionCustomers` fixture with `GET /customers?search=` and `POST /customers`; keep `posLoyaltyConfig.ts` helpers for client-side preview until server totals are authoritative.
 
-### POS modals (Sortonium-styled)
+### POS modals (Sortorium-styled)
 
 | Modal ID | Component | Purpose |
 |---|---|---|
@@ -767,7 +767,7 @@ When adding a new screen or decomposing a monolith, copy this structure. Pre-ref
 
 ## 💱 Currency (BDT)
 
-Sortonium defaults to **Bangladeshi Taka (BDT)**. Use the shared helpers — do not hardcode `৳` or `$` in new code.
+Sortorium defaults to **Bangladeshi Taka (BDT)**. Use the shared helpers — do not hardcode `৳` or `$` in new code.
 
 ```ts
 import { formatCurrency, parseCurrency } from "@/lib/currency";
@@ -787,7 +787,7 @@ POS product fixtures (`posProductsData.ts`) and cart math use BDT throughout.
 
 ---
 
-## 🏷 Branding (Sortonium)
+## 🏷 Branding (Sortorium)
 
 Product name and logo paths live in **`src/lib/branding.ts`**. Use these everywhere instead of hardcoding text or legacy `logo.png` paths.
 
@@ -800,13 +800,13 @@ import BrandLogo from "@/components/brand/BrandLogo";
 <BrandLogo variant="small" />     // collapsed sidebar
 
 // Footer text
-copyrightNotice(); // "2014 - 2026 © Sortonium. All Rights Reserved"
+copyrightNotice(); // "2014 - 2026 © Sortorium. All Rights Reserved"
 ```
 
 | Asset | Path | Use |
 |---|---|---|
-| **Icon (S mark)** | `assets/img/brand/sortonium-icon.png` · `.svg` | Figma node `632:61` — favicon, browser tab, PWA |
-| **Logo (wordmark)** | `assets/img/brand/sortonium-logo.png` | Header, auth, POS, invoices |
+| **Icon (S mark)** | `assets/img/brand/sortorium-icon.png` · `.svg` | Figma node `632:61` — favicon, browser tab, PWA |
+| **Logo (wordmark)** | `assets/img/brand/sortorium-logo.png` | Header, auth, POS, invoices |
 | Favicon (alias) | `public/favicon.png` | Same as icon PNG |
 
 ---
@@ -883,6 +883,6 @@ graph TD
 
 <div align="center">
 
-**Sortonium** — retail POS SaaS front-end · [GeekSSort](https://github.com/GeekSSort/geekpos_frontend)
+**Sortorium** — retail POS SaaS front-end · [GeekSSort](https://github.com/GeekSSort/geekpos_frontend)
 
 </div>

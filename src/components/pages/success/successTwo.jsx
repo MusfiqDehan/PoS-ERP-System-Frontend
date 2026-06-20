@@ -19,11 +19,11 @@ const SuccessTwo = () => {
                                     <div className="login-userset">
                                         <div className="login-userset">
                                             <div className="login-logo logo-normal">
-                                                <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                                                <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                                             </div>
                                         </div>
                                         <Link href={all_routes.newdashboard} className="login-logo logo-white">
-                                            <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                                            <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                                         </Link>
                                         <div className="login-userheading text-center">
                                             <img src="assets/img/icons/check-icon.svg" alt="Icon" />
@@ -38,7 +38,7 @@ const SuccessTwo = () => {
                                             </Link>
                                         </div>
                                         <div className="my-4 d-flex justify-content-center align-items-center copyright-text">
-                                            <p>Copyright © 2025 Sortonium</p>
+                                            <p>Copyright © 2025 Sortorium</p>
                                         </div>
                                     </div>
                                 </div>

@@ -62,7 +62,7 @@ export default function  SupplierReportComponent() {
         <>
           <div className="d-flex align-items-center">
             <Link href="#" className="avatar avatar-md me-2">
-              <img src={record.image} alt="Sortonium" />
+              <img src={record.image} alt="Sortorium" />
             </Link>
             <h6 className="fw-medium">
               <Link href="#">{text}</Link>

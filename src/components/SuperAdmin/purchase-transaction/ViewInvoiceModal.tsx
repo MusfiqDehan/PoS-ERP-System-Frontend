@@ -13,7 +13,7 @@ export default function ViewInvoiceModal() {
                 <div className="col-md-6">
                   <div className="mb-4">
                     <img
-                      src="assets/img/brand/sortonium-logo.png"
+                      src="assets/img/brand/sortorium-logo.png"
                       className="img-fluid"
                       alt="logo"
                     />

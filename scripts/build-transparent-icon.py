@@ -1,4 +1,4 @@
-"""Build transparent Sortonium icon PNG + SVG for favicon/metadata."""
+"""Build transparent Sortorium icon PNG + SVG for favicon/metadata."""
 from __future__ import annotations
 
 import base64
@@ -8,9 +8,9 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 BRAND = ROOT / "public" / "assets" / "img" / "brand"
-SOURCE = BRAND / "sortonium-icon-source.png"
-ICON_PNG = BRAND / "sortonium-icon.png"
-ICON_SVG = BRAND / "sortonium-icon.svg"
+SOURCE = BRAND / "sortorium-icon-source.png"
+ICON_PNG = BRAND / "sortorium-icon.png"
+ICON_SVG = BRAND / "sortorium-icon.svg"
 FAVICON = ROOT / "public" / "favicon.png"
 
 # Icon inset within the canvas — slightly smaller so the tab favicon doesn't feel oversized.
@@ -47,7 +47,7 @@ def main() -> None:
     icon = remove_dark_background(Image.open(SOURCE))
 
     for size in (512, 64, 32):
-        fit_on_canvas(icon, size).save(BRAND / f"sortonium-icon-{size}.png")
+        fit_on_canvas(icon, size).save(BRAND / f"sortorium-icon-{size}.png")
 
     # Full-size export: square canvas with same inset ratio
     max_side = max(icon.size)
@@ -55,10 +55,10 @@ def main() -> None:
     padded = fit_on_canvas(icon, canvas_side)
     padded.save(ICON_PNG)
 
-    favicon = Image.open(BRAND / "sortonium-icon-32.png")
+    favicon = Image.open(BRAND / "sortorium-icon-32.png")
     favicon.save(FAVICON)
 
-    png64 = BRAND / "sortonium-icon-64.png"
+    png64 = BRAND / "sortorium-icon-64.png"
     b64 = base64.b64encode(png64.read_bytes()).decode("ascii")
     w, h = Image.open(png64).size
     svg = (

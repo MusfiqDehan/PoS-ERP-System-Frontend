@@ -320,7 +320,7 @@ const TodoModal = () => {
                   <div className="delete-image text-center mx-auto">
                     <img
                       src="./assets/img/icons/close-circle.png"
-                      alt="Sortonium"
+                      alt="Sortorium"
                       className="img-fluid"
                     />
                   </div>

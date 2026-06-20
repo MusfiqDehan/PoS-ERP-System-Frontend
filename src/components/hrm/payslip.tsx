@@ -163,7 +163,7 @@ export default function PayslipComponent  () {
                             </div>
                             <div className="text-center">
                                 <div className="mb-3">
-                                    <img src="assets/img/brand/sortonium-logo.png" className="img-fluid" alt="logo" />
+                                    <img src="assets/img/brand/sortorium-logo.png" className="img-fluid" alt="logo" />
                                 </div>
                                 <p>
                                     81, Randall Drive,Hornchurch <br />

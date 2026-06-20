@@ -1,21 +1,21 @@
 {
-  "short_name": "Sortonium",
-  "name": "Sortonium — Retail POS & Inventory Management",
+  "short_name": "Sortorium",
+  "name": "Sortorium — Retail POS & Inventory Management",
   "icons": [
     {
-      "src": "assets/img/brand/sortonium-icon-32.png",
+      "src": "assets/img/brand/sortorium-icon-32.png",
       "sizes": "32x32",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/img/brand/sortonium-icon-512.png",
+      "src": "assets/img/brand/sortorium-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "assets/img/brand/sortonium-icon.svg",
+      "src": "assets/img/brand/sortorium-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml"
     }

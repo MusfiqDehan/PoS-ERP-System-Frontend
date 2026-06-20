@@ -1,4 +1,4 @@
-# Development image for the Sortonium Next.js front-end.
+# Development image for the Sortorium Next.js front-end.
 # This is tuned for a live-reload workflow (bind mount + file watching),
 # NOT for production builds.
 

@@ -13,7 +13,7 @@ export default function SophieHeadrickPost(props: SophieHeadrickPostProps) {
                       <div className="d-flex align-items-center justify-content-between border-bottom flex-wrap row-gap-3 pb-3">
                         <div className="d-flex align-items-center">
                           <span className="avatar avatar-lg avatar-rounded flex-shrink-0 me-2">
-                            <img src="assets/img/users/user-04.jpg" alt="Sortonium" />
+                            <img src="assets/img/users/user-04.jpg" alt="Sortorium" />
                           </span>
                           <div>
                             <h5 className="mb-1">
@@ -135,7 +135,7 @@ export default function SophieHeadrickPost(props: SophieHeadrickPostProps) {
                         <img
                           src="assets/img/social/social-feed-03.jpg"
                           className="rounded"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                       </div>
                       <div className="d-flex align-items-center justify-content-between flex-wrap row-gap-3 mb-3">
@@ -194,7 +194,7 @@ export default function SophieHeadrickPost(props: SophieHeadrickPostProps) {
                           href="#"
                           className="avatar avatar-rounded flex-shrink-0 me-2"
                         >
-                          <img src="assets/img/profiles/avatar-02.jpg" alt="Sortonium" />
+                          <img src="assets/img/profiles/avatar-02.jpg" alt="Sortorium" />
                         </Link>
                         <div className="bg-light rounded flex-fill p-2">
                           <div className="d-flex align-items-center mb-1">
@@ -222,7 +222,7 @@ export default function SophieHeadrickPost(props: SophieHeadrickPostProps) {
                           href="#"
                           className="avatar avatar-rounded flex-shrink-0 me-2"
                         >
-                          <img src="assets/img/profiles/avatar-01.jpg" alt="Sortonium" />
+                          <img src="assets/img/profiles/avatar-01.jpg" alt="Sortorium" />
                         </Link>
                         <div className="bg-light rounded flex-fill p-2">
                           <div className="d-flex align-items-center mb-1">
@@ -248,7 +248,7 @@ export default function SophieHeadrickPost(props: SophieHeadrickPostProps) {
                           href="#"
                           className="avatar avatar-rounded flex-shrink-0 me-2"
                         >
-                          <img src="assets/img/profiles/avatar-04.jpg" alt="Sortonium" />
+                          <img src="assets/img/profiles/avatar-04.jpg" alt="Sortorium" />
                         </Link>
                         <div className="bg-light rounded flex-fill p-2">
                           <div className="d-flex align-items-center mb-1">
@@ -280,7 +280,7 @@ export default function SophieHeadrickPost(props: SophieHeadrickPostProps) {
                             >
                               <img
                                 src="assets/img/profiles/avatar-05.jpg"
-                                alt="Sortonium"
+                                alt="Sortorium"
                               />
                             </Link>
                             <div className="bg-light rounded flex-fill p-2">
@@ -311,7 +311,7 @@ export default function SophieHeadrickPost(props: SophieHeadrickPostProps) {
                             >
                               <img
                                 src="assets/img/profiles/avatar-06.jpg"
-                                alt="Sortonium"
+                                alt="Sortorium"
                               />
                             </Link>
                             <div className="bg-light rounded flex-fill p-2">
@@ -349,7 +349,7 @@ export default function SophieHeadrickPost(props: SophieHeadrickPostProps) {
                       </div>
                       <div className="d-flex align-items-start">
                         <span className="avatar avatar-rounded me-2 flex-shrink-0">
-                          <img src="assets/img/users/user-11.jpg" alt="Sortonium" />
+                          <img src="assets/img/users/user-11.jpg" alt="Sortorium" />
                         </span>
                         <input
                           type="text"

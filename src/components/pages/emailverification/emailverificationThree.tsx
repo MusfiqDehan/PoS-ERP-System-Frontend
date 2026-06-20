@@ -30,9 +30,9 @@ export default  function EmailverificationThreeComponent() {
               <div className="col-lg-5 mx-auto">
                 <div className="login-content user-login">
                   <div className="login-logo">
-                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                    <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                     <Link href={route.dashboard} className="login-logo logo-white">
-                      <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                      <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                     </Link>
                   </div>
                   <form className="digit-group">
@@ -116,7 +116,7 @@ export default  function EmailverificationThreeComponent() {
               </div>
             </div>
             <div className="my-4 d-flex justify-content-center align-items-center copyright-text">
-              <p>Copyright © 2025 Sortonium</p>
+              <p>Copyright © 2025 Sortorium</p>
             </div>
           </div>
         </div>

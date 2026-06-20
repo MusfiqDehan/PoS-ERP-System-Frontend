@@ -1,6 +1,6 @@
-# Running Sortonium on Windows with Docker + WSL2 (Live Reload)
+# Running Sortorium on Windows with Docker + WSL2 (Live Reload)
 
-This guide gets the **Sortonium** Next.js front-end running on a **Windows** machine using
+This guide gets the **Sortorium** Next.js front-end running on a **Windows** machine using
 **Docker** inside **WSL2**, with **instant live reload** — you edit a file in your IDE and the
 website updates automatically in the browser, **with no need to rebuild or restart the container**.
 

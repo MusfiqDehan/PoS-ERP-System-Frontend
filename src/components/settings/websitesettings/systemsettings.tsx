@@ -43,7 +43,7 @@ export default function SystemSettingsComponent ()  {
                                 <span className="system-app-icon">
                                   <img
                                     src="assets/img/icons/app-icon-07.svg"
-                                    alt="Sortonium"
+                                    alt="Sortorium"
                                   />
                                 </span>
                                 <div className="security-title">
@@ -90,7 +90,7 @@ export default function SystemSettingsComponent ()  {
                                 <span className="system-app-icon">
                                   <img
                                     src="assets/img/icons/app-icon-08.svg"
-                                    alt="Sortonium"
+                                    alt="Sortorium"
                                   />
                                 </span>
                                 <div className="security-title">
@@ -137,7 +137,7 @@ export default function SystemSettingsComponent ()  {
                                 <span className="system-app-icon">
                                   <img
                                     src="assets/img/icons/app-icon-09.svg"
-                                    alt="Sortonium"
+                                    alt="Sortorium"
                                   />
                                 </span>
                                 <div className="security-title">
@@ -184,7 +184,7 @@ export default function SystemSettingsComponent ()  {
                                 <span className="system-app-icon">
                                   <img
                                     src="assets/img/icons/app-icon-10.svg"
-                                    alt="Sortonium"
+                                    alt="Sortorium"
                                   />
                                 </span>
                                 <div className="security-title">

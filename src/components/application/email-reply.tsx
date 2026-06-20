@@ -48,7 +48,7 @@ export default function EmailReplyComponent(){
                           <img
                             src="assets/img/profiles/avatar-02.jpg"
                             className="rounded-circle"
-                            alt="Sortonium"
+                            alt="Sortorium"
                           />
                         </Link>
                         <div>
@@ -309,10 +309,10 @@ export default function EmailReplyComponent(){
                       </Link>
                       <div className="box-bg">
                         <span className="bg-right">
-                          <img src="assets/img/bg/email-bg-01.png" alt="Sortonium" />
+                          <img src="assets/img/bg/email-bg-01.png" alt="Sortorium" />
                         </span>
                         <span className="bg-left">
-                          <img src="assets/img/bg/email-bg-02.png" alt="Sortonium" />
+                          <img src="assets/img/bg/email-bg-02.png" alt="Sortorium" />
                         </span>
                       </div>
                     </div>
@@ -428,7 +428,7 @@ export default function EmailReplyComponent(){
                   href="javascript:void(0);"
                   className="avatar avatar-md avatar-rounded flex-shrink-0 me-2"
                 >
-                  <img src="assets/img/profiles/avatar-01.jpg" alt="Sortonium" />
+                  <img src="assets/img/profiles/avatar-01.jpg" alt="Sortorium" />
                 </Link>
                 <div className="flex-fill">
                   <div className="d-flex align-items-start justify-content-between flex-wrap row-gap-2">
@@ -561,7 +561,7 @@ export default function EmailReplyComponent(){
                       href="javascript:void(0);"
                       className="avatar avatar-md avatar-rounded flex-shrink-0 me-2"
                     >
-                      <img src="assets/img/profiles/avatar-01.jpg" alt="Sortonium" />
+                      <img src="assets/img/profiles/avatar-01.jpg" alt="Sortorium" />
                     </Link>
                     <div className="flex-fill">
                       <div className="d-flex align-items-start justify-content-between flex-wrap row-gap-2">
@@ -750,11 +750,11 @@ export default function EmailReplyComponent(){
       </div>
     </div>
     <div className="footer d-sm-flex align-items-center justify-content-between bg-white p-3">
-      <p className="mb-0">2014 - 2025 © Sortonium. All Right Reserved</p>
+      <p className="mb-0">2014 - 2025 © Sortorium. All Right Reserved</p>
       <p>
         Designed &amp; Developed by{" "}
         <Link href="javascript:void(0);" className="text-primary">
-          Sortonium
+          Sortorium
         </Link>
       </p>
     </div>

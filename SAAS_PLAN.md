@@ -1,4 +1,4 @@
-# SaaS Migration Plan — Sortonium (Next.js front-end + Django back-end)
+# SaaS Migration Plan — Sortorium (Next.js front-end + Django back-end)
 
 > Status: **PLAN ONLY. Not started.** No code changes made yet. Decisions below are locked;
 > implementation sequencing is a proposal to be confirmed before work begins.
@@ -10,7 +10,7 @@
 | Backend | **Build a new Django API** (separate service; Django REST Framework) |
 | Scope | **Keep almost all modules** (POS, Inventory, Sales, Purchases, Finance, HRM, CMS, Reports, etc.) |
 | Multi-tenancy | **Subdomain per tenant** (`acme.yourpos.com`), **shared database + `tenant_id`** column |
-| Front-end | This repo — Next.js 15 App Router (the existing Sortonium template) |
+| Front-end | This repo — Next.js 15 App Router (the existing Sortorium template) |
 | Server model | **Drop `output: "export"`** — run Next.js with a server runtime (needed for middleware/auth/subdomain) |
 
 ## Why the template needs work (recap)

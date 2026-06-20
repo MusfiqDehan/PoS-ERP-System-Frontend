@@ -118,7 +118,7 @@ jobs:
 
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
             docker compose pull
-            docker rm -f sortonium-frontend 2>/dev/null || true  # remove pre-rename container
+            docker rm -f sortonium-frontend 2>/dev/null || true  # remove old pre-rename container
             docker compose up -d
             docker image prune -f
         env:

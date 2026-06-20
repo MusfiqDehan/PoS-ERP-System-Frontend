@@ -412,7 +412,7 @@ function PosPrintReceiptModal() {
 
           <div className="pos-sale-modal__body">
             <div className="pos-receipt">
-              <p className="pos-receipt__store">Sortonium · Mirpur-12</p>
+              <p className="pos-receipt__store">Sortorium · Mirpur-12</p>
               <p className="pos-receipt__meta">Invoice #INV-2026-0086</p>
               <div className="pos-receipt__divider" />
               <div className="pos-receipt__row">

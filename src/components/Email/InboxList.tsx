@@ -181,7 +181,7 @@ export default function InboxList() {
                           >
                             <img
                               src="assets/img/profiles/avatar-01.jpg"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </Link>
                           <div className="flex-fill">
@@ -305,7 +305,7 @@ export default function InboxList() {
                       </div>
                       <div className="d-flex align-items-center justify-content-between">
                         <Link href="#">
-                          <img src="assets/img/icons/google-meet.svg" alt="Sortonium" />
+                          <img src="assets/img/icons/google-meet.svg" alt="Sortorium" />
                         </Link>
                         <div className="d-flex align-items-center">
                           <span>
@@ -336,7 +336,7 @@ export default function InboxList() {
                           >
                             <img
                               src="assets/img/profiles/avatar-03.jpg"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </Link>
                           <div className="flex-fill">
@@ -496,7 +496,7 @@ export default function InboxList() {
                           >
                             <img
                               src="assets/img/profiles/avatar-04.jpg"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </Link>
                           <div className="flex-fill">
@@ -646,7 +646,7 @@ export default function InboxList() {
                           >
                             <img
                               src="assets/img/profiles/avatar-05.jpg"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </Link>
                           <div className="flex-fill">
@@ -802,7 +802,7 @@ export default function InboxList() {
                           >
                             <img
                               src="assets/img/profiles/avatar-08.jpg"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </Link>
                           <div className="flex-fill">
@@ -1103,7 +1103,7 @@ export default function InboxList() {
                           >
                             <img
                               src="assets/img/profiles/avatar-07.jpg"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </Link>
                           <div className="flex-fill">

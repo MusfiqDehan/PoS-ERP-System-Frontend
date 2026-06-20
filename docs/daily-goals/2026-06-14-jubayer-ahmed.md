@@ -10,7 +10,7 @@ Done today:
 
 - Category Section (PosCategoryTabs): added left and right scroll buttons, disable at track edges, accessibility labels
 - Products Toolbar: split into products-toolbar/ (ToolbarSearch, ToolbarScan, ToolbarCategory, ToolbarBrand, ToolbarNotification)
-- ToolbarCategory: opens Manage Categories modal (create, update, delete) with Sortonium-styled UI
+- ToolbarCategory: opens Manage Categories modal (create, update, delete) with Sortorium-styled UI
 - Order Details (PosOrderDetails): removed redundant use client to fix serializable props lint
 
 Still pending:
@@ -22,7 +22,7 @@ Still pending:
 - Other pending POS modules
 
 2. Update Brand Identity
-   Replace all dummy text and logo placeholders across the application with Sortonium and its logo.
+   Replace all dummy text and logo placeholders across the application with Sortorium and its logo.
 
 Done:
 

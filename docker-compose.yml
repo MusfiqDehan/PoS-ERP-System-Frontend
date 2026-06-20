@@ -1,4 +1,4 @@
-# Live-reload development stack for the Sortonium Next.js front-end.
+# Live-reload development stack for the Sortorium Next.js front-end.
 #
 #   docker compose up        -> start the dev server with live reload
 #   docker compose up --build-> rebuild the image (after dependency changes)
@@ -9,7 +9,7 @@
 
 services:
   web:
-    container_name: sortonium-frontend-dev
+    container_name: sortorium-frontend-dev
     build:
       context: .
       dockerfile: Dockerfile

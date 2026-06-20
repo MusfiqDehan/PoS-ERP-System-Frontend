@@ -28,7 +28,7 @@ export default  function ComingsoonComponent () {
         <div className="comming-soon-pg w-100">
           <div className="coming-soon-box">
             <div className="pos-logo">
-              <img src="assets/img/logo-small.png" alt="Sortonium" />
+              <img src="assets/img/logo-small.png" alt="Sortorium" />
             </div>
             <span>Our Website is</span>
             <h1>
