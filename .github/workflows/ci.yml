@@ -41,6 +41,11 @@ jobs:
       - name: Type-check
         run: npm run typecheck
 
+      # Unit tests (Vitest + React Testing Library). Verifies component behavior,
+      # not just that the code compiles. Runs before the expensive build step.
+      - name: Run unit tests
+        run: npm run test
+
       # Production build. Catches compilation and bundling errors early.
       - name: Build application
         run: npm run build
