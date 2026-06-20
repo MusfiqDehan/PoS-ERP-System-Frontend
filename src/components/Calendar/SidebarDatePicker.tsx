@@ -16,7 +16,7 @@ export default function SidebarDatePicker({
                         <Calendar
                           className="datepickers pb-4"
                           value={date}
-                          onChange={(e: Date | null) => onDateChange(e)}
+                          onChange={(e) => onDateChange((e.value as Date) ?? null)}
                           inline={true}
                         />
                       </div>

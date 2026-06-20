@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, type CSSProperties } from "react";
 import {
   orderStatisticsDays,
   orderStatisticsFeaturedTooltip,
@@ -86,10 +86,12 @@ export default function OrderStatisticsHeatmap() {
 
         <div
           className="order-statistics__tooltip"
-          style={{
-            "--tooltip-day": activeTooltip.dayIndex,
-            "--tooltip-row": activeTooltip.rowIndex,
-          }}
+          style={
+            {
+              "--tooltip-day": activeTooltip.dayIndex,
+              "--tooltip-row": activeTooltip.rowIndex,
+            } as CSSProperties
+          }
         >
           <p className="order-statistics__tooltip-text">
             {activeTooltip.orders} Orders

@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { MinusCircle, PlusCircle } from "react-feather";
-import DefaultEditor from "react-simple-wysiwyg";
+import DefaultEditor, { type ContentEditableEvent } from "react-simple-wysiwyg";
 
 export default function EditTransferModal() {
   const [quantity, setQuantity] = useState(4);
@@ -26,7 +26,7 @@ export default function EditTransferModal() {
     setQuantity(quantity + 1);
   };
 
-  function onChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  function onChange(e: ContentEditableEvent) {
     setValue(e.target.value);
   }
 

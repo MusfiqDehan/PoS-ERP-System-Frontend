@@ -62,7 +62,7 @@ export default function ComposePanel({
             name="Label"
             defaultValue="Angela Thomas"
           /> */}
-                <Chips value={value} className="input-tags form-control border-0 h-100 w-100" onChange={(e: { value: string[] }) => onValueChange(e.value)} itemTemplate={customChip} />
+                <Chips value={value} className="input-tags form-control border-0 h-100 w-100" onChange={(e) => onValueChange(e.value ?? [])} itemTemplate={customChip} />
               </div>
               <div className="d-flex align-items-center email-cc">
                 <Link href="#" className="d-inline-flex me-2">
