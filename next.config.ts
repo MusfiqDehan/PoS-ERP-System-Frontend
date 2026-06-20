@@ -3,7 +3,10 @@ import path from "path";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 
-  output: "export",
+  // Self-contained Node server build for Docker/VPS deployment. Produces
+  // `.next/standalone/server.js` (run with `node server.js`). Supports SSR,
+  // middleware, auth, and subdomain routing — unlike the old static export.
+  output: "standalone",
    async rewrites() {
     return [
       {

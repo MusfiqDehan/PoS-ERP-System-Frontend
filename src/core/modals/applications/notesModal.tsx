@@ -3,8 +3,15 @@
 
 import React from "react";
 import Select from "react-select";
+import dynamic from "next/dynamic";
 import "bootstrap-daterangepicker/daterangepicker.css";
-import DateRangePicker from "react-bootstrap-daterangepicker";
+
+// Browser-only: react-bootstrap-daterangepicker pulls in jQuery at import time,
+// which breaks server-side prerendering of this page.
+const DateRangePicker = dynamic(
+  () => import("react-bootstrap-daterangepicker"),
+  { ssr: false }
+);
 import TextEditor from "@/core/common/texteditor/texteditor";
 import Link from "next/link";
 import { Eye, Star, Trash2 } from "react-feather";
