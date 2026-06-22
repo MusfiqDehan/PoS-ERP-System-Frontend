@@ -1,0 +1,25 @@
+---
+description: Context for the Roles & Permissions module (saves re-scanning files)
+globs: src/components/usermanagement/rolesPermissions/**,src/app/(features)/(user-management)/roles-permissions/**
+alwaysApply: false
+---
+
+# Roles & Permissions module
+
+Page: `src/app/(features)/(user-management)/roles-permissions/page.tsx` (thin wrapper).
+Renders in order: `PageHeader` → `RolesPermissionsKpiCards` → `RolesCards` → `PermissionsMatrix` → `RoleAssignments`.
+Modals mounted at page bottom: `AddRole` (id `add-units`), `AddUsers id="assign-role-member"`, `EditRole`, `DeleteRoleModal`.
+
+## Components (all in `src/components/usermanagement/rolesPermissions/`)
+- `RolesCards.tsx` + `RoleCard.tsx` + `rolesData.ts` — role cards grid. "Add" button → `#assign-role-member`.
+- `PermissionsMatrix.tsx` + `AccessSelect.tsx` (client) + `permissionsMatrixData.ts` — feature×role grid.
+- `RoleAssignments.tsx` + `roleAssignmentsData.ts` — assignments table.
+- `PageHeader*.tsx` — "Invite Member" + "Create Role" (`#add-units`) buttons.
+
+## Conventions & gotchas (verified)
+- **Tailwind v4 + Bootstrap collide.** Tailwind utilities are in `@layer utilities`; Bootstrap is unlayered + `!important`, so it WINS any shared class name (`mb-0..5`, `p-0..5`, `gap-*`, `border`, `rounded`, `bg-white`). Use arbitrary values (e.g. `mb-[24px]`) to avoid collisions.
+- **Role keys must match** between `rolesData.ts` and `permissionsMatrixData.ts`: `admin, manager, cashier, accountant, auditor, supervisor, storekeeper`.
+- **Verify Tabler icons exist** before use: `grep '\.ti-NAME:' src/style/icons/tabler-icons/webfont/tabler-icons.css` (e.g. `ti-cash-register` does NOT exist).
+- Modals are Bootstrap (`data-bs-toggle="modal"`), id `add-units` is reused across many modals — give page-specific instances a unique id.
+- Matrix sticky Feature column + green scrollbar rely on `.permissions-matrix-scroll` (`container-type: inline-size`) in `global.scss`; columns use `100cqw`.
+- Dev server runs in Docker at `http://localhost:3000` (live reload). Verify pages with `curl -s URL -o /dev/null -w "%{http_code}"`.
