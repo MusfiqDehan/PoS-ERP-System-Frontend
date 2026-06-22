@@ -6,7 +6,9 @@ const backendProxyTarget =
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
+  // Static export only for production builds (Docker/nginx). Omit in dev so
+  // rewrites work without the export-no-custom-routes warning.
+  ...(process.env.NODE_ENV === "production" ? { output: "export" as const } : {}),
 
   async rewrites() {
     const routes: Array<{ source: string; destination: string }> = [
