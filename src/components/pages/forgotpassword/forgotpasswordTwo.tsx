@@ -18,10 +18,10 @@ export default function ForgotpasswordTwoComponent() {
                 <form >
                   <div className="login-userset">
                     <div className="login-logo logo-normal">
-                      <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                      <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                     </div>
                     <Link href={route.dashboard} className="login-logo logo-white">
-                      <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                      <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                     </Link>
                     <div className="login-userheading">
                       <h3>Forgot password?</h3>
@@ -63,7 +63,7 @@ export default function ForgotpasswordTwoComponent() {
                       <h4>OR</h4>
                     </div>
                     <div className="my-4 d-flex justify-content-center align-items-center copyright-text">
-                      <p>Copyright © 2025 Sortonium</p>
+                      <p>Copyright © 2025 Sortorium</p>
                     </div>
                   </div>
                 </form>

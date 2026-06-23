@@ -16,7 +16,7 @@ export default function LeftSidebar(props: LeftSidebarProps) {
                           href="#"
                           className="avatar avatar-xl online avatar-rounded"
                         >
-                          <img src="assets/img/users/user-11.jpg" alt="Sortonium" />
+                          <img src="assets/img/users/user-11.jpg" alt="Sortorium" />
                         </Link>
                         <h5 className="mb-1">
                           <Link href="#">James Hong </Link>
@@ -141,7 +141,7 @@ export default function LeftSidebar(props: LeftSidebarProps) {
                             <img
                               src="assets/img/icons/liked-page-01.svg"
                               className="me-2"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                             Dribble
                           </span>
@@ -157,7 +157,7 @@ export default function LeftSidebar(props: LeftSidebarProps) {
                             <img
                               src="assets/img/icons/liked-page-02.svg"
                               className="me-2"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                             UI/UX Designs
                           </span>
@@ -173,7 +173,7 @@ export default function LeftSidebar(props: LeftSidebarProps) {
                             <img
                               src="assets/img/icons/liked-page-03.svg"
                               className="me-2"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                             Figma Update
                           </span>
@@ -191,7 +191,7 @@ export default function LeftSidebar(props: LeftSidebarProps) {
                                 <img
                                   src="assets/img/icons/liked-page-04.svg"
                                   className="me-2"
-                                  alt="Sortonium"
+                                  alt="Sortorium"
                                 />
                                 I Am Techie
                               </span>

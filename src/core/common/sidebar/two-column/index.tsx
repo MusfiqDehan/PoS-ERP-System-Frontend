@@ -157,16 +157,16 @@ const TwoColumnSidebar = () => {
                             {/* Logo */}
                             <div className="sidebar-logo">
                                 <Link href={route.newdashboard} className="logo logo-normal">
-                                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                                    <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                                 </Link>
                                 <Link href={route.newdashboard} className="logo logo-white">
-                                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                                    <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                                 </Link>
                                 <Link href={route.newdashboard} className="logo-small">
-                                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                                    <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                                 </Link>
                                 <Link href={route.newdashboard} className="logo-small-white">
-                                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                                    <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                                 </Link>
                             </div>
                             {/* /Logo */}
@@ -177,7 +177,7 @@ const TwoColumnSidebar = () => {
                                 <div className="avatar avatar-lg online mb-3">
                                     <img
                                         src="assets/img/customer/customer15.jpg"
-                                        alt="Sortonium"
+                                        alt="Sortorium"
                                         className="img-fluid rounded-circle"
                                     />
                                 </div>

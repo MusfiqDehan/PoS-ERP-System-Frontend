@@ -169,7 +169,7 @@ export default function AllBlogsComponent () {
                         <img
                           src="assets/img/users/user-02.jpg"
                           className="avatar avatar-xs rounded-circle me-2 flex-shrink-0"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                         Gertrude Bowie
                       </Link>
@@ -242,7 +242,7 @@ export default function AllBlogsComponent () {
                         <img
                           src="assets/img/users/user-03.jpg"
                           className="avatar avatar-xs rounded-circle me-2 flex-shrink-0"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                         Edward Marcus
                       </Link>
@@ -315,7 +315,7 @@ export default function AllBlogsComponent () {
                         <img
                           src="assets/img/users/user-05.jpg"
                           className="avatar avatar-xs rounded-circle me-2 flex-shrink-0"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                         Mark Phillips
                       </Link>
@@ -388,7 +388,7 @@ export default function AllBlogsComponent () {
                         <img
                           src="assets/img/users/user-04.jpg"
                           className="avatar avatar-xs rounded-circle me-2 flex-shrink-0"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                         Nidia Hale
                       </Link>
@@ -461,7 +461,7 @@ export default function AllBlogsComponent () {
                         <img
                           src="assets/img/users/user-06.jpg"
                           className="avatar avatar-xs rounded-circle me-2 flex-shrink-0"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                         Rebecca Dale
                       </Link>
@@ -534,7 +534,7 @@ export default function AllBlogsComponent () {
                         <img
                           src="assets/img/users/user-08.jpg"
                           className="avatar avatar-xs rounded-circle me-2 flex-shrink-0"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                         Jimmy Johnson
                       </Link>
@@ -607,7 +607,7 @@ export default function AllBlogsComponent () {
                         <img
                           src="assets/img/users/user-07.jpg"
                           className="avatar avatar-xs rounded-circle me-2 flex-shrink-0"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                         Stanley Pierre
                       </Link>
@@ -680,7 +680,7 @@ export default function AllBlogsComponent () {
                         <img
                           src="assets/img/users/user-10.jpg"
                           className="avatar avatar-xs rounded-circle me-2 flex-shrink-0"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                         Alice Garcia
                       </Link>
@@ -753,7 +753,7 @@ export default function AllBlogsComponent () {
                         <img
                           src="assets/img/users/user-09.jpg"
                           className="avatar avatar-xs rounded-circle me-2 flex-shrink-0"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                         James Currier
                       </Link>
@@ -796,12 +796,12 @@ export default function AllBlogsComponent () {
         </div>
         <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
           <p className="mb-0 text-gray-9">
-            2014 - 2025 © Sortonium. All Right Reserved
+            2014 - 2025 © Sortorium. All Right Reserved
           </p>
           <p>
             Designed &amp; Developed by{" "}
             <a href="javascript:void(0);" className="text-primary">
-              Sortonium
+              Sortorium
             </a>
           </p>
         </div>
@@ -943,7 +943,7 @@ export default function AllBlogsComponent () {
                     <div className="new-employee-field">
                       <div className="profile-pic-upload">
                         <div className="profile-pic edit-review people-profile-pic p-2 border rounded">
-                          <img src="assets/img/users/user-08.jpg" alt="Sortonium" />
+                          <img src="assets/img/users/user-08.jpg" alt="Sortorium" />
                           <Link href="#">
                             <i
                               data-feather="x-square"

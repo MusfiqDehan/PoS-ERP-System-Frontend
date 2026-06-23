@@ -3,8 +3,16 @@
 import ImageWithBasePath from "@/core/common/image-with-base-path";
 import moment from "moment";
 import { useState } from "react";
-import { DateRangePicker } from "react-bootstrap-daterangepicker";
+import dynamic from "next/dynamic";
 import "bootstrap-daterangepicker/daterangepicker.css";
+
+// react-bootstrap-daterangepicker imports jQuery at module load, which throws
+// during server-side prerendering. Load it browser-only so the build can
+// prerender this page.
+const DateRangePicker = dynamic(
+  () => import("react-bootstrap-daterangepicker"),
+  { ssr: false }
+);
 
 export default function DashboardDateRange() {
   const [state, setState] = useState({

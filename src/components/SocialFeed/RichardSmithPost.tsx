@@ -22,7 +22,7 @@ export default function RichardSmithPost(props: RichardSmithPostProps) {
                             href="#"
                             className="avatar avatar-lg avatar-rounded flex-shrink-0 me-2"
                           >
-                            <img src="assets/img/users/user-03.jpg" alt="Sortonium" />
+                            <img src="assets/img/users/user-03.jpg" alt="Sortorium" />
                           </Link>
                           <div>
                             <h5 className="mb-1">
@@ -143,7 +143,7 @@ export default function RichardSmithPost(props: RichardSmithPostProps) {
                         <img
                           src="assets/img/social/social-feed-01.jpg"
                           className="rounded"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                       </div>
                       <Lightbox
@@ -285,7 +285,7 @@ export default function RichardSmithPost(props: RichardSmithPostProps) {
                           href="#"
                           className="avatar avatar-rounded me-2 flex-shrink-0"
                         >
-                          <img src="assets/img/users/user-11.jpg" alt="Sortonium" />
+                          <img src="assets/img/users/user-11.jpg" alt="Sortorium" />
                         </Link>
                         <input
                           type="text"

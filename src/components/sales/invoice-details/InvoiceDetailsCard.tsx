@@ -11,13 +11,13 @@ export default function InvoiceDetailsCard() {
           <div className="col-md-6">
             <div className="mb-2 invoice-logo">
               <img
-                src="assets/img/brand/sortonium-logo.png"
+                src="assets/img/brand/sortorium-logo.png"
                 width={130}
                 className="img-fluid logo"
                 alt="logo"
               />
               <img
-                src="assets/img/brand/sortonium-logo.png"
+                src="assets/img/brand/sortorium-logo.png"
                 width={130}
                 className="img-fluid logo-white"
                 alt="logo"
@@ -192,13 +192,13 @@ export default function InvoiceDetailsCard() {
         <div className="text-center">
           <div className="mb-3 invoice-logo d-flex align-items-center justify-content-center">
             <img
-              src="assets/img/brand/sortonium-logo.png"
+              src="assets/img/brand/sortorium-logo.png"
               width={130}
               className="img-fluid logo"
               alt="logo"
             />
             <img
-              src="assets/img/brand/sortonium-logo.png"
+              src="assets/img/brand/sortorium-logo.png"
               width={130}
               className="img-fluid logo-white"
               alt="logo"

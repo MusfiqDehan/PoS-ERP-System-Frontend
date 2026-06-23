@@ -1,9 +1,5 @@
-import EmailVerificationComponent from "@/components/pages/emailverification/emailverification";
+import EmailVerificationPage from "@/components/pages/emailverification";
 
 export default function EmailVerification() {
-  return (
-    <>
-      <EmailVerificationComponent />
-    </>
-  );
+  return <EmailVerificationPage />;
 }

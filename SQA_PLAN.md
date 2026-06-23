@@ -1,7 +1,7 @@
-# Software Quality Assurance (SQA) Plan — Sortonium
+# Software Quality Assurance (SQA) Plan — Sortorium
 
 > Companion to [`README.md`](README.md) (architecture) and [`SAAS_PLAN.md`](SAAS_PLAN.md) (backend + hosting).
-> This document defines **how quality is assured** across the Sortonium SaaS — test strategy, levels, process,
+> This document defines **how quality is assured** across the Sortorium SaaS — test strategy, levels, process,
 > defect management, environments, and release sign-off.
 > Status: **plan / standard** to follow as modules are wired from the template to the real Django API.
 
@@ -31,7 +31,7 @@
 
 ## 1. Purpose & Scope
 
-**Purpose:** ensure Sortonium is **correct, secure, and reliable** before it reaches tenants — with special
+**Purpose:** ensure Sortorium is **correct, secure, and reliable** before it reaches tenants — with special
 attention to the things a POS *cannot* get wrong: **money math, inventory accuracy, and tenant data isolation.**
 
 **In scope:**

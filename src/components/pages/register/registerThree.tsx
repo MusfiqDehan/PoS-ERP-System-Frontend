@@ -29,9 +29,9 @@ export default function  RegisterThreeComponent () {
               <div className="col-lg-5 mx-auto">
                 <div className="login-content user-login">
                   <div className="login-logo">
-                    <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                    <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                     <Link href={route.dashboard} className="login-logo logo-white">
-                      <img src="assets/img/brand/sortonium-logo.png" alt="Sortonium" />
+                      <img src="assets/img/brand/sortorium-logo.png" alt="Sortorium" />
                     </Link>
                   </div>
                   <form>
@@ -39,7 +39,7 @@ export default function  RegisterThreeComponent () {
                       <div className="card-body p-5">
                         <div className="login-userheading">
                           <h3>Register</h3>
-                          <h4>Create New Sortonium Account</h4>
+                          <h4>Create New Sortorium Account</h4>
                         </div>
                         <div className="mb-3">
                           <label className="form-label">
@@ -187,7 +187,7 @@ export default function  RegisterThreeComponent () {
                   </form>
                 </div>
                 <div className="my-4 d-flex justify-content-center align-items-center copyright-text">
-                  <p>Copyright © 2025 Sortonium</p>
+                  <p>Copyright © 2025 Sortorium</p>
                 </div>
               </div>
             </div>

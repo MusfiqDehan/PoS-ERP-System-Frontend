@@ -6,12 +6,12 @@ export default function PageFooter() {
   return (
     <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
       <p className="mb-0 text-gray-9">
-        2014 - 2025 © Sortonium. All Right Reserved
+        2014 - 2025 © Sortorium. All Right Reserved
       </p>
       <p>
         Designed &amp; Developed by{" "}
         <Link href="javascript:void(0);" className="text-primary">
-          Sortonium
+          Sortorium
         </Link>
       </p>
     </div>

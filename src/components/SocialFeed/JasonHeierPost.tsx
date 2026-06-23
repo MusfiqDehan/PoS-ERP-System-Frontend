@@ -13,7 +13,7 @@ export default function JasonHeierPost() {
                             href="#"
                             className="avatar avatar-lg avatar-rounded flex-shrink-0 me-2"
                           >
-                            <img src="assets/img/users/user-05.jpg" alt="Sortonium" />
+                            <img src="assets/img/users/user-05.jpg" alt="Sortorium" />
                           </Link>
                           <div>
                             <h5 className="mb-1">
@@ -136,7 +136,7 @@ export default function JasonHeierPost() {
                             <img
                               src="assets/img/social/social-feed-02.jpg"
                               className="rounded-top"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </Link>
                         </div>

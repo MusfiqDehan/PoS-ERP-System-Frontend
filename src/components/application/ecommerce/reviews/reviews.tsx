@@ -397,7 +397,7 @@ export default function ReviewsCompontent() {
                 <div className="new-employee-field">
                   <div className="profile-pic-upload">
                     <div className="profile-pic edit-review people-profile-pic p-2 border rounded">
-                      <img src="assets/img/users/user-08.jpg" alt="Sortonium" />
+                      <img src="assets/img/users/user-08.jpg" alt="Sortorium" />
                       <a href="#">
                         <i data-feather="x-square" className="x-square-add" />
                       </a>

@@ -69,7 +69,7 @@ export default function KanbanTaskCard({ task }: KanbanTaskCardProps) {
                                                   <img
                                                     src="assets/img/icons/kanban-arrow.svg"
                                                     className="w-auto h-auto"
-                                                    alt="Sortonium"
+                                                    alt="Sortorium"
                                                   />
                                                 </span>
                                                 <h6 className="d-flex align-items-center">

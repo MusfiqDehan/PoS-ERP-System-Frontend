@@ -54,7 +54,7 @@ export default function RightSidebar() {
                               >
                                 <img
                                   src="assets/img/profiles/avatar-29.jpg"
-                                  alt="Sortonium"
+                                  alt="Sortorium"
                                 />
                               </Link>
                               <div>
@@ -78,7 +78,7 @@ export default function RightSidebar() {
                                 href="#"
                                 className="avatar avatar-rounded flex-shrink-0 me-2"
                               >
-                                <img src="assets/img/users/user-01.jpg" alt="Sortonium" />
+                                <img src="assets/img/users/user-01.jpg" alt="Sortorium" />
                               </Link>
                               <div>
                                 <h6 className="d-inline-flex align-items-center fw-medium mb-1">
@@ -100,7 +100,7 @@ export default function RightSidebar() {
                                 href="#"
                                 className="avatar avatar-rounded flex-shrink-0 me-2"
                               >
-                                <img src="assets/img/users/user-18.jpg" alt="Sortonium" />
+                                <img src="assets/img/users/user-18.jpg" alt="Sortorium" />
                               </Link>
                               <div>
                                 <h6 className="d-inline-flex align-items-center fw-medium mb-1">
@@ -122,7 +122,7 @@ export default function RightSidebar() {
                                 href="#"
                                 className="avatar avatar-rounded flex-shrink-0 me-2"
                               >
-                                <img src="assets/img/users/user-19.jpg" alt="Sortonium" />
+                                <img src="assets/img/users/user-19.jpg" alt="Sortorium" />
                               </Link>
                               <div>
                                 <h6 className="d-inline-flex align-items-center fw-medium mb-1">
@@ -144,7 +144,7 @@ export default function RightSidebar() {
                                 href="#"
                                 className="avatar avatar-rounded flex-shrink-0 me-2"
                               >
-                                <img src="assets/img/users/user-09.jpg" alt="Sortonium" />
+                                <img src="assets/img/users/user-09.jpg" alt="Sortorium" />
                               </Link>
                               <div>
                                 <h6 className="d-inline-flex align-items-center fw-medium mb-1">
@@ -167,7 +167,7 @@ export default function RightSidebar() {
                                 href="#"
                                 className="avatar avatar-rounded flex-shrink-0 me-2"
                               >
-                                <img src="assets/img/users/user-02.jpg" alt="Sortonium" />
+                                <img src="assets/img/users/user-02.jpg" alt="Sortorium" />
                               </Link>
                               <div>
                                 <h6 className="d-inline-flex align-items-center fw-medium mb-1">
@@ -207,7 +207,7 @@ export default function RightSidebar() {
                               >
                                 <img
                                   src="assets/img/profiles/avatar-11.jpg"
-                                  alt="Sortonium"
+                                  alt="Sortorium"
                                 />
                               </Link>
                               <div>
@@ -231,7 +231,7 @@ export default function RightSidebar() {
                                 href="#"
                                 className="avatar avatar-rounded flex-shrink-0 me-2"
                               >
-                                <img src="assets/img/users/user-12.jpg" alt="Sortonium" />
+                                <img src="assets/img/users/user-12.jpg" alt="Sortorium" />
                               </Link>
                               <div>
                                 <h6 className="d-inline-flex align-items-center fw-medium mb-1">
@@ -253,7 +253,7 @@ export default function RightSidebar() {
                                 href="#"
                                 className="avatar avatar-rounded flex-shrink-0 me-2"
                               >
-                                <img src="assets/img/users/user-13.jpg" alt="Sortonium" />
+                                <img src="assets/img/users/user-13.jpg" alt="Sortorium" />
                               </Link>
                               <div>
                                 <h6 className="d-inline-flex align-items-center fw-medium mb-1">
@@ -275,7 +275,7 @@ export default function RightSidebar() {
                                 href="#"
                                 className="avatar avatar-rounded flex-shrink-0 me-2"
                               >
-                                <img src="assets/img/users/user-14.jpg" alt="Sortonium" />
+                                <img src="assets/img/users/user-14.jpg" alt="Sortorium" />
                               </Link>
                               <div>
                                 <h6 className="d-inline-flex align-items-center fw-medium mb-1">
@@ -297,7 +297,7 @@ export default function RightSidebar() {
                                 href="#"
                                 className="avatar avatar-rounded flex-shrink-0 me-2"
                               >
-                                <img src="assets/img/users/user-15.jpg" alt="Sortonium" />
+                                <img src="assets/img/users/user-15.jpg" alt="Sortorium" />
                               </Link>
                               <div>
                                 <h6 className="d-inline-flex align-items-center fw-medium mb-1">
@@ -320,7 +320,7 @@ export default function RightSidebar() {
                                 href="#"
                                 className="avatar avatar-rounded flex-shrink-0 me-2"
                               >
-                                <img src="assets/img/users/user-16.jpg" alt="Sortonium" />
+                                <img src="assets/img/users/user-16.jpg" alt="Sortorium" />
                               </Link>
                               <div>
                                 <h6 className="d-inline-flex align-items-center fw-medium mb-1">
@@ -362,7 +362,7 @@ export default function RightSidebar() {
                             <img
                               src="assets/img/icons/feeds-01.svg"
                               className="me-2"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </span>
                           <p className="fs-12 fw-medium">World Health</p>
@@ -387,7 +387,7 @@ export default function RightSidebar() {
                             <img
                               src="assets/img/icons/feeds-02.svg"
                               className="me-2"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </span>
                           <p className="fs-12 fw-medium">T3 Tech</p>
@@ -412,7 +412,7 @@ export default function RightSidebar() {
                             <img
                               src="assets/img/icons/feeds-03.svg"
                               className="me-2"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </span>
                           <p className="fs-12 fw-medium">Fstoppers</p>
@@ -437,7 +437,7 @@ export default function RightSidebar() {
                             <img
                               src="assets/img/icons/feeds-04.svg"
                               className="me-2"
-                              alt="Sortonium"
+                              alt="Sortorium"
                             />
                           </span>
                           <p className="fs-12 fw-medium">Evernote</p>
@@ -500,7 +500,7 @@ export default function RightSidebar() {
                         <img
                           src="assets/img/social/social-feed-04.jpg"
                           className="rounded"
-                          alt="Sortonium"
+                          alt="Sortorium"
                         />
                       </Link>
                     </div>

@@ -18,7 +18,7 @@ export default function CreatePostForm() {
                               defaultValue={""}
                             />
                             <span className="avatar avatar-lg avatar-rounded text-area-avatar">
-                              <img src="assets/img/users/user-11.jpg" alt="Sortonium" />
+                              <img src="assets/img/users/user-11.jpg" alt="Sortorium" />
                             </span>
                           </div>
                         </div>

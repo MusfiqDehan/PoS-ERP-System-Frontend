@@ -675,7 +675,7 @@ const ModalsComponent = () => {
                         <Link href={all_routes.dashboard} className="logo logo-dark">
                           <span className="logo-lg">
                             <ImageWithBasePath
-                              src="assets/img/brand/sortonium-logo.png"
+                              src="assets/img/brand/sortorium-logo.png"
                               alt="Logo"
                               height={42}
                             />
@@ -762,7 +762,7 @@ const ModalsComponent = () => {
                         <Link href={all_routes.dashboard} className="logo logo-dark">
                           <span className="logo-lg">
                             <ImageWithBasePath
-                              src="assets/img/brand/sortonium-logo.png"
+                              src="assets/img/brand/sortorium-logo.png"
                               alt="Logo"
                               height={42}
                             />

@@ -2578,3 +2578,50 @@ h6 {
   scrollbar-width: thin;
   scrollbar-color: #fe9f43 transparent;
 }
+
+.permissions-matrix-scroll {
+  container-type: inline-size;
+  scrollbar-width: auto;
+  scrollbar-color: #089b7c #e7e7e7;
+
+  &::-webkit-scrollbar {
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #e7e7e7;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #089b7c;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #06866b;
+  }
+}
+
+.role-feature-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #089b7c #f1f1f1;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #089b7c;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #06866b;
+  }
+}

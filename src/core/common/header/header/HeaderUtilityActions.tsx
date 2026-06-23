@@ -82,7 +82,7 @@ export default function HeaderUtilityActions({
                                 <Link href={route.activities}>
                                     <div className="media d-flex">
                                         <span className="avatar flex-shrink-0">
-                                            <img alt="Sortonium" src="assets/img/profiles/avatar-13.jpg" />
+                                            <img alt="Sortorium" src="assets/img/profiles/avatar-13.jpg" />
                                         </span>
                                         <div className="flex-grow-1">
                                             <p className="noti-details">
@@ -98,7 +98,7 @@ export default function HeaderUtilityActions({
                                 <Link href={route.activities}>
                                     <div className="media d-flex">
                                         <span className="avatar flex-shrink-0">
-                                            <img alt="Sortonium" src="assets/img/profiles/avatar-03.jpg" />
+                                            <img alt="Sortorium" src="assets/img/profiles/avatar-03.jpg" />
                                         </span>
                                         <div className="flex-grow-1">
                                             <p className="noti-details">
@@ -113,7 +113,7 @@ export default function HeaderUtilityActions({
                                 <Link href={route.activities} className="recent-msg">
                                     <div className="media d-flex">
                                         <span className="avatar flex-shrink-0">
-                                            <img alt="Sortonium" src="assets/img/profiles/avatar-17.jpg" />
+                                            <img alt="Sortorium" src="assets/img/profiles/avatar-17.jpg" />
                                         </span>
                                         <div className="flex-grow-1">
                                             <p className="noti-details">
@@ -128,7 +128,7 @@ export default function HeaderUtilityActions({
                                 <Link href={route.activities} className="recent-msg">
                                     <div className="media d-flex">
                                         <span className="avatar flex-shrink-0">
-                                            <img alt="Sortonium" src="assets/img/profiles/avatar-02.jpg" />
+                                            <img alt="Sortorium" src="assets/img/profiles/avatar-02.jpg" />
                                         </span>
                                         <div className="flex-grow-1">
                                             <p className="noti-details">
@@ -163,7 +163,7 @@ export default function HeaderUtilityActions({
                 <Link href="#" className="nav-link userset" data-bs-toggle="dropdown">
                     <span className="user-info p-0">
                         <span className="user-letter">
-                            <img src="assets/img/profiles/avator1.jpg" alt="Sortonium" className="img-fluid" />
+                            <img src="assets/img/profiles/avator1.jpg" alt="Sortorium" className="img-fluid" />
                         </span>
                         <span className="figma-profile-name">Jamiuddin Saif</span>
                     </span>
@@ -171,7 +171,7 @@ export default function HeaderUtilityActions({
                 <div className="dropdown-menu menu-drop-user">
                     <div className="profileset d-flex align-items-center">
                         <span className="user-img me-2">
-                            <img src="assets/img/profiles/avator1.jpg" alt="Sortonium" />
+                            <img src="assets/img/profiles/avator1.jpg" alt="Sortorium" />
                         </span>
                         <div>
                             <h6 className="fw-medium">John Smilga</h6>

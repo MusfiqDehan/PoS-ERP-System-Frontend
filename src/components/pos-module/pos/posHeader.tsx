@@ -11,6 +11,7 @@ import {
   posHeaderStores,
   posHeaderUser,
 } from "./posHeaderData";
+import PosHeaderModals from "./PosHeaderModals";
 
 const formatHeaderDate = (date: Date) =>
   date.toLocaleDateString("en-US", {
@@ -39,7 +40,7 @@ export default function PosHeader() {
           <div className="pos-page-header__brand">
             <ImageWithBasePath
               src={posHeaderAssets.companyLogo}
-              alt="Sortonium"
+              alt="Sortorium"
               width={128}
               height={28}
               className="pos-page-header__logo"
@@ -220,6 +221,8 @@ export default function PosHeader() {
           </div>
         </div>
       </div>
+
+      <PosHeaderModals />
     </header>
   );
 }

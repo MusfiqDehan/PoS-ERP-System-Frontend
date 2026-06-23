@@ -1,10 +1,18 @@
+"use client";
 import React from "react";
 import { Eye, Star, Trash2 } from "react-feather/dist";
 import Link from "next/link";
 import Select from "react-select";
+import dynamic from "next/dynamic";
 import "bootstrap-daterangepicker/daterangepicker.css";
-import DateRangePicker from "react-bootstrap-daterangepicker";
 import TextEditor from "../../../feature-module/inventory/texteditor";
+
+// Browser-only: react-bootstrap-daterangepicker pulls in jQuery at import time,
+// which breaks server-side prerendering of this page.
+const DateRangePicker = dynamic(
+  () => import("react-bootstrap-daterangepicker"),
+  { ssr: false }
+);
 
 const TodoModal = () => {
   const initialSettings = {
@@ -312,7 +320,7 @@ const TodoModal = () => {
                   <div className="delete-image text-center mx-auto">
                     <img
                       src="./assets/img/icons/close-circle.png"
-                      alt="Sortonium"
+                      alt="Sortorium"
                       className="img-fluid"
                     />
                   </div>

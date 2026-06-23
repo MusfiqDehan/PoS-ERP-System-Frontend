@@ -35,7 +35,7 @@ export default function AddMemberModal() {
                           <img
                             src="assets/img/profiles/avatar-01.jpg"
                             className="me-2"
-                            alt="Sortonium"
+                            alt="Sortorium"
                           />
                         </span>
                         Sophie
@@ -51,7 +51,7 @@ export default function AddMemberModal() {
                           <img
                             src="assets/img/profiles/avatar-02.jpg"
                             className="me-2"
-                            alt="Sortonium"
+                            alt="Sortorium"
                           />
                         </span>
                         Cameron
@@ -64,7 +64,7 @@ export default function AddMemberModal() {
                           <img
                             src="assets/img/profiles/avatar-03.jpg"
                             className="me-2"
-                            alt="Sortonium"
+                            alt="Sortorium"
                           />
                         </span>
                         Doris
@@ -77,7 +77,7 @@ export default function AddMemberModal() {
                           <img
                             src="assets/img/profiles/avatar-04.jpg"
                             className="me-2"
-                            alt="Sortonium"
+                            alt="Sortorium"
                           />
                         </span>
                         Rufana
@@ -90,7 +90,7 @@ export default function AddMemberModal() {
                           <img
                             src="assets/img/profiles/avatar-04.jpg"
                             className="me-2"
-                            alt="Sortonium"
+                            alt="Sortorium"
                           />
                         </span>
                         Michael

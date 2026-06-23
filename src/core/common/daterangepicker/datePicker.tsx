@@ -1,8 +1,17 @@
 "use client"
 import React, { useState } from 'react';
-import { DateRangePicker } from 'react-bootstrap-daterangepicker';
+import dynamic from 'next/dynamic';
 import moment from 'moment';
 import 'bootstrap-daterangepicker/daterangepicker.css';
+
+// react-bootstrap-daterangepicker imports jQuery at module load, which throws
+// "jQuery requires a window with a document" during server-side prerendering.
+// Load it only in the browser so the standalone/SSR build can prerender pages
+// that use this date picker.
+const DateRangePicker = dynamic(
+  () => import('react-bootstrap-daterangepicker'),
+  { ssr: false }
+);
 
 const PredefinedDateRanges = () => {
   const [state, setState] = useState({

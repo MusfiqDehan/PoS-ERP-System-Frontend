@@ -1,7 +1,5 @@
-import ResetpasswordComponent from "@/components/pages/resetpassword/resetpassword";
+import ResetPasswordPage from "@/components/pages/resetpassword";
 
-export default function ReserPassword(){
-    return(
-        <><ResetpasswordComponent /></>
-    )
+export default function ResetPassword() {
+  return <ResetPasswordPage />;
 }

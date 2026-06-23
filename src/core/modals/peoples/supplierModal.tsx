@@ -220,7 +220,7 @@ const SupplierModal = () => {
                               <span>
                                 <img
                                   src="assets/img/supplier/edit-supplier.jpg"
-                                  alt="Sortonium"
+                                  alt="Sortorium"
                                 />
                               </span>
                               <div className="close-img">
