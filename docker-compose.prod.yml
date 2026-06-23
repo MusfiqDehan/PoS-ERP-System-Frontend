@@ -25,9 +25,10 @@ services:
       - "traefik.docker.network=traefik_proxy"
 
       # ── Frontend router: catch-all for sortorium.com + all *.sortorium.com subdomains.
-      #    Lower priority than backend so /api|/admin|/media|/static|ADMS routes
+      #    Lower priority than backend so /api|/admin/|/media|/static|ADMS routes
+      #    Use /admin/ (not /admin) so frontend routes like /admin-dashboard are not swallowed.
       #    are handled by the backend container first.
-      - "traefik.http.routers.frontend.rule=(Host(`sortorium.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
+      - "traefik.http.routers.frontend.rule=(Host(`sortorium.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
@@ -39,21 +40,21 @@ services:
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
 
       # ── HTTP router: redirect to HTTPS while leaving ACME and ADMS on port 80.
-      - "traefik.http.routers.frontend-http.rule=(Host(`sortorium.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
+      - "traefik.http.routers.frontend-http.rule=(Host(`sortorium.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
       - "traefik.http.routers.frontend-http.entrypoints=web"
       - "traefik.http.routers.frontend-http.priority=10"
       - "traefik.http.routers.frontend-http.middlewares=redirect-to-https@file"
       - "traefik.http.routers.frontend-http.service=frontend"
 
       # ── Custom domain frontend routers (on-demand TLS via customdomains resolver).
-      - "traefik.http.routers.frontend-custom.rule=HostRegexp(`^.+$`) && !Host(`sortorium.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
+      - "traefik.http.routers.frontend-custom.rule=HostRegexp(`^.+$`) && !Host(`sortorium.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
       - "traefik.http.routers.frontend-custom.entrypoints=websecure"
       - "traefik.http.routers.frontend-custom.tls=true"
       - "traefik.http.routers.frontend-custom.tls.certresolver=customdomains"
       - "traefik.http.routers.frontend-custom.priority=1"
       - "traefik.http.routers.frontend-custom.middlewares=security-headers@file,compress@file"
       - "traefik.http.routers.frontend-custom.service=frontend"
-      - "traefik.http.routers.frontend-custom-http.rule=HostRegexp(`^.+$`) && !Host(`sortorium.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
+      - "traefik.http.routers.frontend-custom-http.rule=HostRegexp(`^.+$`) && !Host(`sortorium.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
       - "traefik.http.routers.frontend-custom-http.entrypoints=web"
       - "traefik.http.routers.frontend-custom-http.priority=10"
       - "traefik.http.routers.frontend-custom-http.middlewares=redirect-to-https@file"
