@@ -8,7 +8,8 @@ services:
         - NEXT_PUBLIC_PUBLIC_DOMAIN=sortorium.com
         - NEXT_PUBLIC_WS_BASE_URL=wss://sortorium.com
     container_name: sortorium-frontend
-    image: sortorium-frontend:latest
+    image: sortorium-frontend:${IMAGE_TAG:-latest}
+    stop_grace_period: 30s
     env_file: .env.prod
     expose:
       - "80"
