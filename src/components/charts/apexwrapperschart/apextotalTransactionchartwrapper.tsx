@@ -20,7 +20,7 @@ const ApexTotalTransactionWrapper: React.FC = () => {
       },
       chart: {
         foreColor: '#fff',
-        type: "area" as "area",
+        type: "area" as const,
         width: 80,
         toolbar: {
           show: !1
