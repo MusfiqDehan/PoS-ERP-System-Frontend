@@ -18,20 +18,18 @@ export default function Calender() {
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
-          <div className="row">
-            <div className="col-xxl-3 col-xl-4 theiaStickySidebar">
-              <div className="stickybar">
-                <div className="card">
-                  <div className="card-body p-3">
-                    <SidebarDatePicker date={date} onDateChange={setDate} />
-                    <DraggableEvents />
-                    <UpcomingEvents />
-                    <UpgradeBanner />
-                  </div>
-                </div>
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
+            <div className="xl:col-span-4 min-[1400px]:col-span-3">
+              <div className="bg-white border border-[#f1f1f1] rounded-[8px] p-3">
+                <SidebarDatePicker date={date} onDateChange={setDate} />
+                <DraggableEvents />
+                <UpcomingEvents />
+                <UpgradeBanner />
               </div>
             </div>
-            <CalendarGrid />
+            <div className="xl:col-span-8 min-[1400px]:col-span-9">
+              <CalendarGrid />
+            </div>
           </div>
         </div>
       </div>
