@@ -1,5 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
+.env
+.env.*
+!.env.example
 # ---------------------------------------------------------------------------
 # Dependencies
 # ---------------------------------------------------------------------------
@@ -40,7 +42,7 @@ pnpm-lock.yaml
 next-env.d.ts
 
 # ---------------------------------------------------------------------------
-# Environment files (opt-in to commit specific ones if ever needed)
+# Environment files — commit .env.example only; keep local/prod secrets untracked
 # ---------------------------------------------------------------------------
 .env
 .env.*
