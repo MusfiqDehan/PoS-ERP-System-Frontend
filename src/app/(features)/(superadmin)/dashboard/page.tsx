@@ -1,30 +1,36 @@
 import CommonFooter from "@/core/common/footer/commonFooter";
-import CompaniesChart from "@/components/SuperAdmin/dashboard/CompaniesChart";
-import PageHeader from "@/components/SuperAdmin/dashboard/PageHeader";
-import RecentPlanExpired from "@/components/SuperAdmin/dashboard/RecentPlanExpired";
-import RecentTransactions from "@/components/SuperAdmin/dashboard/RecentTransactions";
-import RecentlyRegistered from "@/components/SuperAdmin/dashboard/RecentlyRegistered";
-import RevenueChart from "@/components/SuperAdmin/dashboard/RevenueChart";
-import StatsCards from "@/components/SuperAdmin/dashboard/StatsCards";
-import TopPlans from "@/components/SuperAdmin/dashboard/TopPlans";
-import WelcomeBanner from "@/components/SuperAdmin/dashboard/WelcomeBanner";
+import DashboardWelcome from "@/components/SuperAdmin/dashboard/DashboardWelcome";
+import KpiCards from "@/components/SuperAdmin/dashboard/KpiCards";
+import StatStrip from "@/components/SuperAdmin/dashboard/StatStrip";
+import BranchPerformance from "@/components/SuperAdmin/dashboard/BranchPerformance";
+import ProfitLossChart from "@/components/SuperAdmin/dashboard/ProfitLossChart";
+import CustomersHeatmap from "@/components/SuperAdmin/dashboard/CustomersHeatmap";
+import BranchAttendance from "@/components/SuperAdmin/dashboard/BranchAttendance";
+import OverallAttendance from "@/components/SuperAdmin/dashboard/OverallAttendance";
 
 export default function SuperAdminDashboard() {
   return (
     <div className="page-wrapper">
       <div className="content">
-        <PageHeader />
-        <WelcomeBanner />
-        <StatsCards />
-        <div className="row">
-          <CompaniesChart />
-          <RevenueChart />
-          <TopPlans />
+        <DashboardWelcome />
+        <KpiCards />
+        <StatStrip />
+        <BranchPerformance />
+        <div className="row g-3 mb-3">
+          <div className="col-xl-8 d-flex">
+            <ProfitLossChart />
+          </div>
+          <div className="col-xl-4 d-flex">
+            <CustomersHeatmap />
+          </div>
         </div>
-        <div className="row">
-          <RecentTransactions />
-          <RecentlyRegistered />
-          <RecentPlanExpired />
+        <div className="row g-3">
+          <div className="col-xl-8 d-flex">
+            <BranchAttendance />
+          </div>
+          <div className="col-xl-4 d-flex">
+            <OverallAttendance />
+          </div>
         </div>
       </div>
       <CommonFooter />
