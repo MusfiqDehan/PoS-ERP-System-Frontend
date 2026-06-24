@@ -9,13 +9,11 @@ export default function ProductListTable() {
   const { dataSource } = useProductList();
 
   return (
-          <div className="card table-list-card">
-            <ProductListFilters />
-            <div className="card-body">
-              <div className="table-responsive">
-                <Table columns={productListColumns} dataSource={dataSource} />
-              </div>
-            </div>
-          </div>
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
+      <ProductListFilters />
+      <div className="overflow-x-auto">
+        <Table columns={productListColumns} dataSource={dataSource} />
+      </div>
+    </div>
   );
 }

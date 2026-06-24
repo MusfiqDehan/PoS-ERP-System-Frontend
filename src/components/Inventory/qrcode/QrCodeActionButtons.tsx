@@ -4,34 +4,28 @@ import Link from "next/link";
 
 export default function QrCodeActionButtons() {
   return (
-    <div className="search-barcode-button">
+    <div className="flex flex-wrap items-center gap-2 mt-5">
       <Link
         href="#"
-        className="btn btn-submit me-2 mt-0 fs-13 btn-primary shadow-none"
         data-bs-toggle="modal"
         data-bs-target="#prints-barcode"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-[6px] bg-[#0ac79e] text-white text-[14px] font-medium hover:bg-[#089b7c] transition-colors"
       >
-        <span>
-          <i className="fas fa-eye me-2" />
-        </span>
+        <i className="fas fa-eye" />
         Generate QR Code
       </Link>
-      <Link
-        href="#"
-        className="btn btn-cancel me-2 fs-13 btn-secondary shadow-none"
+      <button
+        type="button"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors"
       >
-        <span>
-          <i className="fas fa-power-off me-2" />
-        </span>
+        <i className="fas fa-power-off" />
         Reset
-      </Link>
+      </button>
       <Link
         href="#"
-        className="btn btn-cancel close-btn fs-13 btn-danger shadow-none"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-[6px] bg-[#dc3545] text-white text-[14px] font-medium hover:bg-[#c82333] transition-colors"
       >
-        <span>
-          <i className="fas fa-print me-2" />
-        </span>
+        <i className="fas fa-print" />
         Print QRcode
       </Link>
     </div>

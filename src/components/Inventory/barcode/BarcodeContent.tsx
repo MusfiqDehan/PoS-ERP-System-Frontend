@@ -21,7 +21,7 @@ export default function BarcodeContent() {
   };
 
   return (
-    <div className="barcode-content-list">
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px] p-4 sm:p-5">
       <form>
         <WarehouseStoreFields />
         <ProductSearchField />

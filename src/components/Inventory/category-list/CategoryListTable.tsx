@@ -9,12 +9,10 @@ export default function CategoryListTable() {
   const { dataSource } = useCategoryList();
 
   return (
-    <div className="card table-list-card">
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
       <CategoryListFilters />
-      <div className="card-body">
-        <div className="table-responsive category-table">
-          <Table columns={categoryListColumns} dataSource={dataSource} />
-        </div>
+      <div className="overflow-x-auto">
+        <Table columns={categoryListColumns} dataSource={dataSource} />
       </div>
     </div>
   );

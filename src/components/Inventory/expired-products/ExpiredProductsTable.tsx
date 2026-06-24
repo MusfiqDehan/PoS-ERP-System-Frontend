@@ -9,13 +9,11 @@ export default function ExpiredProductsTable() {
   const { dataSource } = useExpiredProducts();
 
   return (
-            <div className="card table-list-card">
-              <ExpiredProductsFilters />
-              <div className="card-body">
-                <div className="table-responsive">
-                  <Table columns={expiredProductColumns} dataSource={dataSource} />
-                </div>
-              </div>
-            </div>
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
+      <ExpiredProductsFilters />
+      <div className="overflow-x-auto">
+        <Table columns={expiredProductColumns} dataSource={dataSource} />
+      </div>
+    </div>
   );
 }

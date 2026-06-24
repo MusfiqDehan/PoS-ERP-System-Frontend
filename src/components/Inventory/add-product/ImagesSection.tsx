@@ -2,7 +2,6 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { Image, PlusCircle, X } from "react-feather";
-import Link from "next/link";
 
 type ImagesSectionProps = {
   showPrimaryImage: boolean;
@@ -18,75 +17,66 @@ export default function ImagesSection({
   onRemoveSecondaryImage,
 }: ImagesSectionProps) {
   return (
-    <div className="accordion-item border mb-4">
-      <h2 className="accordion-header" id="headingSpacingThree">
-        <div
-          className="accordion-button collapsed bg-white"
-          data-bs-toggle="collapse"
-          data-bs-target="#SpacingThree"
-          aria-expanded="true"
-          aria-controls="SpacingThree"
-        >
-          <div className="d-flex align-items-center justify-content-between flex-fill">
-            <h5 className="d-flex align-items-center">
-              <Image data-feather="image" className="text-primary me-2" />
-              <span>Images</span>
-            </h5>
-          </div>
-        </div>
-      </h2>
-      <div
-        id="SpacingThree"
-        className="accordion-collapse collapse show"
-        aria-labelledby="headingSpacingThree"
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px] mb-4">
+      <button
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#SpacingThree"
+        aria-expanded="true"
+        aria-controls="SpacingThree"
+        className="w-full flex items-center justify-between gap-2 px-4 py-3.5 text-left"
       >
-        <div className="accordion-body border-top">
-          <div className="text-editor add-list add">
-            <div className="col-lg-12">
-              <div className="add-choosen">
-                <div className="mb-3">
-                  <div className="image-upload">
-                    <input type="file" />
-                    <div className="image-uploads">
-                      <PlusCircle
-                        size={14}
-                        data-feather="plus-circle"
-                        className="plus-down-add me-0"
-                      />
-                      <h4>Add Images</h4>
-                    </div>
-                  </div>
-                </div>
-                {showSecondaryImage && (
-                  <div className="phone-img">
-                    <img
-                      src="assets/img/products/phone-add-2.png"
-                      alt="image"
-                    />
-                    <Link href="#">
-                      <X
-                        className="x-square-add remove-product"
-                        onClick={onRemoveSecondaryImage}
-                      />
-                    </Link>
-                  </div>
-                )}
-                {showPrimaryImage && (
-                  <div className="phone-img">
-                    <img
-                      src="assets/img/products/phone-add-1.png"
-                      alt="image"
-                    />
-                    <Link href="#">
-                      <X
-                        className="x-square-add remove-product"
-                        onClick={onRemovePrimaryImage}
-                      />
-                    </Link>
-                  </div>
-                )}
-              </div>
+        <span className="flex items-center gap-2 text-[16px] font-semibold text-[#212B36]">
+          <Image size={18} className="text-[#0ac79e]" />
+          Images
+        </span>
+        <i className="ti ti-chevron-down text-[#646B72]" />
+      </button>
+      <div id="SpacingThree" className="accordion-collapse collapse show">
+        <div className="border-t border-[#f1f1f1] p-4">
+          <div className="flex flex-wrap items-start gap-3">
+            <div className="relative w-[120px] h-[120px] border-2 border-dashed border-[#e7e7e7] rounded-lg flex flex-col items-center justify-center text-center hover:border-[#0ac79e] transition-colors cursor-pointer">
+              <input
+                type="file"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+              <PlusCircle size={18} className="text-[#0ac79e] mb-1" />
+              <span className="text-[13px] text-[#646B72]">Add Images</span>
             </div>
+
+            {showSecondaryImage && (
+              <div className="relative w-[120px] h-[120px] rounded-lg border border-[#f1f1f1] overflow-hidden">
+                <img
+                  src="assets/img/products/phone-add-2.png"
+                  alt="image"
+                  className="w-full h-full object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={onRemoveSecondaryImage}
+                  className="absolute top-1 right-1 w-6 h-6 rounded-full bg-white shadow flex items-center justify-center text-[#646B72] hover:text-[#c80000] transition-colors"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            )}
+
+            {showPrimaryImage && (
+              <div className="relative w-[120px] h-[120px] rounded-lg border border-[#f1f1f1] overflow-hidden">
+                <img
+                  src="assets/img/products/phone-add-1.png"
+                  alt="image"
+                  className="w-full h-full object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={onRemovePrimaryImage}
+                  className="absolute top-1 right-1 w-6 h-6 rounded-full bg-white shadow flex items-center justify-center text-[#646B72] hover:text-[#c80000] transition-colors"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

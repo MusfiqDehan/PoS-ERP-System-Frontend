@@ -12,386 +12,171 @@ import {
   status,
 } from "@/components/SuperAdmin/packages/planSelectOptions";
 
+const inputCls =
+  "w-full border border-[#e7e7e7] rounded-md px-3 py-2 text-[14px] text-[#212B36] placeholder:text-[#9aa0a6] focus:border-[#0ac79e] focus:outline-none focus:ring-1 focus:ring-[#0ac79e] transition-colors";
+const labelCls = "block text-[13px] font-medium text-[#212B36] mb-1.5";
+const checkboxCls = "w-4 h-4 rounded accent-[#0ac79e]";
+
+const modules = [
+  "Employees", "Invoices", "Reports", "Contacts", "Clients", "Estimates",
+  "Goals", "Deals", "Projects", "Payments", "Assets", "Leads",
+  "Tickets", "Taxes", "Activities", "Pipelines",
+];
+
+function Toggle({ defaultChecked }: { defaultChecked?: boolean }) {
+  return (
+    <label className="inline-flex items-center cursor-pointer">
+      <input type="checkbox" defaultChecked={defaultChecked} className="sr-only peer" />
+      <span className="relative block w-9 h-5 bg-[#e7e7e7] rounded-full transition-colors peer-checked:bg-[#0ac79e] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:w-4 after:h-4 after:bg-white after:rounded-full after:transition-transform peer-checked:after:translate-x-4" />
+    </label>
+  );
+}
+
 export default function EditPlanModal() {
   return (
-        <div className="modal fade" id="edit_plans">
-          <div className="modal-dialog modal-dialog-centered modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 className="modal-title">Edit Plan</h4>
-                <button
-                  type="button"
-                  className="btn-close custom-btn-close p-0"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <i className="ti ti-x" />
-                </button>
-              </div>
-              <form>
-                <div className="modal-body pb-0">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <div className="d-flex align-items-center flex-wrap row-gap-3 bg-light w-100 rounded p-3 mb-4">
-                        <div className="d-flex align-items-center justify-content-center avatar avatar-xxl rounded-circle border border-dashed me-2 flex-shrink-0 text-dark frames">
-                          <img
-                            src="assets/img/profiles/avatar-30.jpg"
-                            alt="img"
-                            className="rounded-circle"
-                          />
-                        </div>
-                        <div className="profile-upload">
-                          <div className="mb-2">
-                            <h6 className="mb-1">Upload Profile Image</h6>
-                            <p className="fs-12">Image should be below 4 mb</p>
-                          </div>
-                          <div className="profile-uploader d-flex align-items-center">
-                            <div className="drag-upload-btn btn btn-sm btn-primary me-2">
-                              Upload
-                              <input
-                                type="file"
-                                className="form-control image-sign"
-                                multiple
-                              />
-                            </div>
-                            <Link
-                              href="#"
-                              className="btn btn-light btn-sm"
-                            >
-                              Cancel
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3 ">
-                        <label className="form-label">
-                          Plan Name<span className="text-danger"> *</span>
-                        </label>
-                        <Select
-                          classNamePrefix="react-select"
-                          options={planName}
-                          placeholder="Choose"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3 ">
-                        <label className="form-label">
-                          Plan Type<span className="text-danger"> *</span>
-                        </label>
-                        <Select
-                          classNamePrefix="react-select"
-                          options={planType}
-                          placeholder="Choose"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3 ">
-                        <label className="form-label">
-                          Plan Position<span className="text-danger"> *</span>
-                        </label>
-                        <Select
-                          classNamePrefix="react-select"
-                          options={planPosition}
-                          placeholder="Choose"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3 ">
-                        <label className="form-label">
-                          Plan Currency<span className="text-danger"> *</span>
-                        </label>
-                        <Select
-                          classNamePrefix="react-select"
-                          options={plancurrency}
-                          placeholder="Choose"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <div className="d-flex justify-content-between">
-                          <label className="form-label">
-                            Plan Currency<span className="text-danger"> *</span>
-                          </label>
-                          <span className="text-primary">
-                            <i className="fa-solid fa-circle-exclamation me-2" />
-                            Set 0 for free
-                          </span>
-                        </div>
-                        <Select
-                          classNamePrefix="react-select"
-                          options={plancurrency}
-                          placeholder="Choose"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-3">
-                      <div className="mb-3 ">
-                        <label className="form-label">
-                          Discount Type<span className="text-danger"> *</span>
-                        </label>
-                        <div className="pass-group">
-                          <Select
-                            classNamePrefix="react-select"
-                            options={discountType}
-                            placeholder="Choose"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-3">
-                      <div className="mb-3 ">
-                        <label className="form-label">
-                          Discount<span className="text-danger"> *</span>
-                        </label>
-                        <div className="pass-group">
-                          <input type="text" className="form-control" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-lg-3">
-                      <div className="mb-3">
-                        <label className="form-label">Limitations Invoices</label>
-                        <input type="text" className="form-control" />
-                      </div>
-                    </div>
-                    <div className="col-lg-3">
-                      <div className="mb-3">
-                        <label className="form-label">Max Customers</label>
-                        <input type="text" className="form-control" />
-                      </div>
-                    </div>
-                    <div className="col-lg-3">
-                      <div className="mb-3">
-                        <label className="form-label">Product</label>
-                        <input type="text" className="form-control" />
-                      </div>
-                    </div>
-                    <div className="col-lg-3">
-                      <div className="mb-3">
-                        <label className="form-label">Supplier</label>
-                        <input type="text" className="form-control" />
-                      </div>
-                    </div>
-                    <div className="col-lg-12">
-                      <div className="d-flex align-items-center justify-content-between mb-3">
-                        <h6>Plan Modules</h6>
-                        <div className="form-check d-flex align-items-center">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Select All
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Employees
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Invoices
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Reports
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Contacts
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Clients
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Estimates
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Goals
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Deals
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Projects
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Payments
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Assets
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Leads
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Tickets
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Taxes
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Activities
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-lg-3 col-sm-6">
-                        <div className="form-check d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 text-dark fw-medium">
-                            <input className="form-check-input" type="checkbox" />
-                            Pipelines
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="d-flex align-items-center mb-3">
-                          <label className="form-check-label mt-0 me-2 text-dark fw-medium">
-                            Access Trial
-                          </label>
-                          <div className="form-check form-switch me-2">
-                            <input
-                              className="form-check-input me-2"
-                              type="checkbox"
-                              role="switch"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row align-items-center gx-3">
-                      <div className="col-md-4">
-                        <div className="d-flex align-items-center mb-3">
-                          <div className="flex-fill">
-                            <label className="form-label">Trial Days</label>
-                            <input type="text" className="form-control" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-md-3">
-                        <div className="d-block align-items-center ms-3">
-                          <label className="form-check-label mt-0 me-2  text-dark">
-                            Is Recommended
-                          </label>
-                          <div className="form-check form-switch me-2">
-                            <input
-                              className="form-check-input me-2"
-                              type="checkbox"
-                              role="switch"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-md-5">
-                        <div className="mb-3 ">
-                          <label className="form-label">
-                            Status<span className="text-danger"> *</span>
-                          </label>
-                          <Select
-                            classNamePrefix="react-select"
-                            options={status}
-                            placeholder="Choose"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-12">
-                      <div className="mb-3">
-                        <label className="form-label">Description</label>
-                        <textarea className="form-control" defaultValue={""} />
-                      </div>
-                    </div>
+    <div className="modal fade" id="edit_plans">
+      <div className="modal-dialog modal-dialog-centered modal-lg">
+        <div className="modal-content">
+          <div className="flex items-center justify-between p-4 border-b border-[#f1f1f1]">
+            <h4 className="m-0 text-[18px] font-bold text-[#212B36]">Edit Plan</h4>
+            <button
+              type="button"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              className="w-7 h-7 inline-flex items-center justify-center rounded-md text-[#646B72] hover:bg-[#f6f6f6]"
+            >
+              <i className="ti ti-x" />
+            </button>
+          </div>
+          <form>
+            <div className="p-4">
+              <div className="flex items-center flex-wrap gap-3 bg-[#f8f9fa] rounded-md p-3 mb-4">
+                <span className="w-[72px] h-[72px] rounded-full border border-dashed border-[#cfd4da] overflow-hidden flex items-center justify-center shrink-0">
+                  <img src="assets/img/profiles/avatar-30.jpg" alt="img" className="w-full h-full object-cover" />
+                </span>
+                <div>
+                  <h6 className="mb-1 text-[14px] font-semibold text-[#212B36]">Upload Profile Image</h6>
+                  <p className="text-[12px] text-[#646B72] mb-2">Image should be below 4 mb</p>
+                  <div className="flex items-center gap-2">
+                    <label className="relative inline-flex items-center px-3 py-1.5 rounded-md bg-[#0ac79e] text-white text-[13px] font-medium cursor-pointer hover:bg-[#089b7c] transition-colors">
+                      Upload
+                      <input type="file" multiple className="absolute inset-0 opacity-0 cursor-pointer" />
+                    </label>
+                    <Link href="#" className="px-3 py-1.5 rounded-md border border-[#e7e7e7] text-[#646B72] text-[13px] font-medium hover:bg-[#f6f6f6]">
+                      Cancel
+                    </Link>
                   </div>
                 </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-light me-2"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancel
-                  </button>
-                  <button type="button" data-bs-dismiss="modal" className="btn btn-primary">
-                    Save Changes
-                  </button>
+              </div>
+
+              <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-12 min-[768px]:col-span-6">
+                  <label className={labelCls}>Plan Name <span className="text-[#dc3545]">*</span></label>
+                  <Select classNamePrefix="react-select" options={planName} placeholder="Choose" />
                 </div>
-              </form>
+                <div className="col-span-12 min-[768px]:col-span-6">
+                  <label className={labelCls}>Plan Type <span className="text-[#dc3545]">*</span></label>
+                  <Select classNamePrefix="react-select" options={planType} placeholder="Choose" />
+                </div>
+                <div className="col-span-12 min-[768px]:col-span-6">
+                  <label className={labelCls}>Plan Position <span className="text-[#dc3545]">*</span></label>
+                  <Select classNamePrefix="react-select" options={planPosition} placeholder="Choose" />
+                </div>
+                <div className="col-span-12 min-[768px]:col-span-6">
+                  <label className={labelCls}>Plan Currency <span className="text-[#dc3545]">*</span></label>
+                  <Select classNamePrefix="react-select" options={plancurrency} placeholder="Choose" />
+                </div>
+                <div className="col-span-12 min-[768px]:col-span-6">
+                  <div className="flex justify-between items-center mb-1.5">
+                    <label className="text-[13px] font-medium text-[#212B36]">Price <span className="text-[#dc3545]">*</span></label>
+                    <span className="text-[12px] text-[#0ac79e] inline-flex items-center gap-1">
+                      <i className="fa-solid fa-circle-exclamation" /> Set 0 for free
+                    </span>
+                  </div>
+                  <Select classNamePrefix="react-select" options={plancurrency} placeholder="Choose" />
+                </div>
+                <div className="col-span-6 min-[768px]:col-span-3">
+                  <label className={labelCls}>Discount Type <span className="text-[#dc3545]">*</span></label>
+                  <Select classNamePrefix="react-select" options={discountType} placeholder="Choose" />
+                </div>
+                <div className="col-span-6 min-[768px]:col-span-3">
+                  <label className={labelCls}>Discount <span className="text-[#dc3545]">*</span></label>
+                  <input type="text" className={inputCls} />
+                </div>
+                <div className="col-span-6 min-[768px]:col-span-3">
+                  <label className={labelCls}>Limitations Invoices</label>
+                  <input type="text" className={inputCls} />
+                </div>
+                <div className="col-span-6 min-[768px]:col-span-3">
+                  <label className={labelCls}>Max Customers</label>
+                  <input type="text" className={inputCls} />
+                </div>
+                <div className="col-span-6 min-[768px]:col-span-3">
+                  <label className={labelCls}>Product</label>
+                  <input type="text" className={inputCls} />
+                </div>
+                <div className="col-span-6 min-[768px]:col-span-3">
+                  <label className={labelCls}>Supplier</label>
+                  <input type="text" className={inputCls} />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mt-5 mb-3">
+                <h6 className="m-0 text-[14px] font-semibold text-[#212B36]">Plan Modules</h6>
+                <label className="flex items-center gap-2 text-[14px] font-medium text-[#212B36] cursor-pointer">
+                  <input type="checkbox" className={checkboxCls} /> Select All
+                </label>
+              </div>
+              <div className="grid grid-cols-2 min-[992px]:grid-cols-4 gap-3 mb-4">
+                {modules.map((mod) => (
+                  <label key={mod} className="flex items-center gap-2 text-[14px] font-medium text-[#212B36] cursor-pointer">
+                    <input type="checkbox" className={checkboxCls} defaultChecked /> {mod}
+                  </label>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-[14px] font-medium text-[#212B36]">Access Trial</span>
+                <Toggle defaultChecked />
+              </div>
+
+              <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-12 min-[768px]:col-span-4">
+                  <label className={labelCls}>Trial Days</label>
+                  <input type="text" className={inputCls} />
+                </div>
+                <div className="col-span-12 min-[768px]:col-span-3">
+                  <span className="block text-[13px] font-medium text-[#212B36] mb-1.5">Is Recommended</span>
+                  <Toggle defaultChecked />
+                </div>
+                <div className="col-span-12 min-[768px]:col-span-5">
+                  <label className={labelCls}>Status <span className="text-[#dc3545]">*</span></label>
+                  <Select classNamePrefix="react-select" options={status} placeholder="Choose" />
+                </div>
+                <div className="col-span-12">
+                  <label className={labelCls}>Description</label>
+                  <textarea className={`${inputCls} min-h-[90px]`} defaultValue="" />
+                </div>
+              </div>
             </div>
-          </div>
+            <div className="flex items-center justify-end gap-2 p-4 border-t border-[#f1f1f1]">
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                className="px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                className="px-4 py-2 rounded-[6px] bg-[#0ac79e] text-white text-[14px] font-medium hover:bg-[#089b7c] transition-colors"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
+    </div>
   );
 }

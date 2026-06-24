@@ -1,35 +1,28 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
-import CollapesIcon from "@/core/common/tooltip-content/collapes";
-import RefreshIcon from "@/core/common/tooltip-content/refresh";
-import TooltipIcons from "@/core/common/tooltip-content/tooltipIcons";
 import Link from "next/link";
+import ExportButtons from "@/core/common/exportButtons";
 
 export default function PageHeader() {
   return (
-            <div className="page-header">
-              <div className="add-item d-flex">
-                <div className="page-title">
-                  <h4 className="custome-heading">Companies</h4>
-                  <h6>Manage your companies</h6>
-                </div>
-              </div>
-              <ul className="table-top-head">
-                <TooltipIcons />
-                <RefreshIcon />
-                <CollapesIcon />
-              </ul>
-              <div className="page-btn">
-                <Link
-                  href="#"
-                  className="btn btn-primary"
-                  data-bs-toggle="modal"
-                  data-bs-target="#add_company"
-                >
-                  <i className='ti ti-circle-plus me-1'></i> Add Company
-                </Link>
-              </div>
-            </div>
+    <div className="flex items-center justify-between flex-wrap gap-3 mb-[1.5rem]">
+      <div>
+        <h4 className="mb-1 text-[20px] font-bold text-[#212B36]">Companies</h4>
+        <p className="m-0 text-[14px] font-medium text-[#646B72]">
+          Manage your companies
+        </p>
+      </div>
+      <div className="flex items-center flex-wrap gap-3">
+        <ExportButtons />
+        <Link
+          href="#"
+          className="inline-flex items-center gap-1 px-4 py-[10px] rounded-[6px] bg-[#0ac79e] text-white text-[14px] font-medium hover:bg-[#089b7c] transition-colors"
+          data-bs-toggle="modal"
+          data-bs-target="#add_company"
+        >
+          <i className="ti ti-circle-plus text-[16px]" /> Add Company
+        </Link>
+      </div>
+    </div>
   );
 }

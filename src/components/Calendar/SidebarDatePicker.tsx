@@ -7,18 +7,15 @@ type SidebarDatePickerProps = {
   onDateChange: (value: Date | null) => void;
 };
 
-export default function SidebarDatePicker({
-  date,
-  onDateChange,
-}: SidebarDatePickerProps) {
+export default function SidebarDatePicker({ date, onDateChange }: SidebarDatePickerProps) {
   return (
-                      <div className="border-bottom mb-4">
-                        <Calendar
-                          className="datepickers pb-4"
-                          value={date}
-                          onChange={(e) => onDateChange((e.value as Date) ?? null)}
-                          inline={true}
-                        />
-                      </div>
+    <div className="border-b border-[#f1f1f1] mb-4 pb-4">
+      <Calendar
+        className="datepickers"
+        value={date}
+        onChange={(e) => onDateChange((e.value as Date) ?? null)}
+        inline={true}
+      />
+    </div>
   );
 }

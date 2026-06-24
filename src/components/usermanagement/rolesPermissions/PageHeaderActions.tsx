@@ -32,7 +32,7 @@ function PageHeaderActionButton({ label, onClick, modalTarget }: PageHeaderActio
 export default function PageHeaderActions() {
   return (
     <div className="roles-permissions-page-header__actions">
-      <PageHeaderActionButton label="Invite Member" />
+      <PageHeaderActionButton label="Invite Member" modalTarget="#assign-role-member" />
       <PageHeaderActionButton label="Create Role" modalTarget="#add-units" />
     </div>
   );

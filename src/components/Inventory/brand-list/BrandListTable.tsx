@@ -9,12 +9,10 @@ export default function BrandListTable() {
   const { dataSource } = useBrandList();
 
   return (
-    <div className="card table-list-card">
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
       <BrandListFilters />
-      <div className="card-body">
-        <div className="table-responsive brand-table">
-          <Table columns={brandListColumns} dataSource={dataSource} />
-        </div>
+      <div className="overflow-x-auto">
+        <Table columns={brandListColumns} dataSource={dataSource} />
       </div>
     </div>
   );
