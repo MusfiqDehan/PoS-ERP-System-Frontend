@@ -9,120 +9,81 @@ type BarcodeProductsTableProps = {
   onIncrement: () => void;
 };
 
+const rows = [
+  { name: "Nike Jordan", sku: "PT002", code: "HG3FK", img: "assets/img/products/stock-img-02.png" },
+  { name: "Apple Series 5 Watch", sku: "PT003", code: "TEUIU7", img: "assets/img/products/stock-img-03.png" },
+];
+
 export default function BarcodeProductsTable({
   onDecrement,
   onIncrement,
 }: BarcodeProductsTableProps) {
   return (
-    <div className="col-lg-12">
-      <div className="modal-body-table search-modal-header bg-light p-2 p-sm-4">
-        <div className="table-responsive border rounded-1 barcode-table">
-          <table className="table  datatable mb-0">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>SKU</th>
-                <th>Code</th>
-                <th>Qty</th>
-                <th className="text-center no-sort bg-secondary-transparent" />
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div className="d-flex align-items-center">
-                    <Link href="#" className="avatar avatar-md me-2">
-                      <img
-                        src="assets/img/products/stock-img-02.png"
-                        alt="product"
-                      />
+    <div className="mt-4 rounded-[8px] border border-[#f1f1f1] bg-[#f9fafb] p-3 sm:p-4">
+      <div className="overflow-x-auto rounded-md border border-[#e7e7e7] bg-white">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="border-b border-[#e7e7e7] text-[13px] text-[#646B72]">
+              <th className="px-3 py-2.5 font-semibold">Product</th>
+              <th className="px-3 py-2.5 font-semibold">SKU</th>
+              <th className="px-3 py-2.5 font-semibold">Code</th>
+              <th className="px-3 py-2.5 font-semibold">Qty</th>
+              <th className="px-3 py-2.5" />
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.sku} className="border-b border-[#f1f1f1] last:border-0 text-[14px] text-[#212B36]">
+                <td className="px-3 py-2.5">
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href="#"
+                      className="w-10 h-10 rounded-md border border-[#f1f1f1] overflow-hidden flex items-center justify-center shrink-0"
+                    >
+                      <img src={row.img} alt="product" className="w-full h-full object-cover" />
                     </Link>
-                    <Link href="#">Nike Jordan</Link>
+                    <Link href="#" className="font-medium hover:text-[#0ac79e]">{row.name}</Link>
                   </div>
                 </td>
-                <td>PT002</td>
-                <td>HG3FK</td>
-                <td>
-                  <div className="product-quantity border-secondary-transparent">
-                    <span className="quantity-btn" onClick={onDecrement}>
-                      <MinusCircle size={14} className="feather-search" />
-                    </span>
+                <td className="px-3 py-2.5">{row.sku}</td>
+                <td className="px-3 py-2.5">{row.code}</td>
+                <td className="px-3 py-2.5">
+                  <div className="inline-flex items-center border border-[#e7e7e7] rounded-md overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={onDecrement}
+                      className="px-2 py-1.5 text-[#646B72] hover:bg-[#f6f6f6]"
+                    >
+                      <MinusCircle size={14} />
+                    </button>
                     <input
                       type="text"
-                      className="quntity-input"
+                      className="w-12 text-center border-x border-[#e7e7e7] py-1.5 text-[14px] focus:outline-none"
                       defaultValue={4}
                     />
-                    <span className="quantity-btn" onClick={onIncrement}>
-                      +
-                      <PlusCircle size={14} className="plus-circle" />
-                    </span>
+                    <button
+                      type="button"
+                      onClick={onIncrement}
+                      className="px-2 py-1.5 text-[#646B72] hover:bg-[#f6f6f6]"
+                    >
+                      <PlusCircle size={14} />
+                    </button>
                   </div>
                 </td>
-                <td className="action-table-data">
-                  <div className="edit-delete-action">
-                    <Link
-                      data-bs-toggle="modal"
-                      data-bs-target="#delete-modal"
-                      className="barcode-delete-icon"
-                      href="#"
-                    >
-                      <i
-                        data-feather="trash-2"
-                        className="feather-trash-2"
-                      />
-                    </Link>
-                  </div>
+                <td className="px-3 py-2.5 text-center">
+                  <Link
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete-modal"
+                    href="#"
+                    className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#c80000] hover:border-[#c80000] transition-colors"
+                  >
+                    <i className="ti ti-trash" />
+                  </Link>
                 </td>
               </tr>
-              <tr>
-                <td>
-                  <div className="d-flex align-items-center">
-                    <Link href="#" className="avatar avatar-md me-2">
-                      <img
-                        src="assets/img/products/stock-img-03.png"
-                        alt="product"
-                      />
-                    </Link>
-                    <Link href="#">Apple Series 5 Watch</Link>
-                  </div>
-                </td>
-                <td>PT003</td>
-                <td>TEUIU7</td>
-                <td>
-                  <div className="product-quantity border-secondary-transparent">
-                    <span className="quantity-btn" onClick={onDecrement}>
-                      <MinusCircle size={14} className="feather-search" />
-                    </span>
-                    <input
-                      type="text"
-                      className="quntity-input"
-                      defaultValue={4}
-                    />
-                    <span className="quantity-btn" onClick={onIncrement}>
-                      +
-                      <PlusCircle size={14} className="plus-circle" />
-                    </span>
-                  </div>
-                </td>
-                <td className="action-table-data">
-                  <div className="edit-delete-action">
-                    <Link
-                      data-bs-toggle="modal"
-                      data-bs-target="#delete-modal"
-                      className="barcode-delete-icon"
-                      href="#"
-                    >
-                      <i
-                        data-feather="trash-2"
-                        className="feather-trash-2"
-                      />
-                    </Link>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -4,155 +4,71 @@ import { DatePicker } from "antd";
 import Link from "next/link";
 import { getModalContainer } from "./kanbanUtils";
 
+const tabs = [
+  { label: "All", target: "#pills-home", active: true },
+  { label: "High", target: "#pills-contact" },
+  { label: "Medium", target: "#pills-medium" },
+  { label: "Low", target: "#pills-low" },
+];
+
 export default function ProjectsFilters() {
   return (
-            <div className="row">
-              <div className="col-lg-4">
-                <div className="d-flex align-items-center flex-wrap row-gap-3 mb-3">
-                  <h6 className="me-2">Priority</h6>
-                  <ul
-                    className="nav nav-pills border d-inline-flex p-1 rounded bg-light todo-tabs"
-                    id="pills-tab"
-                    role="tablist"
-                  >
-                    <li className="nav-item" role="presentation">
-                      <button
-                        className="nav-link btn btn-sm btn-icon py-3 d-flex align-items-center justify-content-center w-auto active"
-                        data-bs-toggle="pill"
-                        data-bs-target="#pills-home"
-                        type="button"
-                        role="tab"
-                        aria-selected="true"
-                      >
-                        All
-                      </button>
-                    </li>
-                    <li className="nav-item" role="presentation">
-                      <button
-                        className="nav-link btn btn-sm btn-icon py-3 d-flex align-items-center justify-content-center w-auto"
-                        data-bs-toggle="pill"
-                        data-bs-target="#pills-contact"
-                        type="button"
-                        role="tab"
-                        aria-selected="false"
-                      >
-                        High
-                      </button>
-                    </li>
-                    <li className="nav-item" role="presentation">
-                      <button
-                        className="nav-link btn btn-sm btn-icon py-3 d-flex align-items-center justify-content-center w-auto"
-                        data-bs-toggle="pill"
-                        data-bs-target="#pills-medium"
-                        type="button"
-                        role="tab"
-                        aria-selected="false"
-                      >
-                        Medium
-                      </button>
-                    </li>
-                    <li className="nav-item" role="presentation">
-                      <button
-                        className="nav-link btn btn-sm btn-icon py-3 d-flex align-items-center justify-content-center w-auto"
-                        data-bs-toggle="pill"
-                        data-bs-target="#pills-low"
-                        type="button"
-                        role="tab"
-                        aria-selected="false"
-                      >
-                        Low
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="col-lg-8">
-                <div className="d-flex align-items-center justify-content-lg-end flex-wrap row-gap-3 mb-3">
-                  <div className="input-icon w-120 position-relative me-2">
-                    <span className="input-icon-addon">
-                      <i className="ti ti-calendar text-gray-9" />
-                    </span>
-                    <DatePicker
-                      className="form-control datetimepicker"
-                      format={{
-                        format: "DD-MM-YYYY",
-                        type: "mask",
-                      }}
-                      getPopupContainer={getModalContainer}
-                      placeholder="Create Date"
-                    />
-                  </div>
-                  <div className="input-icon w-120 position-relative me-2">
-                    <span className="input-icon-addon">
-                      <i className="ti ti-calendar text-gray-9" />
-                    </span>
-                    <DatePicker
-                      className="form-control datetimepicker"
-                      format={{
-                        format: "DD-MM-YYYY",
-                        type: "mask",
-                      }}
-                      getPopupContainer={getModalContainer}
-                      placeholder="Due Date"
-                    />
-                  </div>
-                  <div className="dropdown me-2">
-                    <Link
-                      href="#"
-                      className="dropdown-toggle btn btn-white d-inline-flex align-items-center p-2"
-                      data-bs-toggle="dropdown"
-                    >
-                      Select Status
-                    </Link>
-                    <ul className="dropdown-menu  dropdown-menu-end p-3">
-                      <li>
-                        <Link href="#" className="dropdown-item rounded-1">
-                          Inprogress
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="dropdown-item rounded-1">
-                          On-hold
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="dropdown-item rounded-1">
-                          Completed
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="d-flex align-items-center border p-2 rounded">
-                    <span className="d-inline-flex me-2">Sort By : </span>
-                    <div className="dropdown">
-                      <Link
-                        href="#"
-                        className="dropdown-toggle btn btn-white d-inline-flex align-items-center border-0 bg-transparent p-0 text-dark"
-                        data-bs-toggle="dropdown"
-                      >
-                        Created Date
-                      </Link>
-                      <ul className="dropdown-menu  dropdown-menu-end p-3">
-                        <li>
-                          <Link href="#" className="dropdown-item rounded-1">
-                            Created Date
-                          </Link>
-                        </li>
-                        <li>
-                          <Link href="#" className="dropdown-item rounded-1">
-                            Last 7 Days
-                          </Link>
-                        </li>
-                        <li>
-                          <Link href="#" className="dropdown-item rounded-1">
-                            Due Date
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
+      <div className="flex items-center gap-2">
+        <h6 className="m-0 text-[14px] font-semibold text-[#212B36]">Priority</h6>
+        <ul
+          className="nav nav-pills inline-flex items-center gap-1 p-1 rounded-md bg-[#f6f7f9] border border-[#f1f1f1]"
+          id="pills-tab"
+          role="tablist"
+        >
+          {tabs.map((t) => (
+            <li className="nav-item" role="presentation" key={t.target}>
+              <button
+                className={`nav-link px-3 py-1.5 rounded text-[13px] font-medium ${t.active ? "active" : "text-[#646B72]"}`}
+                data-bs-toggle="pill"
+                data-bs-target={t.target}
+                type="button"
+                role="tab"
+              >
+                {t.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="flex items-center flex-wrap gap-2 lg:justify-end">
+        <DatePicker format="DD-MM-YYYY" getPopupContainer={getModalContainer} placeholder="Create Date" />
+        <DatePicker format="DD-MM-YYYY" getPopupContainer={getModalContainer} placeholder="Due Date" />
+        <div className="dropdown">
+          <button
+            type="button"
+            data-bs-toggle="dropdown"
+            className="inline-flex items-center gap-2 px-3 py-2 border border-[#e7e7e7] rounded text-[14px] text-[#646B72] bg-white hover:border-[#0ac79e]"
+          >
+            Select Status <i className="ti ti-chevron-down text-[14px]" />
+          </button>
+          <ul className="dropdown-menu dropdown-menu-end p-2">
+            {["Inprogress", "On-hold", "Completed"].map((i) => (
+              <li key={i}><Link href="#" className="dropdown-item rounded-1">{i}</Link></li>
+            ))}
+          </ul>
+        </div>
+        <div className="dropdown">
+          <button
+            type="button"
+            data-bs-toggle="dropdown"
+            className="inline-flex items-center gap-2 px-3 py-2 border border-[#e7e7e7] rounded text-[14px] text-[#646B72] bg-white hover:border-[#0ac79e]"
+          >
+            Sort By : Created Date <i className="ti ti-chevron-down text-[14px]" />
+          </button>
+          <ul className="dropdown-menu dropdown-menu-end p-2">
+            {["Created Date", "Last 7 Days", "Due Date"].map((i) => (
+              <li key={i}><Link href="#" className="dropdown-item rounded-1">{i}</Link></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 }

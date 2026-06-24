@@ -32,31 +32,26 @@ export default function AddProductForm({
   onRemoveSecondaryImage,
 }: AddProductFormProps) {
   return (
-          <form className="add-product-form">
-            <div className="add-product">
-              <div
-                className="accordions-items-seperate"
-                id="accordionSpacingExample"
-              >
-                <ProductInformationSection />
-                <PricingStocksSection
-                  showVariant={showVariant}
-                  showTags={showTags}
-                  tags={tags}
-                  onTagsChange={onTagsChange}
-                  onVariantSelect={onVariantSelect}
-                  onRemoveTags={onRemoveTags}
-                />
-                <ImagesSection
-                  showPrimaryImage={showPrimaryImage}
-                  showSecondaryImage={showSecondaryImage}
-                  onRemovePrimaryImage={onRemovePrimaryImage}
-                  onRemoveSecondaryImage={onRemoveSecondaryImage}
-                />
-                <CustomFieldsSection />
-              </div>
-            </div>
-            <FormActions />
-          </form>
+    <form>
+      <div id="accordionSpacingExample">
+        <ProductInformationSection />
+        <PricingStocksSection
+          showVariant={showVariant}
+          showTags={showTags}
+          tags={tags}
+          onTagsChange={onTagsChange}
+          onVariantSelect={onVariantSelect}
+          onRemoveTags={onRemoveTags}
+        />
+        <ImagesSection
+          showPrimaryImage={showPrimaryImage}
+          showSecondaryImage={showSecondaryImage}
+          onRemovePrimaryImage={onRemovePrimaryImage}
+          onRemoveSecondaryImage={onRemoveSecondaryImage}
+        />
+        <CustomFieldsSection />
+      </div>
+      <FormActions />
+    </form>
   );
 }

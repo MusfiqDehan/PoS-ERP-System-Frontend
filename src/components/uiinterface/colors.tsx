@@ -25,7 +25,7 @@ const ColorsComponent = () => {
                   <div>
                     <div className="color-box bg-primary p-4" />
                     <p className="flex-1 text-sm my-1 pt-1">Primary</p>
-                    <p className="flex-0 text-sm">#FF9F43</p>
+                    <p className="flex-0 text-sm">#0ac79e</p>
                   </div>
                   <div>
                     <div className="color-box bg-secondary p-4" />

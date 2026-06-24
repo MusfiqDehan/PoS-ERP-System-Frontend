@@ -6,12 +6,37 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+const details = [
+  { label: "Product", value: "Macbook pro" },
+  { label: "Category", value: "Computers" },
+  { label: "Sub Category", value: "None" },
+  { label: "Brand", value: "None" },
+  { label: "Unit", value: "Piece" },
+  { label: "SKU", value: "PT0001" },
+  { label: "Minimum Qty", value: "5" },
+  { label: "Quantity", value: "50" },
+  { label: "Tax", value: "0.00 %" },
+  { label: "Discount Type", value: "Percentage" },
+  { label: "Price", value: "1500.00" },
+  { label: "Status", value: "Active" },
+  {
+    label: "Description",
+    value:
+      "Designed for professionals, it offers smooth multitasking and high-end graphics capability.",
+  },
+];
+
+const slides = [
+  { img: "assets/img/products/product69.jpg", name: "macbookpro.jpg", size: "581kb" },
+  { img: "assets/img/products/product69.jpg", name: "macbookpro.jpg", size: "581kb" },
+];
+
 const ProductDetailsComponent = () => {
-const sliderRef = useRef<Slider | null>(null);
+  const sliderRef = useRef<Slider | null>(null);
 
   const settings = {
     dots: false,
-    arrows: false, // hide built-in arrows
+    arrows: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -22,146 +47,80 @@ const sliderRef = useRef<Slider | null>(null);
       { breakpoint: 0, settings: { slidesToShow: 1 } },
     ],
   };
+
   return (
     <div className="page-wrapper">
-  <div className="content">
-    <div className="page-header">
-      <div className="page-title">
-        <h4>Product Details</h4>
-        <h6>Full details of a product</h6>
-      </div>
-    </div>
-    {/* /add */}
-    <div className="row">
-      <div className="col-lg-8 col-sm-12">
-        <div className="card">
-          <div className="card-body">
-            <div className="bar-code-view">
-              <div className="product-details-barcode">
+      <div className="content">
+        <div className="mb-[1.5rem]">
+          <h4 className="mb-1 text-[20px] font-bold text-[#212B36]">Product Details</h4>
+          <p className="m-0 text-[14px] font-medium text-[#646B72]">Full details of a product</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div className="lg:col-span-8">
+            <div className="bg-white border border-[#f1f1f1] rounded-[8px] p-4 sm:p-5">
+              <div className="flex items-center justify-between border-b border-[#f1f1f1] pb-4 mb-4">
                 <img
                   src="/nextjs/template/assets/img/barcode/barcode1.png"
-                  className="barcode"
+                  className="max-h-[60px]"
                   alt="barcode"
                 />
-                <img
-                  src="/nextjs/template/assets/img/barcode/barcode1-white.png"
-                  className="barcode-white"
-                  alt="barcode"
-                />
+                <Link
+                  href="#"
+                  className="w-9 h-9 inline-flex items-center justify-center rounded-md border border-[#e7e7e7] text-[#212B36] hover:border-[#0ac79e] hover:text-[#0ac79e] transition-colors"
+                >
+                  <i className="ti ti-printer text-[18px]" />
+                </Link>
               </div>
-              <Link href="#" className="printimg">
-                <i className="ti ti-printer fs-24 text-dark" />
-              </Link>
-            </div>
-            <div className="productdetails">
-              <ul className="product-bar">
-                <li>
-                  <h4>Product</h4>
-                  <h6>Macbook pro </h6>
-                </li>
-                <li>
-                  <h4>Category</h4>
-                  <h6>Computers</h6>
-                </li>
-                <li>
-                  <h4>Sub Category</h4>
-                  <h6>None</h6>
-                </li>
-                <li>
-                  <h4>Brand</h4>
-                  <h6>None</h6>
-                </li>
-                <li>
-                  <h4>Unit</h4>
-                  <h6>Piece</h6>
-                </li>
-                <li>
-                  <h4>SKU</h4>
-                  <h6>PT0001</h6>
-                </li>
-                <li>
-                  <h4>Minimum Qty</h4>
-                  <h6>5</h6>
-                </li>
-                <li>
-                  <h4>Quantity</h4>
-                  <h6>50</h6>
-                </li>
-                <li>
-                  <h4>Tax</h4>
-                  <h6>0.00 %</h6>
-                </li>
-                <li>
-                  <h4>Discount Type</h4>
-                  <h6>Percentage</h6>
-                </li>
-                <li>
-                  <h4>Price</h4>
-                  <h6>1500.00</h6>
-                </li>
-                <li>
-                  <h4>Status</h4>
-                  <h6>Active</h6>
-                </li>
-                <li>
-                  <h4>Description</h4>
-                  <h6>
-                    Designed for professionals, it offers smooth multitasking
-                    and high-end graphics capability.
-                  </h6>
-                </li>
+              <ul className="divide-y divide-[#f1f1f1]">
+                {details.map((d) => (
+                  <li key={d.label} className="grid grid-cols-1 sm:grid-cols-3 gap-1 py-2.5">
+                    <span className="text-[14px] font-semibold text-[#212B36]">{d.label}</span>
+                    <span className="sm:col-span-2 text-[14px] text-[#646B72]">{d.value}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="col-lg-4 col-sm-12">
-        <div className="card">
-          <div className="card-body">
-           <div className="slider-product-details">
 
-      {/* Slider */}
-      <Slider ref={sliderRef} {...settings} className="product-slide">
-        <div className="slider-product">
-          <img src="assets/img/products/product69.jpg" alt="img" />
-          <h4 className="text-dark">macbookpro.jpg</h4>
-          <h6 className="text-dark">581kb</h6>
-        </div>
+          <div className="lg:col-span-4">
+            <div className="bg-white border border-[#f1f1f1] rounded-[8px] p-4 sm:p-5">
+              <Slider ref={sliderRef} {...settings}>
+                {slides.map((s, i) => (
+                  <div key={i} className="text-center">
+                    <img
+                      src={s.img}
+                      alt="img"
+                      className="mx-auto rounded-md mb-3 max-h-[260px] object-contain"
+                    />
+                    <h4 className="text-[15px] font-semibold text-[#212B36]">{s.name}</h4>
+                    <h6 className="text-[13px] text-[#646B72]">{s.size}</h6>
+                  </div>
+                ))}
+              </Slider>
 
-        <div className="slider-product">
-          <img src="assets/img/products/product69.jpg" alt="img" />
-          <h4 className="text-dark">macbookpro.jpg</h4>
-          <h6 className="text-dark">581kb</h6>
-        </div>
-      </Slider>
-
-      {/* External Buttons */}
-      <div className="product-nav-controls d-flex align-items-center justify-content-between">
-        <button
-          className="product-prev"
-          onClick={() => sliderRef.current?.slickPrev()}
-        >
-          <i className="fa fa-chevron-left" />
-        </button>
-
-        <button
-          className="product-next"
-          onClick={() => sliderRef.current?.slickNext()}
-        >
-          <i className="fa fa-chevron-right" />
-        </button>
-      </div>
-
-    </div>
+              <div className="flex items-center justify-between mt-4">
+                <button
+                  type="button"
+                  onClick={() => sliderRef.current?.slickPrev()}
+                  className="w-8 h-8 inline-flex items-center justify-center rounded-full border border-[#e7e7e7] text-[#646B72] hover:border-[#0ac79e] hover:text-[#0ac79e] transition-colors"
+                >
+                  <i className="fa fa-chevron-left" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => sliderRef.current?.slickNext()}
+                  className="w-8 h-8 inline-flex items-center justify-center rounded-full border border-[#e7e7e7] text-[#646B72] hover:border-[#0ac79e] hover:text-[#0ac79e] transition-colors"
+                >
+                  <i className="fa fa-chevron-right" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    {/* /add */}
-  </div>
-</div>
+  );
+};
 
-  )
-}
-
-export default ProductDetailsComponent
+export default ProductDetailsComponent;

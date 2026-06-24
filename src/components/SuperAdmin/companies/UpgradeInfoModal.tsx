@@ -3,198 +3,104 @@
 
 import { DatePicker } from "antd";
 import Select from "react-select";
-import Link from "next/link";
-import {
-  currency,
-  language,
-  planName,
-  planType,
-  statusChoose,
-} from "@/core/common/selectOption/selectOption";
+import { planName, planType } from "@/core/common/selectOption/selectOption";
 
 type UpgradeInfoModalProps = {
   getModalContainer: () => HTMLElement;
 };
 
-export default function UpgradeInfoModal({
-  getModalContainer,
-}: UpgradeInfoModalProps) {
+const inputCls =
+  "w-full border border-[#e7e7e7] rounded-md px-3 py-2 text-[14px] text-[#212B36] placeholder:text-[#9aa0a6] focus:border-[#0ac79e] focus:outline-none focus:ring-1 focus:ring-[#0ac79e] transition-colors";
+const labelCls = "block text-[13px] font-medium text-[#212B36] mb-1.5";
+
+function Field({ label, value }: { label: string; value: string }) {
   return (
-        <div className="modal fade" id="upgrade_info">
-          <div className="modal-dialog modal-dialog-centered modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 className="modal-title">Upgrade Package</h4>
-                <button
-                  type="button"
-                  className="btn-close custom-btn-close p-0"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <i className="ti ti-x" />
-                </button>
+    <div>
+      <p className="m-0 text-[12px] text-[#646B72] mb-1">{label}</p>
+      <p className="m-0 text-[14px] text-[#212B36]">{value}</p>
+    </div>
+  );
+}
+
+export default function UpgradeInfoModal({ getModalContainer }: UpgradeInfoModalProps) {
+  return (
+    <div className="modal fade" id="upgrade_info">
+      <div className="modal-dialog modal-dialog-centered modal-lg">
+        <div className="modal-content">
+          <div className="flex items-center justify-between p-4 border-b border-[#f1f1f1]">
+            <h4 className="m-0 text-[18px] font-bold text-[#212B36]">Upgrade Package</h4>
+            <button
+              type="button"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              className="w-7 h-7 inline-flex items-center justify-center rounded-md text-[#646B72] hover:bg-[#f6f6f6]"
+            >
+              <i className="ti ti-x" />
+            </button>
+          </div>
+
+          <div className="p-4 pb-0">
+            <div className="rounded-md bg-[#f8f9fa] p-4">
+              <h5 className="text-[16px] font-semibold text-[#212B36] mb-3">Current Plan Details</h5>
+              <div className="grid grid-cols-2 min-[576px]:grid-cols-3 gap-4">
+                <Field label="Company Name" value="BrightWave Innovations" />
+                <Field label="Plan Name" value="Advanced" />
+                <Field label="Plan Type" value="Monthly" />
+                <Field label="Price" value="200" />
+                <Field label="Register Date" value="12 Sep 2024" />
+                <Field label="Expiring On" value="11 Oct 2024" />
               </div>
-              <div className="p-3 mb-1">
-                <div className="rounded bg-light p-3">
-                  <h5 className="mb-3">Current Plan Details</h5>
-                  <div className="row align-items-center">
-                    <div className="col-md-4">
-                      <div className="mb-3">
-                        <p className="fs-12 mb-0">Company Name</p>
-                        <p className="text-gray-9">BrightWave Innovations</p>
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="mb-3">
-                        <p className="fs-12 mb-0">Plan Name</p>
-                        <p className="text-gray-9">Advanced</p>
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="mb-3">
-                        <p className="fs-12 mb-0">Plan Type</p>
-                        <p className="text-gray-9">Monthly</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row align-items-center">
-                    <div className="col-md-4">
-                      <div className="mb-3">
-                        <p className="fs-12 mb-0">Price</p>
-                        <p className="text-gray-9">200</p>
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="mb-3">
-                        <p className="fs-12 mb-0">Register Date</p>
-                        <p className="text-gray-9">12 Sep 2024</p>
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="mb-3">
-                        <p className="fs-12 mb-0">Expiring On</p>
-                        <p className="text-gray-9">11 Oct 2024</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <form>
-                <div className="modal-body pb-0">
-                  <h5 className="mb-4">Change Plan</h5>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="mb-3 ">
-                        <label className="form-label">
-                          Plan Name <span className="text-danger">*</span>
-                        </label>
-                        <Select
-                          classNamePrefix="react-select"
-                          options={planName}
-                          placeholder="Choose"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3 ">
-                        <label className="form-label">
-                          Plan Type <span className="text-danger">*</span>
-                        </label>
-                        <Select
-                          classNamePrefix="react-select"
-                          options={planType}
-                          placeholder="Choose"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">
-                          Ammount<span className="text-danger">*</span>
-                        </label>
-                        <input type="text" className="form-control" />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">
-                          Payment Date <span className="text-danger">*</span>
-                        </label>
-                        <div className="input-icon-end position-relative">
-                          <DatePicker
-                            className="form-control datetimepicker"
-                            format={{
-                              format: "DD-MM-YYYY",
-                              type: "mask",
-                            }}
-                            getPopupContainer={getModalContainer}
-                            placeholder="DD-MM-YYYY"
-                          />
-                          <span className="input-icon-addon">
-                            <i className="ti ti-calendar text-gray-7" />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">
-                          Next Payment Date <span className="text-danger">*</span>
-                        </label>
-                        <div className="input-icon-end position-relative">
-                          <DatePicker
-                            className="form-control datetimepicker"
-                            format={{
-                              format: "DD-MM-YYYY",
-                              type: "mask",
-                            }}
-                            getPopupContainer={getModalContainer}
-                            placeholder="DD-MM-YYYY"
-                          />
-                          <span className="input-icon-addon">
-                            <i className="ti ti-calendar text-gray-7" />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">
-                          Expiring On <span className="text-danger">*</span>
-                        </label>
-                        <div className="input-icon-end position-relative">
-                          <DatePicker
-                            className="form-control datetimepicker"
-                            format={{
-                              format: "DD-MM-YYYY",
-                              type: "mask",
-                            }}
-                            getPopupContainer={getModalContainer}
-                            placeholder="DD-MM-YYYY"
-                          />
-                          <span className="input-icon-addon">
-                            <i className="ti ti-calendar text-gray-7" />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-light me-2"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancel
-                  </button>
-                  <button type="button" data-bs-dismiss="modal" className="btn btn-primary">
-                    Save Changes
-                  </button>
-                </div>
-              </form>
             </div>
           </div>
+
+          <form>
+            <div className="p-4">
+              <h5 className="text-[16px] font-semibold text-[#212B36] mb-4">Change Plan</h5>
+              <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-12 min-[768px]:col-span-6">
+                  <label className={labelCls}>Plan Name <span className="text-[#dc3545]">*</span></label>
+                  <Select classNamePrefix="react-select" options={planName} placeholder="Choose" />
+                </div>
+                <div className="col-span-12 min-[768px]:col-span-6">
+                  <label className={labelCls}>Plan Type <span className="text-[#dc3545]">*</span></label>
+                  <Select classNamePrefix="react-select" options={planType} placeholder="Choose" />
+                </div>
+                <div className="col-span-12 min-[768px]:col-span-6">
+                  <label className={labelCls}>Amount <span className="text-[#dc3545]">*</span></label>
+                  <input type="text" className={inputCls} />
+                </div>
+                {["Payment Date", "Next Payment Date", "Expiring On"].map((lbl) => (
+                  <div key={lbl} className="col-span-12 min-[768px]:col-span-6">
+                    <label className={labelCls}>{lbl} <span className="text-[#dc3545]">*</span></label>
+                    <DatePicker
+                      className="w-full"
+                      format="DD-MM-YYYY"
+                      getPopupContainer={getModalContainer}
+                      placeholder="DD-MM-YYYY"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-2 p-4 border-t border-[#f1f1f1]">
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                className="px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                className="px-4 py-2 rounded-[6px] bg-[#0ac79e] text-white text-[14px] font-medium hover:bg-[#089b7c] transition-colors"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
+    </div>
   );
 }

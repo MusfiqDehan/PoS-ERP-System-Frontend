@@ -9,12 +9,10 @@ export default function SubCategoryTable() {
   const { dataSource } = useSubCategories();
 
   return (
-    <div className="card table-list-card">
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
       <SubCategoryFilters />
-      <div className="card-body">
-        <div className="table-responsive sub-category-table">
-          <Table columns={subCategoryColumns} dataSource={dataSource} />
-        </div>
+      <div className="overflow-x-auto">
+        <Table columns={subCategoryColumns} dataSource={dataSource} />
       </div>
     </div>
   );

@@ -10,41 +10,47 @@ type BrandListRowCellProps = {
 
 export function BrandImageCell({ record }: BrandListRowCellProps) {
   return (
-    <span className="productimgname">
-      <Link href="#" className="product-img stock-img">
-        <img alt="" src={record.logo} />
-      </Link>
-    </span>
+    <Link
+      href="#"
+      className="w-12 h-10 inline-flex items-center justify-center rounded border border-[#f1f1f1] overflow-hidden"
+    >
+      <img alt="" src={record.logo} className="max-w-full max-h-full object-contain" />
+    </Link>
   );
 }
 
 export function BrandStatusCell({ status }: { status: string }) {
   return (
-    <span className="badge table-badge bg-success fw-medium fs-10">{status}</span>
+    <span
+      className={`inline-flex items-center gap-1 px-2 py-[3px] rounded text-[11px] font-medium ${
+        status === "Inactive" ? "bg-[#fff0f0] text-[#c80000]" : "bg-[#E7FBF7] text-[#0ac79e]"
+      }`}
+    >
+      <i className="ti ti-point-filled" />
+      {status}
+    </span>
   );
 }
 
 export function BrandActionsCell() {
   return (
-    <div className="action-table-data">
-      <div className="edit-delete-action">
-        <Link
-          className="me-2 p-2"
-          href="#"
-          data-bs-toggle="modal"
-          data-bs-target="#edit-brand"
-        >
-          <i data-feather="edit" className="feather-edit"></i>
-        </Link>
-        <Link
-          data-bs-toggle="modal"
-          data-bs-target="#delete-modal"
-          className="p-2"
-          href="#"
-        >
-          <i data-feather="trash-2" className="feather-trash-2"></i>
-        </Link>
-      </div>
+    <div className="inline-flex items-center gap-2">
+      <Link
+        href="#"
+        data-bs-toggle="modal"
+        data-bs-target="#edit-brand"
+        className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#0ac79e] hover:border-[#0ac79e] transition-colors"
+      >
+        <i className="ti ti-edit" />
+      </Link>
+      <Link
+        href="#"
+        data-bs-toggle="modal"
+        data-bs-target="#delete-modal"
+        className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#c80000] hover:border-[#c80000] transition-colors"
+      >
+        <i className="ti ti-trash" />
+      </Link>
     </div>
   );
 }

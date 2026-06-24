@@ -1,0 +1,18 @@
+import RoleCard from "./RoleCard";
+import { rolesData } from "./rolesData";
+
+export default function RolesCards() {
+  return (
+    <section className="mb-[24px] w-full overflow-hidden rounded-lg border border-[#f1f1f1] bg-white p-4">
+      <h2 className="m-0 text-lg font-semibold leading-normal text-[#333333]">Roles</h2>
+      <p className="mt-1 mb-4 text-sm font-normal leading-normal text-[#666666]">
+        Predefined and custom roles for your team.
+      </p>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {rolesData.map((role) => (
+          <RoleCard key={role.id} role={role} />
+        ))}
+      </div>
+    </section>
+  );
+}
