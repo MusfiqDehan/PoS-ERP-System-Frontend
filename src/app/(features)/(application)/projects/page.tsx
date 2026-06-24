@@ -43,9 +43,9 @@ export default function Projects() {
     <div className="page-wrapper">
       <div className="content">
         <PageHeader />
-        <div className="card">
+        <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
           <ProjectsCardHeader />
-          <div className="card-body">
+          <div className="p-4">
             <ProjectsFilters />
             <div className="tab-content" id="pills-tabContent">
               <AllProjectsTab columns={columns} onDragEnd={onDragEndAll} />
