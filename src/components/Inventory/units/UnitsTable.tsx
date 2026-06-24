@@ -9,12 +9,10 @@ export default function UnitsTable() {
   const { dataSource } = useUnits();
 
   return (
-    <div className="card table-list-card">
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
       <UnitsFilters />
-      <div className="card-body">
-        <div className="table-responsive">
-          <Table columns={unitsColumns} dataSource={dataSource} />
-        </div>
+      <div className="overflow-x-auto">
+        <Table columns={unitsColumns} dataSource={dataSource} />
       </div>
     </div>
   );

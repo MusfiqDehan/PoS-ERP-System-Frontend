@@ -1,15 +1,10 @@
-# Keep the image small and the build context clean. The bind mount supplies the
-# live source at runtime, so these don't need to be baked into the image.
 node_modules
-.next
 out
+.next
 .git
-.gitignore
+.DS_Store
 npm-debug.log*
-yarn-error.log*
-Dockerfile
-docker-compose.yml
-.dockerignore
-.env*.local
-*.md
-.cursor
+pnpm-debug.log*
+.env
+.env.local
+.env.prod

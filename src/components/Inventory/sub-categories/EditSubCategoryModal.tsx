@@ -1,115 +1,94 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import SelectField from "@/core/common/form/SelectField";
-import TextField from "@/core/common/form/TextField";
+import Select from "react-select";
 import { Category } from "@/core/common/selectOption/selectOption";
 import Link from "next/link";
-import { X } from "react-feather";
+
+const inputCls =
+  "w-full border border-[#e7e7e7] rounded-md px-3 py-2 text-[14px] text-[#212B36] focus:border-[#0ac79e] focus:outline-none focus:ring-1 focus:ring-[#0ac79e] transition-colors";
+const labelCls = "block text-[13px] font-medium text-[#212B36] mb-1.5";
 
 export default function EditSubCategoryModal() {
   return (
     <div className="modal fade" id="edit-category">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
-          <div className="page-wrapper-new p-0">
-            <div className="content">
-              <div className="modal-header">
-                <div className="page-title">
-                  <h4>Edit Sub Category</h4>
+          <div className="flex items-center justify-between p-4 border-b border-[#f1f1f1]">
+            <h4 className="m-0 text-[18px] font-bold text-[#212B36]">Edit Sub Category</h4>
+            <button
+              type="button"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              className="w-7 h-7 inline-flex items-center justify-center rounded-md text-[#646B72] hover:bg-[#f6f6f6]"
+            >
+              <i className="ti ti-x" />
+            </button>
+          </div>
+          <form>
+            <div className="p-4 flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="relative w-[72px] h-[72px] shrink-0">
+                  <img
+                    src="assets/img/products/laptop.png"
+                    className="w-full h-full object-contain rounded-md border border-[#f1f1f1] bg-white p-1"
+                    alt="image"
+                  />
+                  <button
+                    type="button"
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 inline-flex items-center justify-center rounded-full bg-[#dc3545] text-white text-[12px] leading-none"
+                  >
+                    ×
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  className="close bg-danger text-white fs-16"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">×</span>
-                </button>
+                <div>
+                  <label className="relative inline-flex items-center px-3 py-1.5 rounded-md bg-[#0ac79e] text-white text-[13px] font-medium cursor-pointer hover:bg-[#089b7c] transition-colors">
+                    Change Image
+                    <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" />
+                  </label>
+                  <p className="mt-2 text-[12px] text-[#646B72]">JPEG, PNG up to 2 MB</p>
+                </div>
               </div>
-              <div className="modal-body">
-                <form>
-                  <div className="mb-3">
-                    <div className="add-image-upload">
-                      <div className="add-image p-1 border-solid">
-                        <img src="assets/img/products/laptop.png" alt="image" />
-                        <Link href="#">
-                          <X className="x-square-add image-close remove-product fs-12 text-white bg-danger rounded-1" />
-                        </Link>
-                      </div>
-                      <div className="new-employee-field">
-                        <div className="mb-0">
-                          <div className="image-upload mb-2">
-                            <input type="file" />
-                            <div className="image-uploads">
-                              <h4 className="fs-13 fw-medium">Change Image</h4>
-                            </div>
-                          </div>
-                          <span>JPEG, PNG up to 2 MB</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <SelectField
-                    label="Category"
-                    required
-                    className="mb-3"
-                    options={Category}
-                    placeholder="Choose"
-                    classNamePrefix="react-select"
-                  />
-                  <TextField
-                    label="Sub Category"
-                    required
-                    className="mb-3"
-                    defaultValue="Laptop"
-                  />
-                  <TextField
-                    label="Category Code"
-                    required
-                    className="mb-3"
-                    defaultValue="CT001"
-                  />
-                  <div className="mb-3">
-                    <label className="form-label">
-                      Description<span className="text-danger ms-1">*</span>
-                    </label>
-                    <textarea
-                      className="form-control"
-                      defaultValue="Efficient Productivity"
-                    />
-                  </div>
-                  <div className="mb-0">
-                    <div className="status-toggle modal-status d-flex justify-content-between align-items-center">
-                      <span className="status-label">Status</span>
-                      <input
-                        type="checkbox"
-                        id="user3"
-                        className="check"
-                        defaultChecked
-                      />
-                      <label htmlFor="user3" className="checktoggle" />
-                    </div>
-                  </div>
-                </form>
+              <div>
+                <label className={labelCls}>Category <span className="text-[#dc3545]">*</span></label>
+                <Select classNamePrefix="react-select" options={Category} placeholder="Choose" />
               </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn me-2 btn-secondary fs-13 fw-medium p-2 px-3 shadow-none"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-                <Link
-                  href="#"
-                  className="btn btn-primary fs-13 fw-medium p-2 px-3"
-                >
-                  Add Sub Category
-                </Link>
+              <div>
+                <label className={labelCls}>Sub Category <span className="text-[#dc3545]">*</span></label>
+                <input type="text" className={inputCls} defaultValue="Laptop" />
+              </div>
+              <div>
+                <label className={labelCls}>Category Code <span className="text-[#dc3545]">*</span></label>
+                <input type="text" className={inputCls} defaultValue="CT001" />
+              </div>
+              <div>
+                <label className={labelCls}>Description <span className="text-[#dc3545]">*</span></label>
+                <textarea className={inputCls} rows={3} defaultValue="Efficient Productivity" />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[14px] font-medium text-[#212B36]">Status</span>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input type="checkbox" defaultChecked className="sr-only peer" />
+                  <span className="relative block w-9 h-5 bg-[#e7e7e7] rounded-full transition-colors peer-checked:bg-[#0ac79e] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:w-4 after:h-4 after:bg-white after:rounded-full after:transition-transform peer-checked:after:translate-x-4" />
+                </label>
               </div>
             </div>
-          </div>
+            <div className="flex items-center justify-end gap-2 p-4 border-t border-[#f1f1f1]">
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                className="px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors"
+              >
+                Cancel
+              </button>
+              <Link
+                href="#"
+                className="px-4 py-2 rounded-[6px] bg-[#0ac79e] text-white text-[14px] font-medium hover:bg-[#089b7c] transition-colors"
+              >
+                Save Changes
+              </Link>
+            </div>
+          </form>
         </div>
       </div>
     </div>

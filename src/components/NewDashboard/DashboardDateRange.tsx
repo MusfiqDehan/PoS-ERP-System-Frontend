@@ -57,15 +57,20 @@ export default function DashboardDateRange() {
       }}
       onCallback={handleCallback}
     >
-      <button type="button" className="dashboard-page-header__date-picker">
+      <button
+        type="button"
+        className="inline-flex items-center gap-[8px] p-[12px] bg-white border border-[#e7e7e7] rounded-[4px] shadow-[0_4px_30px_rgba(231,231,231,0.48)] cursor-pointer shrink-0"
+      >
         <ImageWithBasePath
           src="assets/img/dashboard/page-header/calendar.png"
           alt=""
           width={18}
           height={18}
-          className="dashboard-page-header__date-icon"
+          className="block shrink-0 object-contain"
         />
-        <span className="dashboard-page-header__date-label">{label}</span>
+        <span className="text-[14px] font-medium leading-[18px] text-[#212B36] whitespace-nowrap">
+          {label}
+        </span>
       </button>
     </DateRangePicker>
   );

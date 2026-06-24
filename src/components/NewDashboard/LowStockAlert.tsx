@@ -13,25 +13,28 @@ export default function LowStockAlert() {
   }
 
   return (
-    <div className="low-stock-alert" role="alert">
-      <div className="low-stock-alert__inner">
-        <div className="low-stock-alert__content">
+    <div
+      className="w-full p-[12px] bg-[#e7fbf7] rounded-[8px] mb-[1.5rem]"
+      role="alert"
+    >
+      <div className="flex items-center justify-between gap-[12px] w-full">
+        <div className="flex items-center gap-[8px] min-w-0 flex-1">
           <ImageWithBasePath
             src={lowStockAlertData.infoIconSrc}
             alt=""
             width={24}
             height={24}
-            className="low-stock-alert__icon"
+            className="block shrink-0 object-contain"
           />
-          <p className="low-stock-alert__text">
+          <p className="m-0 text-[16px] font-medium leading-[normal] text-[#646B72]">
             Your product{" "}
-            <span className="low-stock-alert__highlight">
+            <span className="text-[#089b7c]">
               {lowStockAlertData.productName} is running Low,
             </span>{" "}
             already below {lowStockAlertData.threshold},{" "}
             <Link
               href={lowStockAlertData.addStockHref}
-              className="low-stock-alert__link"
+              className="text-[#089b7c] font-medium underline hover:text-[#067a63]"
             >
               Add Stock.
             </Link>
@@ -39,7 +42,7 @@ export default function LowStockAlert() {
         </div>
         <button
           type="button"
-          className="low-stock-alert__close"
+          className="inline-flex items-center justify-center p-0 border-0 bg-transparent cursor-pointer shrink-0 leading-[0]"
           aria-label="Close"
           onClick={() => setVisible(false)}
         >

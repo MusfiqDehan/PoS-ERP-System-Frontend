@@ -1,5 +1,51 @@
 # CI/CD Pipeline — Full Implementation Guide
 
+## Production branch pipeline (current)
+
+**Repository:** `GeekSSort/geekpos_frontend`  
+**Workflow:** `.github/workflows/production.yml`  
+**Release branch:** `production` (not `main`)
+
+```
+PR → production   →  ci only (lint, typecheck, vitest, build)
+push → production →  ci  →  deploy (blue-green zero-downtime on VPS)
+```
+
+### Zero-downtime deploy
+
+Deploy runs `scripts/deploy/production.sh` on the VPS via SSH:
+
+1. Build image while `sortorium-frontend` keeps serving
+2. Start `sortorium-frontend-candidate` (Traefik load-balances live + candidate)
+3. HTTPS smoke `https://sortorium.com/`
+4. Graceful stop live → promote canonical frontend → remove candidate
+
+If candidate healthcheck fails, deploy aborts and the live container is **not** stopped.
+
+Compose overlay: `docker-compose.deploy.yml` (`frontend_candidate` with `-candidate` Traefik routers).
+
+### GitHub secrets (frontend repo)
+
+| Secret | Purpose |
+|--------|---------|
+| `VPS_HOST` | VPS hostname/IP |
+| `VPS_USER` | SSH user |
+| `VPS_SSH_KEY` | Private key |
+| `VPS_DEPLOY_PATH` | e.g. `/opt/sortorium/frontend` |
+
+### Manual validation after setup
+
+```bash
+# Zero-downtime check during deploy
+while curl -sf https://sortorium.com/; do sleep 1; done
+```
+
+---
+
+## Legacy `main` + GHCR guide (reference)
+
+The sections below describe an alternate **`main`** branch workflow with GHCR image pull (`.github/workflows/ci-cd.yml`). The **production** pipeline above builds on the VPS and uses the `production` branch.
+
 This document explains the **Continuous Integration (CI)** and **Continuous Deployment (CD)**
 pipeline for this Next.js app, end to end. It is written so that **anyone can reproduce it from
 scratch** — on this repo or a new one.

@@ -9,12 +9,10 @@ export default function WarrantyTable() {
   const { dataSource } = useWarranties();
 
   return (
-    <div className="card table-list-card">
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
       <WarrantyFilters />
-      <div className="card-body">
-        <div className="table-responsive">
-          <Table columns={warrantyColumns} dataSource={dataSource} />
-        </div>
+      <div className="overflow-x-auto">
+        <Table columns={warrantyColumns} dataSource={dataSource} />
       </div>
     </div>
   );

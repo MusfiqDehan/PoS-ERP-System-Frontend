@@ -3,136 +3,73 @@
 
 import Link from "next/link";
 
+function Field({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="m-0 text-[12px] text-[#646B72] mb-1">{label}</p>
+      <p className="m-0 text-[14px] text-[#212B36]">{value}</p>
+    </div>
+  );
+}
+
 export default function CompanyDetailModal() {
   return (
-        <div className="modal fade" id="company_detail">
-          <div className="modal-dialog modal-dialog-centered modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 className="modal-title">Company Detail</h4>
-                <button
-                  type="button"
-                  className="btn-close custom-btn-close p-0"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
+    <div className="modal fade" id="company_detail">
+      <div className="modal-dialog modal-dialog-centered modal-lg">
+        <div className="modal-content">
+          <div className="flex items-center justify-between p-4 border-b border-[#f1f1f1]">
+            <h4 className="m-0 text-[18px] font-bold text-[#212B36]">Company Detail</h4>
+            <button
+              type="button"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              className="w-7 h-7 inline-flex items-center justify-center rounded-md text-[#646B72] hover:bg-[#f6f6f6]"
+            >
+              <i className="ti ti-x" />
+            </button>
+          </div>
+          <div className="p-4">
+            <div className="flex items-center justify-between gap-3 flex-wrap rounded-md bg-[#f8f9fa] p-3 mb-4">
+              <div className="flex items-center gap-2 min-w-0">
+                <Link
+                  href="#"
+                  className="w-10 h-10 rounded-full border border-[#f1f1f1] overflow-hidden flex items-center justify-center shrink-0"
                 >
-                  <i className="ti ti-x" />
-                </button>
-              </div>
-              <div className="moday-body">
-                <div className="p-3">
-                  <div className="d-flex justify-content-between align-items-center rounded bg-light p-3">
-                    <div className="file-name-icon d-flex align-items-center">
-                      <Link
-                        href="#"
-                        className="avatar avatar-md border rounded-circle flex-shrink-0 me-2"
-                      >
-                        <img
-                          src="assets/img/company/company-01.svg"
-                          className="img-fluid"
-                          alt="img"
-                        />
-                      </Link>
-                      <div>
-                        <p className="text-gray-9 fw-medium mb-0">
-                          BrightWave Innovations
-                        </p>
-                        <p>michael@example.com</p>
-                      </div>
-                    </div>
-                    <span className="badge badge-success">
-                      <i className="ti ti-point-filled" />
-                      Active
-                    </span>
-                  </div>
-                </div>
-                <div className="p-3">
-                  <p className="text-gray-9 fw-medium">Basic Info</p>
-                  <div className="pb-1 border-bottom mb-4">
-                    <div className="row align-items-center">
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Account URL</p>
-                          <p className="text-gray-9">bwi.example.com</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Phone Number</p>
-                          <p className="text-gray-9">(163) 2459 315</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Website</p>
-                          <p className="text-gray-9">www.exmple.com</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row align-items-center">
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Currency</p>
-                          <p className="text-gray-9">United Stated Dollar (USD)</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Language</p>
-                          <p className="text-gray-9">English</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Addresss</p>
-                          <p className="text-gray-9">
-                            3705 Lynn Avenue, Phelps, WI 54554
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-gray-9 fw-medium">Plan Details</p>
-                  <div>
-                    <div className="row align-items-center">
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Plan Name</p>
-                          <p className="text-gray-9">Advanced</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Plan Type</p>
-                          <p className="text-gray-9">Monthly</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Price</p>
-                          <p className="text-gray-9">$200</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row align-items-center">
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Register Date</p>
-                          <p className="text-gray-9">12 Sep 2024</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="mb-3">
-                          <p className="fs-12 mb-0">Expiring On</p>
-                          <p className="text-gray-9">11 Oct 2024</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <img src="assets/img/company/company-01.svg" className="w-full h-full object-cover" alt="img" />
+                </Link>
+                <div className="min-w-0">
+                  <p className="m-0 text-[14px] font-medium text-[#212B36] truncate">
+                    BrightWave Innovations
+                  </p>
+                  <p className="m-0 text-[13px] text-[#646B72] truncate">michael@example.com</p>
                 </div>
               </div>
+              <span className="inline-flex items-center gap-1 px-2 py-[3px] rounded text-[11px] font-medium bg-[#E7FBF7] text-[#0ac79e]">
+                <i className="ti ti-point-filled" /> Active
+              </span>
+            </div>
+
+            <p className="text-[14px] font-medium text-[#212B36] mb-3">Basic Info</p>
+            <div className="grid grid-cols-2 min-[576px]:grid-cols-3 gap-4 pb-4 mb-4 border-b border-[#f1f1f1]">
+              <Field label="Account URL" value="bwi.example.com" />
+              <Field label="Phone Number" value="(163) 2459 315" />
+              <Field label="Website" value="www.exmple.com" />
+              <Field label="Currency" value="United Stated Dollar (USD)" />
+              <Field label="Language" value="English" />
+              <Field label="Address" value="3705 Lynn Avenue, Phelps, WI 54554" />
+            </div>
+
+            <p className="text-[14px] font-medium text-[#212B36] mb-3">Plan Details</p>
+            <div className="grid grid-cols-2 min-[576px]:grid-cols-3 gap-4">
+              <Field label="Plan Name" value="Advanced" />
+              <Field label="Plan Type" value="Monthly" />
+              <Field label="Price" value="$200" />
+              <Field label="Register Date" value="12 Sep 2024" />
+              <Field label="Expiring On" value="11 Oct 2024" />
             </div>
           </div>
         </div>
+      </div>
+    </div>
   );
 }

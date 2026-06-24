@@ -22,7 +22,7 @@ $__basecolor: #2c3038;
 .swal2-confirm {
   background-color: #ff8d1f !important;
   border: 1px solid #ff8d1f !important;
-  box-shadow: 0 3px 10px rgba(255, 159, 67, 0.5);
+  box-shadow: 0 3px 10px rgba(10, 199, 158, 0.5);
   color: #ffffff !important;
 }
 
@@ -49,7 +49,7 @@ $__basecolor: #2c3038;
 }
 
 .text-primary .toast-body {
-  background: rgba(255, 159, 67, 0.1) !important;
+  background: rgba(10, 199, 158, 0.1) !important;
 }
 
 .swal2-container .swal2-title {
@@ -80,7 +80,7 @@ $__basecolor: #2c3038;
 
 #primaryToast .toast-body,
 #warningToast .toast-body {
-  color: #ff9f43;
+  color: #0ac79e;
   background-color: #fff5ec;
 }
 
@@ -170,9 +170,9 @@ $__basecolor: #2c3038;
 :where(.css-dev-only-do-not-override-1b0bdye).ant-pagination
   .ant-pagination-item-active {
   font-weight: 600;
-  border-color: #ff9f43;
+  border-color: #0ac79e;
   border-radius: 15px;
-  background-color: #ff9f43;
+  background-color: #0ac79e;
   color: #fff;
 }
 
@@ -298,7 +298,7 @@ ul.tabs.owl-carousel.pos-category {
 }
 
 .pos-category .owl-item.active {
-  border-color: #fe9f43;
+  border-color: #0ac79e;
 }
 
 .pos-category .slick-track .slick-slide:last-child {
@@ -338,7 +338,7 @@ ul.tabs.owl-carousel.pos-category {
 
 .owl-carousel.pos-category .slick-prev:hover,
 .owl-carousel.pos-category .slick-next:hover {
-  background-color: #ff9f43;
+  background-color: #0ac79e;
 }
 
 .owl-carousel.pos-category .slick-next {
@@ -366,8 +366,8 @@ ul.tabs.owl-carousel.pos-category {
 
 :where(.css-dev-only-do-not-override-1b0bdye).ant-checkbox-checked
   .ant-checkbox-inner {
-  background-color: #ff9f43;
-  border-color: #ff9f43;
+  background-color: #0ac79e;
+  border-color: #0ac79e;
 }
 
 .iconsize {
@@ -524,12 +524,12 @@ ul.ant-pagination.ant-table-pagination li button.ant-pagination-item-link {
 }
 
 div.css-b62m3t-container .react-select__option--is-focused {
-  background-color: #ff9f43;
+  background-color: #0ac79e;
   color: #fff;
 }
 
 div.css-b62m3t-container .react-select__option--is-selected {
-  background-color: #ff9f43;
+  background-color: #0ac79e;
   color: #fff;
 }
 
@@ -694,26 +694,26 @@ div.ant-picker.ant-picker-outlined {
 
 div.rc-slider-track,
 .rc-slider-tracks {
-  background-color: #ff9f43;
+  background-color: #0ac79e;
 }
 
 div.rc-slider-handle {
-  border: solid 2px #ff9f43;
+  border: solid 2px #0ac79e;
 }
 
 span.rc-slider-dot-active {
-  border-color: #ff9f43;
+  border-color: #0ac79e;
 }
 
 div.rc-slider-handle:active {
-  border-color: #ff9f43;
-  box-shadow: 0 0 5px #ff9f43;
+  border-color: #0ac79e;
+  box-shadow: 0 0 5px #0ac79e;
   cursor: grabbing;
 }
 
 .rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging {
-  border-color: #ff9f43;
-  box-shadow: 0 0 0 5px #ff9f43;
+  border-color: #0ac79e;
+  box-shadow: 0 0 0 5px #0ac79e;
 }
 
 .react-select-min-width .css-b62m3t-container {
@@ -764,14 +764,14 @@ table tbody td .action-table-data a .action-edit {
 }
 
 .custom-active-hassubroute-false a {
-  background: rgba(254, 159, 67, 0.08);
+  background: rgba(10, 199, 158, 0.08);
   border-radius: 5px;
-  color: #fe9f43;
+  color: #0ac79e;
 }
 
 .custom-active-hassubroute-false a span.custom-active-span,
 .custom-active-hassubroute-false a svg {
-  color: #fe9f43 !important;
+  color: #0ac79e !important;
 }
 
 .sidebar.figma-sidebar .custom-active-hassubroute-false a {
@@ -1004,7 +1004,7 @@ div.rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-draggin
 
 .pos-category5 li:hover,
 .pos-category5 li.active {
-  border-color: #fe9f43;
+  border-color: #0ac79e;
 }
 
 .pos-category5 li a img {
@@ -1085,8 +1085,8 @@ div.rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-draggin
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fe9f43;
-  border-color: #fe9f43;
+  background: #0ac79e;
+  border-color: #0ac79e;
 
   a:not([href]):not([class]) {
     color: #fff;
@@ -1094,7 +1094,7 @@ div.rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-draggin
 }
 
 .ant-pagination .ant-pagination-item-active:hover {
-  border-color: #fe9f43;
+  border-color: #0ac79e;
 }
 
 .ant-pagination .ant-pagination-item-active:hover a {
@@ -1119,7 +1119,7 @@ div.rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-draggin
 }
 
 .pos-category3 li.active {
-  border-color: #fe9f43;
+  border-color: #0ac79e;
 }
 
 .input-groupicon.calender-input svg {
@@ -1254,7 +1254,7 @@ div.rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-draggin
     }
 
     table td.p-datepicker-today > span {
-      background-color: #fe9f43;
+      background-color: #0ac79e;
       color: #fff;
     }
   }
@@ -1330,7 +1330,7 @@ div.rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-draggin
 }
 
 .border-primary {
-  border-color: #fe9f43 !important;
+  border-color: #0ac79e !important;
 }
 
 .todo-accordion {
@@ -1653,7 +1653,7 @@ div.rti--container {
   &.custom-active-hassubroute-false {
     a {
       i {
-        color: #fe9f43 !important;
+        color: #0ac79e !important;
       }
     }
   }
@@ -2017,7 +2017,7 @@ h6 {
     color: #ffffff;
     background: #212b36;
     &:hover {
-      background: #fe9f43;
+      background: #0ac79e;
       color: #ffffff;
     }
   }
@@ -2025,7 +2025,7 @@ h6 {
     color: #ffffff;
     background: #212b36;
     &:hover {
-      background: #fe9f43;
+      background: #0ac79e;
       color: #ffffff;
     }
   }
@@ -2204,7 +2204,7 @@ h6 {
     color: #fff;
   }
   div.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-focus {
-    background-color: #fe9f43;
+    background-color: #0ac79e;
   }
   div.p-dropdown .p-dropdown-label {
     color: #fff;
@@ -2219,8 +2219,8 @@ h6 {
     color: #484444;
   }
   .ant-pagination .ant-pagination-item-active {
-    background-color: #fe9f43;
-    border-color: #fe9f43;
+    background-color: #0ac79e;
+    border-color: #0ac79e;
     color: #fff;
   }
   .css-13cymwt-control {
@@ -2250,13 +2250,13 @@ h6 {
     color: #d8dfee;
   }
   .css-d7l1ni-option {
-    background-color: #fe9f43;
-    border-color: #fe9f43;
+    background-color: #0ac79e;
+    border-color: #0ac79e;
     color: #fff;
   }
   .css-tr4s17-option {
-    background-color: #fe9f43;
-    border-color: #fe9f43;
+    background-color: #0ac79e;
+    border-color: #0ac79e;
     color: #fff;
   }
   .css-1dimb5e-singleValue {
@@ -2576,7 +2576,7 @@ h6 {
   }
 
   scrollbar-width: thin;
-  scrollbar-color: #fe9f43 transparent;
+  scrollbar-color: #0ac79e transparent;
 }
 
 .permissions-matrix-scroll {

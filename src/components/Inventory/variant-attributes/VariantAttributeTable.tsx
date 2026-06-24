@@ -9,12 +9,10 @@ export default function VariantAttributeTable() {
   const { dataSource } = useVariantAttributes();
 
   return (
-    <div className="card table-list-card">
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
       <VariantAttributeFilters />
-      <div className="card-body">
-        <div className="table-responsive">
-          <Table columns={variantAttributeColumns} dataSource={dataSource} />
-        </div>
+      <div className="overflow-x-auto">
+        <Table columns={variantAttributeColumns} dataSource={dataSource} />
       </div>
     </div>
   );

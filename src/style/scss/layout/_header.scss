@@ -1299,6 +1299,22 @@ hr {
     }
   }
 }
+// The legacy "collapse header" toggle (#collapse-header) was built for the old
+// header markup; on the new figma top-header it zeroed the right group's height
+// and knocked it out of vertical alignment. Keep the new header intact when the
+// `header-collapse` body class is toggled so the navbar can't break.
+.header-collapse .header.figma-top-header {
+  width: calc(100% - 252px);
+  left: 252px;
+
+  .figma-header-group,
+  .figma-header-group--right,
+  .user-menu {
+    display: flex;
+    height: auto;
+  }
+}
+
 .link-nav {
   .dropdown-menu {
     padding: 20px;

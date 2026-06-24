@@ -10,11 +10,11 @@ import {
 
 export default function LowStocksFilters() {
   return (
-                <div className="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
-                  <FilterDropdown label="Warehouse" options={warehouseFilterOptions} />
-                  <FilterDropdown label="Store" options={storeFilterOptions} />
-                  <FilterDropdown label="Category" options={categoryFilterOptions} />
-                  <FilterDropdown label="Product" options={productFilterOptions} />
-                </div>
+    <div className="flex items-center flex-wrap gap-2">
+      <FilterDropdown label="Warehouse" options={warehouseFilterOptions} />
+      <FilterDropdown label="Store" options={storeFilterOptions} />
+      <FilterDropdown label="Category" options={categoryFilterOptions} />
+      <FilterDropdown label="Product" options={productFilterOptions} />
+    </div>
   );
 }

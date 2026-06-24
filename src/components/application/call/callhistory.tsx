@@ -3,335 +3,208 @@
 
 import { callhistorydata } from "@/core/json/callhistorydata";
 import { all_routes } from "@/data/all_routes";
-import {
-  Eye,
-  MessageSquare,
-  PhoneCall,
-  PhoneIncoming,
-  PhoneMissed,
-  PhoneOutgoing,
-  Trash2,
-  Video,
-} from "react-feather";
 import Link from "next/link";
 import Table from "@/core/common/pagination/datatable";
-import TooltipIcons from "@/core/common/tooltip-content/tooltipIcons";
-import RefreshIcon from "@/core/common/tooltip-content/refresh";
-import CollapesIcon from "@/core/common/tooltip-content/collapes";
 import CommonFooter from "@/core/common/footer/commonFooter";
+import ExportButtons from "@/core/common/exportButtons";
+
+const callTypeMap: Record<string, { icon: string; color: string }> = {
+  "Incoming Call": { icon: "ti ti-phone-incoming", color: "#0ac79e" },
+  "Outgoing Call": { icon: "ti ti-phone-outgoing", color: "#3577f1" },
+};
+
+const columns = [
+  {
+    title: "UserName",
+    dataIndex: "username",
+    render: (text: any, record: any) => (
+      <div className="flex items-center gap-2">
+        <Link href="#" className="w-10 h-10 rounded-full border border-[#f1f1f1] overflow-hidden flex items-center justify-center shrink-0">
+          <img alt="user" src={record.image_url} className="w-full h-full object-cover" />
+        </Link>
+        <Link href="#" className="text-[15px] font-medium text-[#212B36] hover:text-[#0ac79e]">{text}</Link>
+      </div>
+    ),
+    sorter: (a: any, b: any) => a.username.length - b.username.length,
+  },
+  {
+    title: "Phone Number",
+    dataIndex: "phone_number",
+    sorter: (a: any, b: any) => a.phone_number.length - b.phone_number.length,
+  },
+  {
+    title: "Call Type",
+    dataIndex: "call_type",
+    render: (text: any) => {
+      const m = callTypeMap[text] || { icon: "ti ti-phone-x", color: "#dc3545" };
+      return (
+        <span className="inline-flex items-center gap-2 text-[#646B72]">
+          <i className={m.icon} style={{ color: m.color }} />
+          {text}
+        </span>
+      );
+    },
+    sorter: (a: any, b: any) => a.call_type.length - b.call_type.length,
+  },
+  {
+    title: "Duration",
+    dataIndex: "duration",
+    sorter: (a: any, b: any) => a.duration.length - b.duration.length,
+  },
+  {
+    title: "Date & Time",
+    dataIndex: "date_time",
+    sorter: (a: any, b: any) => a.date_time.length - b.date_time.length,
+  },
+  {
+    title: "Action",
+    dataIndex: "action",
+    render: () => (
+      <div className="inline-flex items-center gap-2">
+        <Link
+          href="#"
+          data-bs-toggle="modal"
+          data-bs-target="#user-profile-new"
+          className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#0ac79e] hover:border-[#0ac79e] transition-colors"
+        >
+          <i className="ti ti-eye" />
+        </Link>
+        <Link
+          href="#"
+          data-bs-toggle="modal"
+          data-bs-target="#delete"
+          className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#c80000] hover:border-[#c80000] transition-colors"
+        >
+          <i className="ti ti-trash" />
+        </Link>
+      </div>
+    ),
+  },
+];
+
+const filterDropdowns = [
+  { label: "Call type", items: ["Incoming", "Outgoing", "Missed Call"] },
+  { label: "Sort By : Last 7 Days", items: ["Recently Added", "Ascending", "Descending", "Last Month", "Last 7 Days"] },
+];
 
 export default function CallHistoryComponent() {
-  const data = callhistorydata;
-
-  const columns = [
-    {
-      title: "UserName",
-      dataIndex: "username",
-      render: (text: any, record: any) => (
-        <>
-          <div className="userimgname">
-            <Link href="#" className="product-img">
-              <img alt="product" src={record.image_url} />
-            </Link>
-            <Link href="#">{text}</Link>
-          </div>
-        </>
-      ),
-      sorter: (a: any, b: any) => a.username.length - b.username.length,
-    },
-    {
-      title: "Phone Number",
-      dataIndex: "phone_number",
-      sorter: (a: any, b: any) => a.phone_number.length - b.phone_number.length,
-    },
-
-    {
-      title: "Call Type",
-      dataIndex: "call_type",
-      render: (text: any) => (
-        <>
-          {text === "Incoming Call" ? (
-            <PhoneIncoming className="income-success text-success me-2" />
-          ) : text === "Outgoing Call" ? (
-            <PhoneOutgoing className="outcome-warning text-success me-2" />
-          ) : (
-            <PhoneMissed className="missed-call text-danger me-2" />
-          )}
-          {text}
-        </>
-      ),
-      sorter: (a: any, b: any) => a.call_type.length - b.call_type.length,
-    },
-    {
-      title: "Duration",
-      dataIndex: "duration",
-      sorter: (a: any, b: any) => a.duration.length - b.duration.length,
-    },
-    {
-      title: "Date & Time",
-      dataIndex: "date_time",
-      sorter: (a: any, b: any) => a.date_time.length - b.date_time.length,
-    },
-
-    {
-      title: "Action",
-      dataIndex: "action",
-      render: () => (
-        <div className="action-table-data">
-          <div className="edit-delete-action">
-            <div className="input-block add-lists"></div>
-
-            <Link
-              className="me-2 p-2"
-              href="#"
-              data-bs-toggle="modal"
-              data-bs-target="#user-profile-new"
-            >
-              <Eye className="feather-view" />
-            </Link>
-
-            <Link
-              className="confirm-text p-2"
-              href="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete"
-            >
-              <Trash2 className="feather-trash-2" />
-            </Link>
-          </div>
-        </div>
-      ),
-      sorter: (a: any, b: any) => a.createdby.length - b.createdby.length,
-    },
-  ];
   return (
     <>
       <div className="page-wrapper">
         <div className="content">
-          <div className="page-header">
-            <div className="page-header menu">
-              <div className="page-title">
-                <h4>Call History</h4>
-                <h6>Manage your call history</h6>
-              </div>
-            </div>
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-[1.5rem]">
             <div>
-              <ul className="table-top-head">
-                <TooltipIcons />
-                <RefreshIcon />
-                <CollapesIcon />
-              </ul>
+              <h4 className="mb-1 text-[20px] font-bold text-[#212B36]">Call History</h4>
+              <p className="m-0 text-[14px] font-medium text-[#646B72]">Manage your call history</p>
             </div>
+            <ExportButtons />
           </div>
-          {/* /product list */}
-          <div className="card table-list-card">
-            <div className="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-              <div className="search-set"></div>
-              <div className="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
-                <div className="dropdown me-2">
-                  <Link
-                    href="#"
-                    className="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center"
-                    data-bs-toggle="dropdown"
-                  >
-                    Call type
-                  </Link>
-                  <ul className="dropdown-menu  dropdown-menu-end p-3">
-                    <li>
-                      <Link href="#" className="dropdown-item rounded-1">
-                        Incoming
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item rounded-1">
-                        Outgoing
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item rounded-1">
-                        Missed Call
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-                <div className="dropdown">
-                  <Link
-                    href="#"
-                    className="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center"
-                    data-bs-toggle="dropdown"
-                  >
-                    Sort By : Last 7 Days
-                  </Link>
-                  <ul className="dropdown-menu  dropdown-menu-end p-3">
-                    <li>
-                      <Link href="#" className="dropdown-item rounded-1">
-                        Recently Added
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item rounded-1">
-                        Ascending
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item rounded-1">
-                        Desending
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item rounded-1">
-                        Last Month
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="#" className="dropdown-item rounded-1">
-                        Last 7 Days
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
 
-            <div className="card-body">
-              <div className="table-responsive product-list">
-                <Table columns={columns} dataSource={data} />
-              </div>
+          <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
+            <div className="flex items-center justify-end flex-wrap gap-2 p-4 border-b border-[#f1f1f1]">
+              {filterDropdowns.map((dd) => (
+                <div key={dd.label} className="dropdown">
+                  <button
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    className="inline-flex items-center gap-2 px-3 py-2 border border-[#e7e7e7] rounded text-[14px] text-[#646B72] bg-white hover:border-[#0ac79e]"
+                  >
+                    {dd.label}
+                    <i className="ti ti-chevron-down text-[14px]" />
+                  </button>
+                  <ul className="dropdown-menu dropdown-menu-end p-2">
+                    {dd.items.map((item) => (
+                      <li key={item}>
+                        <Link href="#" className="dropdown-item rounded-1">{item}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <div className="overflow-x-auto">
+              <Table columns={columns} dataSource={callhistorydata} />
             </div>
           </div>
-          {/* /product list */}
         </div>
         <CommonFooter />
       </div>
 
-      {/* details popup */}
+      {/* Profile detail popup */}
       <div className="modal fade" id="user-profile-new">
-        <div className="modal-dialog history-modal-profile">
-          <div className="modal-content">
-            <div className="page-wrapper details-blk">
-              <div className="content">
-                <div className="text-center right-sidebar-profile mb-3">
-                  <figure className="avatar">
-                    <img
-                      className="rounded-circle"
-                      src="/nextjs/template/assets/img/users/user-08.jpg"
-                      alt="image"
-                    />
-                  </figure>
-                  <div className="chat-options chat-option-profile">
-                    <ul className="list-inline">
-                      <li className="list-inline-item">
-                        <Link
-                          href={all_routes.videocall}
-                          className="bg-secondary-transparent p-2 d-flex align-items-center rounded-circle"
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="bottom"
-                          title=""
-                          data-bs-original-title="Video Call"
-                        >
-                          <Video />
-                        </Link>
-                      </li>
-                      <li className="list-inline-item">
-                        <Link
-                          href={all_routes.chat}
-                          className="bg-primary p-2 d-flex align-items-center rounded-circle"
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="bottom"
-                          title=""
-                          data-bs-original-title="Chat"
-                        >
-                          <MessageSquare />
-                        </Link>
-                      </li>
-                      <li className="list-inline-item ">
-                        <Link
-                          href={all_routes.audiocall}
-                          className="profile-open bg-secondary-transparent p-2 d-flex align-items-center rounded-circle"
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="bottom"
-                          title=""
-                          data-bs-original-title="Voice Call"
-                        >
-                          <PhoneCall/>
-                        </Link>
-                      </li>
-                    </ul>
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content relative">
+            <button
+              type="button"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              className="absolute top-4 right-4 w-7 h-7 inline-flex items-center justify-center rounded-md text-[#646B72] hover:bg-[#f6f6f6]"
+            >
+              <i className="ti ti-x" />
+            </button>
+            <div className="p-6 text-center">
+              <img
+                className="w-[88px] h-[88px] rounded-full object-cover mx-auto mb-3 border-4 border-white shadow"
+                src="assets/img/users/user-08.jpg"
+                alt="user"
+              />
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <Link href={all_routes.videocall} className="w-9 h-9 inline-flex items-center justify-center rounded-full bg-[#f1f5f6] text-[#212B36] hover:bg-[#e7e7e7]" title="Video Call">
+                  <i className="ti ti-video text-[18px]" />
+                </Link>
+                <Link href={all_routes.chat} className="w-9 h-9 inline-flex items-center justify-center rounded-full bg-[#0ac79e] text-white hover:bg-[#089b7c]" title="Chat">
+                  <i className="ti ti-message text-[18px]" />
+                </Link>
+                <Link href={all_routes.audiocall} className="w-9 h-9 inline-flex items-center justify-center rounded-full bg-[#f1f5f6] text-[#212B36] hover:bg-[#e7e7e7]" title="Voice Call">
+                  <i className="ti ti-phone-call text-[18px]" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-left">
+                {[
+                  { label: "Name", value: "Thomas" },
+                  { label: "Phone", value: "+1 25182 94528" },
+                  { label: "Email", value: "thomas@example.com" },
+                  { label: "Total Calls", value: "20" },
+                  { label: "Average Call Timing", value: "0.30" },
+                  { label: "Average Waiting Time", value: "00.5" },
+                ].map((row) => (
+                  <div key={row.label} className="flex items-center justify-between gap-2 border-b border-[#f1f1f1] pb-2">
+                    <span className="text-[13px] text-[#646B72]">{row.label}</span>
+                    <span className="text-[13px] font-medium text-[#212B36]">{row.value}</span>
                   </div>
-                </div>
-                <div className="modal-profile-detail">
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <div className="modal-userlist">
-                        <ul>
-                          <li>
-                            Name<span>Thomas</span>
-                          </li>
-                          <li>
-                            Phone<span>+1 25182 94528</span>
-                          </li>
-                          <li>
-                            Email<span>thomas@example.com</span>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div className="col-lg-6">
-                      <div className="modal-userlist d-flex justify-content-center">
-                        <ul>
-                          <li>
-                            Total Calls<span>20</span>
-                          </li>
-                          <li>
-                            Average Call Timing<span>0.30</span>
-                          </li>
-                          <li>
-                            Average Waiting Time<span>00.5</span>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </div>
-      {/* /details popup */}
+
       {/* Delete */}
-      <div className="modal fade modal-default" id="delete">
+      <div className="modal fade" id="delete">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
-            <div className="modal-body p-0">
-              <div className="success-wrap text-center">
-                <form>
-                  <div className="icon-success bg-danger-transparent text-danger mb-2">
-                    <i className="ti ti-trash" />
-                  </div>
-                  <h3 className="mb-2">Delete History</h3>
-                  <p className="fs-16 mb-3">
-                    Are you sure you want to delete contact from call history?
-                  </p>
-                  <div className="d-flex align-items-center justify-content-center gap-2 flex-wrap">
-                    <button
-                      type="button"
-                      className="btn btn-md btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      No, Cancel
-                    </button>
-                    <button type="submit" className="btn btn-md btn-primary">
-                      Yes, Delete
-                    </button>
-                  </div>
-                </form>
+            <div className="p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <span className="w-16 h-16 inline-flex items-center justify-center rounded-full bg-[#fff0f0] text-[#dc3545]">
+                  <i className="ti ti-trash text-[32px]" />
+                </span>
+              </div>
+              <h3 className="mb-1 text-[20px] font-bold text-[#212B36]">Delete History</h3>
+              <p className="mb-4 text-[14px] text-[#646B72]">
+                Are you sure you want to delete contact from call history?
+              </p>
+              <div className="flex items-center justify-center gap-3 flex-wrap">
+                <button type="button" data-bs-dismiss="modal" className="px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors">
+                  No, Cancel
+                </button>
+                <button type="button" data-bs-dismiss="modal" className="px-4 py-2 rounded-[6px] bg-[#dc3545] text-white text-[14px] font-medium hover:bg-[#bb2d3b] transition-colors">
+                  Yes, Delete
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {/* /Delete */}
     </>
   );
 }

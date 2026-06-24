@@ -13,16 +13,13 @@ export default function LowStocksTableCard({ filters }: LowStocksTableCardProps)
   const { dataSource } = useLowStocks();
 
   return (
-                <div className="card table-list-card">
-                  <div className="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                    <div className="search-set"></div>
-                    {filters}
-                  </div>
-                  <div className="card-body">
-                    <div className="table-responsive">
-                      <Table columns={lowStockColumns} dataSource={dataSource} />
-                    </div>
-                  </div>
-                </div>
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
+      <div className="flex items-center justify-end flex-wrap gap-2 p-4 border-b border-[#f1f1f1]">
+        {filters}
+      </div>
+      <div className="overflow-x-auto">
+        <Table columns={lowStockColumns} dataSource={dataSource} />
+      </div>
+    </div>
   );
 }

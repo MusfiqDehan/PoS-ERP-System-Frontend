@@ -94,7 +94,39 @@ npm run build    # 3. production build → static export to /out
 | `npm run lint` | `next lint` |
 | `npm test` | ⚠️ Not wired yet — see [Testing](#-testing-required) for the required setup |
 
-> Path alias: `@/*` → `./src/*`. No `.env` file, no CI (yet).
+> Path alias: `@/*` → `./src/*`. See [Docker](#-docker) for containerized local and production workflows.
+
+---
+
+## 🐳 Docker
+
+### Local development (port 3002)
+
+Requires the backend running on host port **8002** (e.g. `Sortorium_Backend/docker-compose.local.yml`).
+
+```bash
+cp .env.example .env.local   # first time only — defaults are committed in .env.local
+docker compose -f docker-compose.local.yml up --build
+```
+
+Open **http://localhost:3002**. API requests are proxied to `http://host.docker.internal:8002` so tenant subdomains resolve correctly via django-tenants.
+
+### Production build & deploy
+
+```bash
+# Build image locally
+docker build -t sortorium-frontend:latest .
+
+# Or deploy via compose (requires external traefik_proxy network on the host)
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+Production serves the static export from `out/` via nginx on port **80**, behind Traefik on `sortorium.com` and `*.sortorium.com`. Backend paths (`/api`, `/admin`, `/media`, `/static`, `/ws`, ADMS) are routed to `Sortorium_Backend` at higher Traefik priority.
+
+### Post-deploy smoke test
+
+1. `https://sortorium.com/` → frontend UI
+2. `https://sortorium.com/api/v1/health/ready/` → backend health JSON
 
 ---
 

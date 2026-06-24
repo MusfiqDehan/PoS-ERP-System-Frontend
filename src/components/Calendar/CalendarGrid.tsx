@@ -15,30 +15,19 @@ export default function CalendarGrid() {
   };
 
   return (
-              <div className="col-xxl-9 col-xl-8 theiaStickySidebar">
-                <div className="stickybar">
-                  <div className="card border-0">
-                    <div className="card-body">
-                      <FullCalendar
-                        plugins={[
-                          dayGridPlugin,
-                          timeGridPlugin,
-                          interactionPlugin,
-                        ]}
-                        initialView="dayGridMonth"
-                        events={calendarEvents}
-                        headerToolbar={{
-                          start: "today,prev,next",
-                          center: "title",
-                          end: "dayGridMonth,dayGridWeek,dayGridDay",
-                        }}
-                        eventClick={handleEventClick}
-                        ref={calendarRef}
-                      />
-                    </div>
-                  </div>
-                </div>
-  
-              </div>
+    <div className="bg-white border border-[#f1f1f1] rounded-[8px] p-4">
+      <FullCalendar
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        initialView="dayGridMonth"
+        events={calendarEvents}
+        headerToolbar={{
+          start: "today,prev,next",
+          center: "title",
+          end: "dayGridMonth,dayGridWeek,dayGridDay",
+        }}
+        eventClick={handleEventClick}
+        ref={calendarRef}
+      />
+    </div>
   );
 }

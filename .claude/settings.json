@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wsl.exe -e bash -c 'cd /home/user/projects/geekpos-frontend *)",
+      "Bash(wsl.exe -e bash -ic 'cd /home/user/projects/geekpos-frontend *)"
+    ]
+  }
+}

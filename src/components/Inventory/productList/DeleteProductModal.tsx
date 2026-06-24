@@ -2,40 +2,38 @@
 
 export default function DeleteProductModal() {
   return (
-        <div className="modal fade" id="delete-modal">
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="page-wrapper-new p-0">
-                <div className="content p-5 px-3 text-center">
-                  <span className="rounded-circle d-inline-flex p-2 bg-danger-transparent mb-2">
-                    <i className="ti ti-trash fs-24 text-danger" />
-                  </span>
-                  <h4 className="fs-20 text-gray-9 fw-bold mb-2 mt-1">
-                    Delete Product
-                  </h4>
-                  <p className="text-gray-6 mb-0 fs-16">
-                    Are you sure you want to delete product?
-                  </p>
-                  <div className="modal-footer-btn mt-3 d-flex justify-content-center">
-                    <button
-                      type="button"
-                      className="btn me-2 btn-secondary fs-13 fw-medium p-2 px-3 shadow-none"
-                      data-bs-dismiss="modal"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-primary fs-13 fw-medium p-2 px-3"
-                      data-bs-dismiss="modal"
-                    >
-                      Yes Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
+    <div className="modal fade" id="delete-modal">
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="p-6 text-center">
+            <div className="flex justify-center mb-3">
+              <span className="w-16 h-16 inline-flex items-center justify-center rounded-full bg-[#fff0f0] text-[#dc3545]">
+                <i className="ti ti-trash text-[32px]" />
+              </span>
+            </div>
+            <h4 className="mb-1 text-[20px] font-bold text-[#212B36]">Delete Product</h4>
+            <p className="mb-4 text-[14px] text-[#646B72]">
+              Are you sure you want to delete product?
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                className="px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                className="px-4 py-2 rounded-[6px] bg-[#dc3545] text-white text-[14px] font-medium hover:bg-[#bb2d3b] transition-colors"
+              >
+                Yes, Delete
+              </button>
             </div>
           </div>
         </div>
+      </div>
+    </div>
   );
 }

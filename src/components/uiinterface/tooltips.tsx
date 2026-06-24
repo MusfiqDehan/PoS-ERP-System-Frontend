@@ -201,7 +201,7 @@ const TooltipsComponent = () => {
                       title="This top tooltip is themed via CSS variables."
                       placement="top"
                       overlayInnerStyle={{
-                        backgroundColor: "#FE9F43",
+                        backgroundColor: "#0ac79e",
                         color: "#ffffff",
                       }}
                     >
