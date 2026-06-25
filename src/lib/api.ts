@@ -24,7 +24,7 @@ export type ApiResult<T> = {
   body: ApiEnvelope<T>;
 };
 
-/** POST JSON to `path` (e.g. "/api/v1/tenancy/register/") and return the parsed envelope. */
+/** POST JSON to `path` (e.g. "tenancy/register/") and return the parsed envelope. */
 export async function apiPost<T = unknown>(
   path: string,
   payload: unknown,
