@@ -1,6 +1,6 @@
 "use client";
 
-import { CSSProperties } from "react";
+import { CSSProperties, useState } from "react";
 import Link from "next/link";
 
 type Achievement = {
@@ -39,9 +39,19 @@ const rows: BranchRow[] = [
   { sn: 8, branch: "Sonadanga", code: "KHU-01", city: "Khulna", sales: "$76,210", target: "90.0k", achievement: { fraction: 0.66, barColor: "#e84245", text: "-15.3%", textColor: "#e84245" }, margin: "21.4%", txns: "174", basket: "$438", stock: "2.44M", status: "Close", alerts: "2 Alters" },
 ];
 
-const filters = ["Sales", "Target", "Margin", "Stock"];
+type FilterKey = "Sales" | "Target" | "Margin" | "Stock";
+
+const filters: FilterKey[] = ["Sales", "Target", "Margin", "Stock"];
 
 export default function BranchPerformance() {
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("Sales");
+
+  const activeCellStyle: CSSProperties = {
+    background: SALES_BG,
+    color: "#089b7c",
+    fontWeight: 500,
+  };
+
   return (
     <div className="card mb-3" style={{ borderColor: "#f1f1f1", borderRadius: 8 }}>
       <div className="card-body">
@@ -54,11 +64,12 @@ export default function BranchPerformance() {
               <button
                 key={filter}
                 type="button"
+                onClick={() => setActiveFilter(filter)}
                 className="rounded"
                 style={
-                  filter === "Sales"
-                    ? { background: SALES_BG, color: "#089b7c", border: "none", padding: "9px 16px", fontSize: 14, fontWeight: 500 }
-                    : { background: "#fff", color: "#666", border: "1px solid #e7e7e7", padding: "9px 16px", fontSize: 14, fontWeight: 500 }
+                  filter === activeFilter
+                    ? { background: SALES_BG, color: "#089b7c", border: "1px solid transparent", padding: "9px 16px", fontSize: 14, fontWeight: 500, cursor: "pointer", transition: "background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease" }
+                    : { background: "#fff", color: "#666", border: "1px solid #e7e7e7", padding: "9px 16px", fontSize: 14, fontWeight: 500, cursor: "pointer", transition: "background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease" }
                 }
               >
                 {filter}
@@ -74,13 +85,13 @@ export default function BranchPerformance() {
                 <th style={thStyle}>SN</th>
                 <th style={thStyle}>Branch</th>
                 <th style={thStyle}>City</th>
-                <th style={{ ...thStyle, background: SALES_BG }}>Sales Today</th>
-                <th style={thStyle}>Target</th>
+                <th style={activeFilter === "Sales" ? { ...thStyle, background: SALES_BG } : thStyle}>Sales Today</th>
+                <th style={activeFilter === "Target" ? { ...thStyle, background: SALES_BG } : thStyle}>Target</th>
                 <th style={thStyle}>Achievement</th>
-                <th style={thStyle}>Margin</th>
+                <th style={activeFilter === "Margin" ? { ...thStyle, background: SALES_BG } : thStyle}>Margin</th>
                 <th style={thStyle}>Txns</th>
                 <th style={thStyle}>Basket</th>
-                <th style={thStyle}>Stock Value</th>
+                <th style={activeFilter === "Stock" ? { ...thStyle, background: SALES_BG } : thStyle}>Stock Value</th>
                 <th style={thStyle}>Status</th>
                 <th style={thStyle} />
               </tr>
@@ -94,10 +105,10 @@ export default function BranchPerformance() {
                     <div style={{ color: "#646b72", fontSize: 12 }}>{row.code}</div>
                   </td>
                   <td style={{ ...tdStyle, color: "#666" }}>{row.city}</td>
-                  <td style={{ ...tdStyle, background: SALES_BG, color: "#089b7c", fontWeight: 500 }}>
+                  <td style={activeFilter === "Sales" ? { ...tdStyle, ...activeCellStyle } : { ...tdStyle, color: "#666" }}>
                     {row.sales}
                   </td>
-                  <td style={{ ...tdStyle, color: "#666" }}>{row.target}</td>
+                  <td style={activeFilter === "Target" ? { ...tdStyle, ...activeCellStyle } : { ...tdStyle, color: "#666" }}>{row.target}</td>
                   <td style={tdStyle}>
                     <div className="d-flex align-items-center gap-2">
                       <span
@@ -128,10 +139,10 @@ export default function BranchPerformance() {
                       </span>
                     </div>
                   </td>
-                  <td style={{ ...tdStyle, color: "#666" }}>{row.margin}</td>
+                  <td style={activeFilter === "Margin" ? { ...tdStyle, ...activeCellStyle } : { ...tdStyle, color: "#666" }}>{row.margin}</td>
                   <td style={{ ...tdStyle, color: "#666" }}>{row.txns}</td>
                   <td style={{ ...tdStyle, color: "#666" }}>{row.basket}</td>
-                  <td style={{ ...tdStyle, color: "#666" }}>{row.stock}</td>
+                  <td style={activeFilter === "Stock" ? { ...tdStyle, ...activeCellStyle } : { ...tdStyle, color: "#666" }}>{row.stock}</td>
                   <td style={tdStyle}>
                     <span style={{ color: "#666" }}>{row.status}</span>
                     <span className="ms-2" style={{ color: "#c80303" }}>{row.alerts}</span>
@@ -158,6 +169,7 @@ const thStyle: CSSProperties = {
   borderBottom: "none",
   whiteSpace: "nowrap",
   padding: "10px 12px",
+  transition: "background-color 0.3s ease, color 0.3s ease",
 };
 
 const tdStyle: CSSProperties = {
@@ -165,4 +177,5 @@ const tdStyle: CSSProperties = {
   borderBottom: "none",
   whiteSpace: "nowrap",
   padding: "12px",
+  transition: "background-color 0.3s ease, color 0.3s ease",
 };

@@ -1,20 +1,24 @@
 "use client";
 
 import DashboardDateRange from "./DashboardDateRange";
+import CollapesIcon from "@/core/common/tooltip-content/collapes";
 
 export default function PageHeader() {
   return (
-    <div className="flex items-center justify-between gap-[16px] flex-wrap w-full mb-[1.5rem]">
-      <div className="flex flex-col gap-[4px] max-w-[204px]">
-        <h1 className="m-0 text-[20px] font-bold leading-[normal] text-[#212B36] uppercase">
-          Welcome Admin
-        </h1>
-        <p className="m-0 text-[12px] font-medium leading-[normal] text-[#646B72]">
-          You have <span className="text-[#089b7c] font-medium">200+</span>{" "}
+    <div className="d-lg-flex align-items-center justify-content-between mb-4">
+      <div>
+        <h2 className="mb-1 text-[24px] font-bold whitespace-nowrap">Welcome, Admin</h2>
+        <p className="mb-0">
+          You have <span className="text-primary fw-bold">200+</span>{" "}
           Orders, Today
         </p>
       </div>
-      <DashboardDateRange />
+      <ul className="table-top-head">
+        <li>
+          <DashboardDateRange />
+        </li>
+        <CollapesIcon />
+      </ul>
     </div>
   );
 }

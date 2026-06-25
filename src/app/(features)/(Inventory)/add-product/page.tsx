@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CommonFooter from "@/core/common/footer/commonFooter";
 import AddBrand from "@/core/modals/inventory/addbrand";
 import AddCategory from "@/core/modals/inventory/addcategory";
@@ -17,6 +17,12 @@ export default function AddProduct() {
   const [showTags, setShowTags] = useState(true);
   const [showPrimaryImage, setShowPrimaryImage] = useState(true);
   const [showSecondaryImage, setShowSecondaryImage] = useState(true);
+
+  // The modals below use react-select directly, whose auto-generated ids
+  // differ between server and client and break hydration. Mount them only
+  // on the client so there is no server markup to mismatch against.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <>
@@ -38,12 +44,16 @@ export default function AddProduct() {
         </div>
         <CommonFooter />
       </div>
-      <Addunits />
-      <AddCategory />
-      <AddVariant />
-      <AddBrand />
-      <AddVarientNew />
-      <DeleteAttributeModal />
+      {mounted && (
+        <>
+          <Addunits />
+          <AddCategory />
+          <AddVariant />
+          <AddBrand />
+          <AddVarientNew />
+          <DeleteAttributeModal />
+        </>
+      )}
     </>
   );
 }
