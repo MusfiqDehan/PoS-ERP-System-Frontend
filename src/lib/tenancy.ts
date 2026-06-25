@@ -2,9 +2,9 @@
 
 import { apiPost, type ApiResult } from "./api";
 
-export const TENANT_REGISTER_PATH = "/api/v1/tenancy/register/";
-export const TENANT_TOKEN_VALIDATE_PATH = "/api/v1/tenancy/tokens/validate/";
-export const TENANT_PASSWORD_SETUP_PATH = "/api/v1/tenancy/password/setup/";
+export const TENANT_REGISTER_PATH = "tenancy/register/";
+export const TENANT_TOKEN_VALIDATE_PATH = "tenancy/tokens/validate/";
+export const TENANT_PASSWORD_SETUP_PATH = "tenancy/password/setup/";
 
 export type TenantRegistrationRequest = {
   subdomain: string;
