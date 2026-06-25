@@ -14,22 +14,24 @@ export const SidebarData = [
         icon: "layout-grid",
         submenu: true,
         showSubRoute: false,
-
+        roles: ["owner", "manager"],
         submenuItems: [
           { label: "Admin Dashboard", link: "/admin-dashboard" },
           // Hidden — page kept at /admin-dashboard-two for later use
           // { label: "Admin Dashboard 2", link: "/admin-dashboard-two" },
           { label: "Sales Dashboard", link: "/sales-dashboard" },
+          // Owner's multi-branch overview (branch performance, profits per branch)
+          { label: "Branch Overview", link: "/dashboard", roles: ["owner"] },
         ],
       },
       {
-        label: "Super Admin",
+        label: "Overview",
         icon: "user-edit",
         submenu: true,
         showSubRoute: false,
-
+        roles: ["platform"],
         submenuItems: [
-          { label: "Dashboard", link: "/dashboard" },
+          { label: "Dashboard", link: route.vendorDashboard },
           { label: "Companies", link: "/companies" },
           { label: "Subscriptions", link: "/subscription" },
           { label: "Packages", link: "/packages" },
@@ -42,6 +44,7 @@ export const SidebarData = [
         icon: "brand-apple-arcade",
         submenu: true,
         showSubRoute: false,
+        roles: ["owner", "manager"],
         submenuItems: [
           { label: "Chat", link: "/chat", showSubRoute: false },
           {
@@ -82,6 +85,7 @@ export const SidebarData = [
         icon: "layout-sidebar-right-collapse",
         submenu: true,
         showSubRoute: false,
+        roles: ["owner"],
         submenuItems: [
           { label: "Horizontal", link: route.Horizontal, showSubRoute: false },
           { label: "Detached", link: route.Detached, showSubRoute: false },
@@ -100,6 +104,7 @@ export const SidebarData = [
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "Inventory",
+    roles: ["owner", "manager"],
     submenuItems: [
       {
         label: "Products",
@@ -193,6 +198,7 @@ export const SidebarData = [
     submenuHdr: "Stock",
     submenu: true,
     showSubRoute: false,
+    roles: ["owner", "manager"],
     submenuItems: [
       {
         label: "Manage Stock",
@@ -223,6 +229,7 @@ export const SidebarData = [
     submenuHdr: "Sales",
     submenu: false,
     showSubRoute: false,
+    roles: ["owner", "manager"],
     submenuItems: [
       {
         label: "Sales",
@@ -291,6 +298,7 @@ export const SidebarData = [
     submenuOpen: true,
     submenuHdr: "Promo",
     showSubRoute: false,
+    roles: ["owner"],
     submenuItems: [
       {
         label: "Coupons",
@@ -327,6 +335,7 @@ export const SidebarData = [
     submenuOpen: true,
     submenuHdr: "Purchases",
     showSubRoute: false,
+    roles: ["owner"],
     submenuItems: [
       {
         label: "Purchases",
@@ -357,6 +366,7 @@ export const SidebarData = [
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "Finance & Accounts",
+    roles: ["owner"],
     submenuItems: [
       {
         label: "Expenses",
@@ -436,7 +446,7 @@ export const SidebarData = [
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "People",
-
+    roles: ["owner", "manager"],
     submenuItems: [
       {
         label: "Customers",
@@ -481,6 +491,7 @@ export const SidebarData = [
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "HRM",
+    roles: ["owner", "manager"],
     submenuItems: [
       {
         label: "Employees",
@@ -556,6 +567,7 @@ export const SidebarData = [
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "Reports",
+    roles: ["owner", "manager"],
     submenuItems: [
       {
         label: "Sales Report",
@@ -663,6 +675,7 @@ export const SidebarData = [
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "Content (CMS)",
+    roles: ["platform"],
     submenuItems: [
       {
         label: "Pages",
@@ -715,6 +728,7 @@ export const SidebarData = [
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "User Management",
+    roles: ["owner"],
     submenuItems: [
       {
         label: "Users",
@@ -741,6 +755,7 @@ export const SidebarData = [
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "Pages",
+    roles: ["owner"],
     submenuItems: [
       {
         label: "Profile",
@@ -904,6 +919,7 @@ export const SidebarData = [
     submenu: true,
     showSubRoute: false,
     submenuHdr: "Settings",
+    roles: ["owner"],
     submenuItems: [
       {
         label: "General Settings",
@@ -1065,6 +1081,7 @@ export const SidebarData = [
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "UI Interface",
+    roles: ["owner"],
     submenuItems: [
       {
         label: "Base UI",
@@ -1264,6 +1281,7 @@ export const SidebarData = [
     submenuOpen: true,
     showSubRoute: false,
     submenuHdr: "Help",
+    roles: ["platform", "owner", "manager"],
     submenuItems: [
       {
         label: "Documentation",

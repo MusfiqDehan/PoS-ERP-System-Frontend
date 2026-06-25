@@ -12,6 +12,14 @@ import { brandAssets, PRODUCT_NAME } from "@/lib/branding";
 import { ChevronsLeft } from "react-feather";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import {
+  APP_ROLES,
+  DEFAULT_ROLE,
+  filterSidebarByRole,
+  getStoredRole,
+  setStoredRole,
+  type AppRole,
+} from "@/data/rolePermissions";
 export default function Sidebar() {
   const route = all_routes;
   const pathname = usePathname();
@@ -22,6 +30,16 @@ export default function Sidebar() {
   const [toggle, SetToggle] = useState(false);
   const [expandMenus, setExpandMenus] = useState(false); // Local state for expandMenus
   const [dataLayout, setDataLayout] = useState("default"); // Local state for dataLayout
+  // Current viewer role. SSR uses the default; the stored role is applied on
+  // mount to avoid a hydration mismatch. Drives which menu sections render.
+  const [role, setRole] = useState<AppRole>(DEFAULT_ROLE);
+  useEffect(() => setRole(getStoredRole()), []);
+  const visibleSidebar = filterSidebarByRole(SidebarData as any[], role);
+
+  const handleRoleChange = (next: AppRole): void => {
+    setRole(next);
+    setStoredRole(next);
+  };
   const sidebarDateLabel = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     month: "long",
@@ -88,6 +106,18 @@ export default function Sidebar() {
                 />
               </Link>
               <p className="sidebar-branding__date">{sidebarDateLabel}</p>
+              <select
+                aria-label="View as role"
+                className="sidebar-role-switcher"
+                value={role}
+                onChange={(e) => handleRoleChange(e.target.value as AppRole)}
+              >
+                {APP_ROLES.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
+              </select>
             </div>
             <Link
               id="toggle_btn"
@@ -105,7 +135,7 @@ export default function Sidebar() {
           <div className="sidebar-inner slimscroll">
             <div id="sidebar-menu" className="sidebar-menu">
               <ul>
-                {SidebarData?.map((mainLabel: any, index: any) => (
+                {visibleSidebar?.map((mainLabel: any, index: any) => (
                   <li className="submenu-open" key={index}>
                     <h6 className="submenu-hdr">{mainLabel?.label}</h6>
                     <ul>

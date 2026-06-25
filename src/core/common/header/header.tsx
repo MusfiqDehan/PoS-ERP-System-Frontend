@@ -8,6 +8,12 @@ import HeaderQuickAdd from "./header/HeaderQuickAdd";
 import HeaderSearch from "./header/HeaderSearch";
 import HeaderStoreSelector from "./header/HeaderStoreSelector";
 import HeaderUtilityActions from "./header/HeaderUtilityActions";
+import {
+    DEFAULT_ROLE,
+    getStoredRole,
+    ROLE_CHANGE_EVENT,
+    type AppRole,
+} from "@/data/rolePermissions";
 
 export default function Header() {
     const route = all_routes;
@@ -15,6 +21,20 @@ export default function Header() {
 
     const [isFullscreen, setIsFullscreen] = useState(false);
     const flagImage = "assets/img/flags/us-flag.svg";
+
+    // A branch manager is tied to a single branch, so the branch (store)
+    // switcher is hidden for them. SSR uses the default role; the stored role
+    // is applied on mount and kept in sync with the sidebar role switcher.
+    const [role, setRole] = useState<AppRole>(DEFAULT_ROLE);
+    useEffect(() => {
+        setRole(getStoredRole());
+        const handleRoleChange = (e: Event) => {
+            const next = (e as CustomEvent<AppRole>).detail;
+            setRole(next ?? getStoredRole());
+        };
+        window.addEventListener(ROLE_CHANGE_EVENT, handleRoleChange);
+        return () => window.removeEventListener(ROLE_CHANGE_EVENT, handleRoleChange);
+    }, []);
 
     const exclusionArray = [
         "/reactjs/template/dream-pos/index-three",
@@ -70,7 +90,7 @@ export default function Header() {
                 </Link>
 
                 <div className="figma-header-group figma-header-group--left">
-                    <HeaderStoreSelector />
+                    {role !== "manager" && <HeaderStoreSelector />}
                     <HeaderSearch />
                     <HeaderQuickAdd route={route} />
                 </div>

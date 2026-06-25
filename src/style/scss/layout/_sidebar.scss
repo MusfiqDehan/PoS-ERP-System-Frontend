@@ -669,6 +669,29 @@
     }
   }
 
+  // Demo-only role switcher (no auth layer yet). Lets you preview the menu as
+  // each tier: Platform (SaaS vendor) / Business Owner / Branch Manager.
+  .sidebar-role-switcher {
+    margin-top: 8px;
+    width: 100%;
+    max-width: 160px;
+    padding: 5px 8px;
+    font-family: "Urbanist", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #089b7c;
+    background-color: #e7fbf7;
+    border: 1px solid #b9efe4;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #089b7c;
+    }
+  }
+
   .slimScrollDiv {
     height: calc(100% - 96px) !important;
   }

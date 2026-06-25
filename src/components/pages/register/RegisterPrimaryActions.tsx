@@ -3,22 +3,24 @@ import { all_routes } from "@/data/all_routes";
 
 type RegisterPrimaryActionsProps = {
   disabled?: boolean;
+  loading?: boolean;
 };
 
-export default function RegisterPrimaryActions({ disabled = false }: RegisterPrimaryActionsProps) {
+export default function RegisterPrimaryActions({
+  disabled = false,
+  loading = false,
+}: RegisterPrimaryActionsProps) {
   const route = all_routes;
 
   return (
     <div className="auth-split-page__primary-actions">
-      {disabled ? (
-        <button type="button" className="auth-split-page__submit" disabled>
-          Sign Up
-        </button>
-      ) : (
-        <Link href={route.twostepverification} className="auth-split-page__submit">
-          Sign Up
-        </Link>
-      )}
+      <button
+        type="submit"
+        className="auth-split-page__submit"
+        disabled={disabled || loading}
+      >
+        {loading ? "Creating account…" : "Sign Up"}
+      </button>
 
       <p className="auth-split-page__prompt">
         Already have an account?{" "}
