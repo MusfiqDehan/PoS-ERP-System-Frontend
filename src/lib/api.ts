@@ -1,14 +1,17 @@
 /**
  * Minimal API client for talking to the Django (DRF) backend.
  *
- * Base URL comes from NEXT_PUBLIC_API_BASE_URL (e.g. http://localhost:8002),
- * falling back to the local dev backend port. The backend wraps every response
- * in an envelope: { success, message, data?, error_code?, errors? }.
+ * Two base URLs:
+ * - API_BASE_URL — used for tenant-scoped endpoints (resolved from current host).
+ * - PUBLIC_API_BASE_URL — used for public-schema endpoints (registration,
+ *   login, token-validate, password-setup). Always hits the public domain so it
+ *   works from any tenant subdomain.
+ *
+ * The backend wraps every response in an envelope:
+ * { success, message, data?, error_code?, errors? }.
  */
 
-export const API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8002"
-).replace(/\/$/, "");
+import { API_BASE_URL, PUBLIC_API_BASE_URL } from "./env";
 
 export type ApiEnvelope<T = unknown> = {
   success: boolean;
@@ -24,12 +27,29 @@ export type ApiResult<T> = {
   body: ApiEnvelope<T>;
 };
 
-/** POST JSON to `path` (e.g. "tenancy/register/") and return the parsed envelope. */
+/** POST JSON to `path` (e.g. "tenancy/register/") using the tenant-scoped base URL. */
 export async function apiPost<T = unknown>(
   path: string,
   payload: unknown,
 ): Promise<ApiResult<T>> {
-  const url = `${API_BASE_URL}/${path.replace(/^\//, "")}`;
+  return rawPost(API_BASE_URL, path, payload);
+}
+
+/** POST JSON to `path` (e.g. "tenancy/password/setup/") using the **public** base URL.
+ *  Use this for public-schema endpoints that need to work from any tenant subdomain. */
+export async function publicApiPost<T = unknown>(
+  path: string,
+  payload: unknown,
+): Promise<ApiResult<T>> {
+  return rawPost(PUBLIC_API_BASE_URL, path, payload);
+}
+
+async function rawPost<T>(
+  base: string,
+  path: string,
+  payload: unknown,
+): Promise<ApiResult<T>> {
+  const url = `${base}/${path.replace(/^\//, "")}`;
 
   let response: Response;
   try {
