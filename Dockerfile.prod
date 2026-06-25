@@ -1,48 +1,29 @@
-# Production image for the Sortorium Next.js front-end.
-#
-# Multi-stage build that compiles the app and ships a small, self-contained
-# Node server from Next.js `output: "standalone"` (run with `node server.js`).
-# Unlike ./Dockerfile (dev / live-reload via bind mount), this is what CI builds
-# and what gets deployed to the VPS.
-#
-# Build locally:   docker build -f Dockerfile.prod -t sortorium:prod .
-# Run locally:     docker run --rm -p 3000:3000 sortorium:prod
+# ── Stage 1: build ──────────────────────────────────────────────────────────
+FROM node:25.9.0-slim AS builder
 
-FROM node:20-alpine AS base
-# Next.js / sharp and some native deps are happier with libc compat on alpine.
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# --- deps: install node_modules from the lockfile (cached unless it changes) ---
-FROM base AS deps
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# --- builder: compile the production (standalone) build ---
-FROM base AS builder
-ENV NEXT_TELEMETRY_DISABLED=1
-COPY --from=deps /app/node_modules ./node_modules
+# NEXT_PUBLIC_* vars are baked into the bundle at build time
+ARG NEXT_PUBLIC_API_BASE_URL
+ARG NEXT_PUBLIC_PUBLIC_DOMAIN
+ARG NEXT_PUBLIC_WS_BASE_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_PUBLIC_DOMAIN=$NEXT_PUBLIC_PUBLIC_DOMAIN
+ENV NEXT_PUBLIC_WS_BASE_URL=$NEXT_PUBLIC_WS_BASE_URL
+ENV NODE_ENV=production
+
 COPY . .
 RUN npm run build
 
-# --- runner: minimal runtime image ---
-FROM base AS runner
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
-# Bind to all interfaces so the server is reachable from outside the container.
-ENV HOSTNAME=0.0.0.0
+# ── Stage 2: serve with nginx ────────────────────────────────────────────────
+FROM nginx:alpine
 
-# Run as a non-root user for security.
-RUN addgroup --system --gid 1001 nodejs \
- && adduser --system --uid 1001 nextjs
+COPY --from=builder /app/out /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# The standalone output bundles a trimmed node_modules + server.js. The static
-# assets and public/ folder are NOT included automatically, so copy them too.
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+EXPOSE 80
 
-USER nextjs
-EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["nginx", "-g", "daemon off;"]
