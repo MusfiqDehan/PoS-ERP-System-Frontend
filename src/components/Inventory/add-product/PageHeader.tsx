@@ -15,19 +15,19 @@ export default function PageHeader() {
         <h4 className="mb-1 text-[20px] font-bold text-[#212B36]">Create Product</h4>
         <p className="m-0 text-[14px] font-medium text-[#646B72]">Create new product</p>
       </div>
-      <ul className="table-top-head flex items-center gap-2 m-0 p-0">
-        <RefreshIcon />
-        <CollapesIcon />
-        <li>
-          <Link
-            href={route.productlist}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors"
-          >
-            <ArrowLeft size={16} />
-            Back to Product
-          </Link>
-        </li>
-      </ul>
+      <div className="flex items-center gap-2">
+        <ul className="table-top-head flex items-center gap-2 m-0 p-0">
+          <RefreshIcon />
+          <CollapesIcon />
+        </ul>
+        <Link
+          href={route.productlist}
+          className="inline-flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors bg-[#FFFFFF]"
+        >
+          <ArrowLeft size={16} />
+          Back to Product
+        </Link>
+      </div>
     </div>
   );
 }

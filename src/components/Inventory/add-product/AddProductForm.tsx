@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import CustomFieldsSection from "./CustomFieldsSection";
 import FormActions from "./FormActions";
 import ImagesSection from "./ImagesSection";
@@ -31,6 +32,23 @@ export default function AddProductForm({
   onRemovePrimaryImage,
   onRemoveSecondaryImage,
 }: AddProductFormProps) {
+  // Render the form only after the client mounts. The fields rely on
+  // third-party widgets (WYSIWYG editor, antd date picker, react-select)
+  // whose markup differs between server and client; rendering them during
+  // SSR triggers a hydration mismatch that wipes the entire form subtree.
+  // Gating on mount keeps server/client output identical (an empty
+  // placeholder) and avoids the mismatch entirely.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return (
+      <div className="py-10 text-center text-[14px] text-[#646B72]">
+        Loading form…
+      </div>
+    );
+  }
+
   return (
     <form>
       <div id="accordionSpacingExample">
