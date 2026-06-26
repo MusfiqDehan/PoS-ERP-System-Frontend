@@ -6,17 +6,16 @@ const backendProxyTarget =
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Dev rewrites proxy server-side requests only. Browser NEXT_PUBLIC_* in local dev
+  // should target Django directly (see .env.example) — this proxy strips trailing slashes.
+  skipTrailingSlashRedirect: true,
+
   // Static export only for production builds (Docker/nginx). Omit in dev so
   // rewrites work without the export-no-custom-routes warning.
   ...(process.env.NODE_ENV === "production" ? { output: "export" as const } : {}),
 
   async rewrites() {
-    const routes: Array<{ source: string; destination: string }> = [
-      {
-        source: "/",
-        destination: "/signin",
-      },
-    ];
+    const routes: Array<{ source: string; destination: string }> = [];
 
     if (isDev) {
       const proxy = (source: string, targetPath: string) => ({
