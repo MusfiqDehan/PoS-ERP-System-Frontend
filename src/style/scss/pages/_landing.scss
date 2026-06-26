@@ -1,0 +1,247 @@
+@use "../utils/variables" as *;
+
+.landing-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8fffc 0%, #ffffff 40%);
+  color: #101828;
+  font-family: "Urbanist", sans-serif;
+}
+
+.landing-page__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.landing-page__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.landing-page__nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.landing-page__nav-links a {
+  color: #475467;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+.landing-page__nav-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.landing-page__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.landing-page__btn--ghost {
+  color: #344054;
+  border-color: #d0d5dd;
+  background: #fff;
+
+  &:hover {
+    border-color: $primary;
+    color: $primary;
+  }
+}
+
+.landing-page__btn--primary {
+  background: $primary;
+  color: #fff;
+
+  &:hover {
+    background: $primary-hover;
+    color: #fff;
+  }
+}
+
+.landing-page__hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem 3rem;
+  text-align: center;
+}
+
+.landing-page__hero-title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  color: #101828;
+}
+
+.landing-page__hero-subtitle {
+  font-size: 1.125rem;
+  color: #667085;
+  max-width: 640px;
+  margin: 0 auto 2rem;
+}
+
+.landing-page__hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.landing-page__pricing {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+}
+
+.landing-page__section-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.landing-page__section-subtitle {
+  text-align: center;
+  color: #667085;
+  margin-bottom: 2rem;
+}
+
+.landing-page__billing-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.landing-page__pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.landing-page__pricing-card {
+  background: #fff;
+  border: 1px solid #eaecf0;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+.landing-page__pricing-card--featured {
+  border-color: $primary;
+  box-shadow: 0 8px 24px rgba(10, 199, 158, 0.15);
+}
+
+.landing-page__pricing-name {
+  font-weight: 600;
+  color: #344054;
+  margin-bottom: 0.5rem;
+}
+
+.landing-page__pricing-price {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.landing-page__pricing-period {
+  color: #667085;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.landing-page__pricing-features {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.5rem;
+  flex: 1;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #475467;
+    font-size: 0.9375rem;
+  }
+}
+
+.landing-page__pricing-check {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background: rgba($primary, 0.15);
+  color: $primary;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+}
+
+.landing-page__footer {
+  border-top: 1px solid #eaecf0;
+  padding: 2rem;
+  text-align: center;
+  color: #667085;
+  font-size: 0.875rem;
+}
+
+.landing-page__footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 0.75rem;
+
+  a {
+    color: #475467;
+    text-decoration: none;
+
+    &:hover {
+      color: $primary;
+    }
+  }
+}
+
+.landing-page__status {
+  text-align: center;
+  color: #667085;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .landing-page__nav-links {
+    display: none;
+  }
+
+  .landing-page__nav {
+    padding: 1rem;
+  }
+}
