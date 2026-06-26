@@ -3,11 +3,13 @@
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../../app/global.scss";
 import { useEffect } from "react";
-import { usePathname } from "next/navigation"; // Import usePathname
+import { usePathname } from "next/navigation";
+import { SessionGuard } from "@/components/auth/SessionGuard";
 import Header from "@/core/common/header/header";
 import Sidebar from "@/core/common/sidebar/sidebar";
 import HorizontalSidebar from "@/core/common/sidebar/horizontalSidebar";
 import TwoColumnSidebar from "@/core/common/sidebar/two-column";
+import { AuthProvider } from "@/providers/auth-provider";
 
 export default function Layoutpages({
   children,
@@ -68,12 +70,16 @@ export default function Layoutpages({
 
   // Run effect when pathname changes// Run effect when pathname changes
   return (
-    <div className="main-wrapper">
-      <Header />
-      <HorizontalSidebar />
-      <TwoColumnSidebar />
-      <Sidebar />
-      {children}
-    </div>
+    <AuthProvider>
+      <SessionGuard>
+        <div className="main-wrapper">
+          <Header />
+          <HorizontalSidebar />
+          <TwoColumnSidebar />
+          <Sidebar />
+          {children}
+        </div>
+      </SessionGuard>
+    </AuthProvider>
   );
 }
