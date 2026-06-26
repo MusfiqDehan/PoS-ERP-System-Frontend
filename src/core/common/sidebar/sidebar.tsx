@@ -12,40 +12,26 @@ import { brandAssets, PRODUCT_NAME } from "@/lib/branding";
 import { ChevronsLeft } from "react-feather";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import {
-  APP_ROLES,
-  DEFAULT_ROLE,
-  filterSidebarByRole,
-  getStoredRole,
-  setStoredRole,
-  type AppRole,
-} from "@/data/rolePermissions";
+import { filterSidebarByAccess } from "@/data/rolePermissions";
+import { useAuth } from "@/providers/auth-provider";
+
 export default function Sidebar() {
   const route = all_routes;
   const pathname = usePathname();
-  // const { t } = useTranslation();
-
-  const [subOpen, setSubopen] = useState("");
-  const [subsidebar, setSubsidebar] = useState("");
-  const [toggle, SetToggle] = useState(false);
-  const [expandMenus, setExpandMenus] = useState(false); // Local state for expandMenus
-  const [dataLayout, setDataLayout] = useState("default"); // Local state for dataLayout
-  // Current viewer role. SSR uses the default; the stored role is applied on
-  // mount to avoid a hydration mismatch. Drives which menu sections render.
-  const [role, setRole] = useState<AppRole>(DEFAULT_ROLE);
-  useEffect(() => setRole(getStoredRole()), []);
-  const visibleSidebar = filterSidebarByRole(SidebarData as any[], role);
-
-  const handleRoleChange = (next: AppRole): void => {
-    setRole(next);
-    setStoredRole(next);
-  };
+  const { tier } = useAuth();
+  const visibleSidebar = filterSidebarByAccess(SidebarData as any[], tier);
   const sidebarDateLabel = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",
     year: "numeric",
   }).format(new Date());
+
+  const [subOpen, setSubopen] = useState("");
+  const [subsidebar, setSubsidebar] = useState("");
+  const [toggle, SetToggle] = useState(false);
+  const [expandMenus, setExpandMenus] = useState(false);
+  const [dataLayout, setDataLayout] = useState("default");
 
   const toggleSidebar = (title: string): void => {
     if (title === subOpen) {
@@ -106,18 +92,6 @@ export default function Sidebar() {
                 />
               </Link>
               <p className="sidebar-branding__date">{sidebarDateLabel}</p>
-              <select
-                aria-label="View as role"
-                className="sidebar-role-switcher"
-                value={role}
-                onChange={(e) => handleRoleChange(e.target.value as AppRole)}
-              >
-                {APP_ROLES.map((r) => (
-                  <option key={r.value} value={r.value}>
-                    {r.label}
-                  </option>
-                ))}
-              </select>
             </div>
             <Link
               id="toggle_btn"
