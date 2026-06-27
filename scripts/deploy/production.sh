@@ -55,6 +55,9 @@ wait_container_healthy() {
 smoke_check() {
   log "HTTPS smoke check: $SMOKE_URL"
   curl -fsS --retry 5 --retry-delay 3 --retry-all-errors -o /dev/null "$SMOKE_URL"
+  if curl -sI "$SMOKE_URL" | grep -qi '^location:.*signin'; then
+    die "Root URL still redirects to /signin"
+  fi
 }
 
 export IMAGE_TAG
