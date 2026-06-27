@@ -1,9 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { AuthSocialSection } from "@/core/common/auth";
 import { AuthEmailField, AuthTextField } from "@/core/common/form/auth";
 import { collectErrorMessages } from "@/lib/api";
+import { fetchPublicPackages, type PublicPackage } from "@/lib/billing";
 import { registerTenant } from "@/lib/tenancy";
 import RegisterFormHeader from "./RegisterFormHeader";
 import RegisterPrimaryActions from "./RegisterPrimaryActions";
@@ -14,17 +16,33 @@ const TENANT_BASE_DOMAIN =
   process.env.NEXT_PUBLIC_TENANT_BASE_DOMAIN || "sortorium.com";
 
 export default function RegisterFormPanel() {
+  const searchParams = useSearchParams();
+  const initialPlan = searchParams.get("plan")?.trim().toLowerCase() || "free";
+
   const [companyName, setCompanyName] = useState("");
   const [subdomain, setSubdomain] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [plan] = useState("free");
+  const [plan, setPlan] = useState(initialPlan);
+  const [packages, setPackages] = useState<PublicPackage[]>([]);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    setPlan(initialPlan);
+  }, [initialPlan]);
+
+  useEffect(() => {
+    fetchPublicPackages().then(({ ok, body }) => {
+      if (ok && body.success && body.data?.items) {
+        setPackages(body.data.items);
+      }
+    });
+  }, []);
 
   const normalizedSubdomain = subdomain.trim().toLowerCase();
   const subdomainValid = SUBDOMAIN_PATTERN.test(normalizedSubdomain);
@@ -34,8 +52,9 @@ export default function RegisterFormPanel() {
       companyName.trim().length > 0 &&
       subdomainValid &&
       email.trim().length > 0 &&
-      agreedToTerms,
-    [companyName, subdomainValid, email, agreedToTerms],
+      agreedToTerms &&
+      plan.length > 0,
+    [companyName, subdomainValid, email, agreedToTerms, plan],
   );
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -103,6 +122,30 @@ export default function RegisterFormPanel() {
             ) : null}
 
             <div className="auth-split-page__credentials">
+              {packages.length > 0 ? (
+                <div className="mb-3">
+                  <label className="form-label" htmlFor="register-plan">
+                    Plan
+                  </label>
+                  <select
+                    id="register-plan"
+                    className="form-select"
+                    value={plan}
+                    onChange={(event) => setPlan(event.target.value)}
+                  >
+                    {packages.map((pkg) => (
+                      <option key={pkg.slug} value={pkg.slug}>
+                        {pkg.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <p className="auth-form-field__hint">
+                  Selected plan: <strong>{plan}</strong>
+                </p>
+              )}
+
               <AuthTextField
                 label="Company Name"
                 required

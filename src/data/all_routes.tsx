@@ -1,5 +1,7 @@
 
 export const all_routes = {
+  landing: "/",
+  vendorDashboard: "/vendor-dashboard",
   newdashboard: "/admin-dashboard",
   dashboard: "/admin-dashboard-two",
   productlist: "/product-list",
@@ -244,7 +246,6 @@ export const all_routes = {
   wishlist: "/wishlist",
   reviews: "/reviews",
   superadmindashboard: "/dashboard",
-  vendorDashboard: "/vendor-dashboard",
   companies: "/companies",
   subscription: "/subscription",
   packagelist: "/packages",
