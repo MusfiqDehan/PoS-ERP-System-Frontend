@@ -66,10 +66,14 @@ jobs:
           RSYNC_RSH="ssh ${SSH_OPTS}"
 
           # Push checkout to VPS over SSH (VPS cannot git-fetch private HTTPS remotes).
+          # Do not use git on the server for deploy sync — rsync is the source of truth.
           rsync -az --delete \
             --exclude '.git/' \
+            --exclude '.deploy-revision' \
             --exclude 'node_modules/' \
             --exclude '.next/' \
+            --exclude 'out/' \
+            --exclude 'coverage/' \
             --exclude '.env.prod' \
             -e "${RSYNC_RSH}" \
             ./ "${VPS_USER}@${VPS_HOST}:${VPS_DEPLOY_PATH}/"
