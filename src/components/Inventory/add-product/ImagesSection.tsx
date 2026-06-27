@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import { useState } from "react";
 import { Image, PlusCircle, X } from "react-feather";
 
 type ImagesSectionProps = {
@@ -16,23 +17,23 @@ export default function ImagesSection({
   onRemovePrimaryImage,
   onRemoveSecondaryImage,
 }: ImagesSectionProps) {
+  const [open, setOpen] = useState(true);
+
   return (
     <div className="bg-white border border-[#f1f1f1] rounded-[8px] mb-4">
       <button
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#SpacingThree"
-        aria-expanded="true"
-        aria-controls="SpacingThree"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
         className="w-full flex items-center justify-between gap-2 px-4 py-3.5 text-left"
       >
         <span className="flex items-center gap-2 text-[16px] font-semibold text-[#212B36]">
           <Image size={18} className="text-[#0ac79e]" />
           Images
         </span>
-        <i className="ti ti-chevron-down text-[#646B72]" />
+        <i className={`ti ti-chevron-${open ? "up" : "down"} text-[#646B72]`} />
       </button>
-      <div id="SpacingThree" className="accordion-collapse collapse show">
+      {open && (
         <div className="border-t border-[#f1f1f1] p-4">
           <div className="flex flex-wrap items-start gap-3">
             <div className="relative w-[120px] h-[120px] border-2 border-dashed border-[#e7e7e7] rounded-lg flex flex-col items-center justify-center text-center hover:border-[#0ac79e] transition-colors cursor-pointer">
@@ -79,7 +80,7 @@ export default function ImagesSection({
             )}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

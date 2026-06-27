@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import CounterThree from "@/core/common/counter/counterThree";
 import FormCol from "@/core/common/form/FormCol";
 import SelectField from "@/core/common/form/SelectField";
@@ -35,23 +36,23 @@ export default function PricingStocksSection({
   onVariantSelect,
   onRemoveTags,
 }: PricingStocksSectionProps) {
+  const [open, setOpen] = useState(true);
+
   return (
     <div className="bg-white border border-[#f1f1f1] rounded-[8px] mb-4">
       <button
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#SpacingTwo"
-        aria-expanded="true"
-        aria-controls="SpacingTwo"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
         className="w-full flex items-center justify-between gap-2 px-4 py-3.5 text-left"
       >
         <span className="flex items-center gap-2 text-[16px] font-semibold text-[#212B36]">
           <LifeBuoy size={18} className="text-[#0ac79e]" />
           Pricing &amp; Stocks
         </span>
-        <i className="ti ti-chevron-down text-[#646B72]" />
+        <i className={`ti ti-chevron-${open ? "up" : "down"} text-[#646B72]`} />
       </button>
-      <div id="SpacingTwo" className="accordion-collapse collapse show">
+      {open && (
         <div className="border-t border-[#f1f1f1] p-4">
           <div className="mb-4">
             <label className="block text-[13px] font-medium text-[#212B36] mb-2">
@@ -238,7 +239,7 @@ export default function PricingStocksSection({
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

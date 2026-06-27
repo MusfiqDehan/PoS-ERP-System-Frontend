@@ -12,22 +12,26 @@ import { brandAssets, PRODUCT_NAME } from "@/lib/branding";
 import { ChevronsLeft } from "react-feather";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import { filterSidebarByAccess } from "@/data/rolePermissions";
+import { useAuth } from "@/providers/auth-provider";
+
 export default function Sidebar() {
   const route = all_routes;
   const pathname = usePathname();
-  // const { t } = useTranslation();
-
-  const [subOpen, setSubopen] = useState("");
-  const [subsidebar, setSubsidebar] = useState("");
-  const [toggle, SetToggle] = useState(false);
-  const [expandMenus, setExpandMenus] = useState(false); // Local state for expandMenus
-  const [dataLayout, setDataLayout] = useState("default"); // Local state for dataLayout
+  const { tier } = useAuth();
+  const visibleSidebar = filterSidebarByAccess(SidebarData as any[], tier);
   const sidebarDateLabel = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",
     year: "numeric",
   }).format(new Date());
+
+  const [subOpen, setSubopen] = useState("");
+  const [subsidebar, setSubsidebar] = useState("");
+  const [toggle, SetToggle] = useState(false);
+  const [expandMenus, setExpandMenus] = useState(false);
+  const [dataLayout, setDataLayout] = useState("default");
 
   const toggleSidebar = (title: string): void => {
     if (title === subOpen) {
@@ -105,7 +109,7 @@ export default function Sidebar() {
           <div className="sidebar-inner slimscroll">
             <div id="sidebar-menu" className="sidebar-menu">
               <ul>
-                {SidebarData?.map((mainLabel: any, index: any) => (
+                {visibleSidebar?.map((mainLabel: any, index: any) => (
                   <li className="submenu-open" key={index}>
                     <h6 className="submenu-hdr">{mainLabel?.label}</h6>
                     <ul>

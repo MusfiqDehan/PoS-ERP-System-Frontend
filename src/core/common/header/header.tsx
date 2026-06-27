@@ -4,6 +4,9 @@ import { all_routes } from "@/data/all_routes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import LogoutLink from "@/components/auth/LogoutLink";
+import { shouldHideStoreSelector } from "@/data/rolePermissions";
+import { useAuth } from "@/providers/auth-provider";
 import HeaderQuickAdd from "./header/HeaderQuickAdd";
 import HeaderSearch from "./header/HeaderSearch";
 import HeaderStoreSelector from "./header/HeaderStoreSelector";
@@ -12,9 +15,11 @@ import HeaderUtilityActions from "./header/HeaderUtilityActions";
 export default function Header() {
     const route = all_routes;
     const pathname = usePathname();
+    const { tier, tenantAccess } = useAuth();
 
     const [isFullscreen, setIsFullscreen] = useState(false);
     const flagImage = "assets/img/flags/us-flag.svg";
+    const hideStoreSelector = shouldHideStoreSelector(tier, tenantAccess);
 
     const exclusionArray = [
         "/reactjs/template/dream-pos/index-three",
@@ -70,7 +75,7 @@ export default function Header() {
                 </Link>
 
                 <div className="figma-header-group figma-header-group--left">
-                    <HeaderStoreSelector />
+                    {!hideStoreSelector && <HeaderStoreSelector />}
                     <HeaderSearch />
                     <HeaderQuickAdd route={route} />
                 </div>
@@ -100,9 +105,7 @@ export default function Header() {
                         <Link className="dropdown-item" href="generalsettings">
                             Settings
                         </Link>
-                        <Link className="dropdown-item" href="signin">
-                            Logout
-                        </Link>
+                        <LogoutLink className="dropdown-item">Logout</LogoutLink>
                     </div>
                 </div>
             </div>

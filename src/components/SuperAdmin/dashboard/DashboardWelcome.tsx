@@ -4,9 +4,9 @@ export default function DashboardWelcome() {
   return (
     <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
       <div>
-        <h4 className="mb-1 fw-bold text-uppercase" style={{ color: "#333" }}>
+        <h2 className="mb-1 text-[24px] font-bold" style={{ color: "#212B36" }}>
           Welcome Jamiuddin Saif
-        </h4>
+        </h2>
         <p className="mb-0" style={{ color: "#666", fontSize: 12, fontWeight: 500 }}>
           Let&apos;s see what&apos;s happening across your business.
         </p>

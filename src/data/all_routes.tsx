@@ -1,5 +1,7 @@
 
 export const all_routes = {
+  landing: "/",
+  vendorDashboard: "/vendor-dashboard",
   newdashboard: "/admin-dashboard",
   dashboard: "/admin-dashboard-two",
   productlist: "/product-list",
@@ -170,6 +172,7 @@ export const all_routes = {
   register: "/register",
   registerTwo: "/register-2",
   registerThree: "/register-3",
+  verifyEmail: "/verify-email",
   forgotPassword: "/forgot-password",
   forgotPasswordTwo: "/forgot-password-2",
   forgotPasswordThree: "/forgot-password-3",

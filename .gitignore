@@ -86,12 +86,13 @@ Desktop.ini
 # Deployment
 # ---------------------------------------------------------------------------
 .vercel
+.deploy-revision
 
 # ---------------------------------------------------------------------------
 # Local-only / scratch
 # ---------------------------------------------------------------------------
 # local docs (daily goals, personal notes)
-/docs/
+docs/daily-goals/
 # git recovery backups (e.g. created when repairing a corrupted .git)
 .git.broken/
 *.corrupt.bak
