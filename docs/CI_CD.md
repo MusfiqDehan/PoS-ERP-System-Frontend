@@ -33,6 +33,8 @@ Compose overlay: `docker-compose.deploy.yml` (`frontend_candidate` with `-candid
 | `VPS_SSH_KEY` | Private key |
 | `VPS_DEPLOY_PATH` | e.g. `/opt/sortorium/frontend` |
 
+CI **rsyncs** code to the VPS (no `git pull` on the server). `.env.prod` is preserved. The deploy script removes any stale `.git` directory (leftover from an old clone) that would otherwise make `git status` show phantom changes. Check deployed SHA with `cat .deploy-revision`.
+
 ### Manual validation after setup
 
 ```bash
