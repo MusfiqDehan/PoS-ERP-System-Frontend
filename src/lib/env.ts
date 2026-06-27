@@ -1,0 +1,20 @@
+/**
+ * Environment-derived base URLs for API calls.
+ *
+ * - API_BASE_URL          — tenant-scoped endpoints (resolved from current host/domain)
+ * - PUBLIC_API_BASE_URL   — public-schema endpoints (register, auth, token-validate,
+ *                           password-setup). Always hits the bare public domain so it
+ *                           works from any tenant subdomain.
+ *
+ * Override via NEXT_PUBLIC_API_BASE_URL and NEXT_PUBLIC_PUBLIC_API_BASE_URL (.env / CI).
+ */
+
+const raw = (process.env.NEXT_PUBLIC_API_BASE_URL || "https://sortorium.com/api/v1").replace(
+  /\/$/,
+  "",
+);
+
+const publicRaw = (process.env.NEXT_PUBLIC_PUBLIC_API_BASE_URL || raw).replace(/\/$/, "");
+
+export const API_BASE_URL = raw;
+export const PUBLIC_API_BASE_URL = publicRaw;

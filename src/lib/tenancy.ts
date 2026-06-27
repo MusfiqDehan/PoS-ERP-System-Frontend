@@ -1,10 +1,10 @@
 /** Tenant self-registration + email verification — wires public auth flows to the DRF backend. */
 
-import { apiPost, type ApiResult } from "./api";
+import { publicApiPost, type ApiResult } from "./api";
 
-export const TENANT_REGISTER_PATH = "/api/v1/tenancy/register/";
-export const TENANT_TOKEN_VALIDATE_PATH = "/api/v1/tenancy/tokens/validate/";
-export const TENANT_PASSWORD_SETUP_PATH = "/api/v1/tenancy/password/setup/";
+export const TENANT_REGISTER_PATH = "tenancy/register/";
+export const TENANT_TOKEN_VALIDATE_PATH = "tenancy/tokens/validate/";
+export const TENANT_PASSWORD_SETUP_PATH = "tenancy/password/setup/";
 
 export type TenantRegistrationRequest = {
   subdomain: string;
@@ -27,7 +27,7 @@ export type TenantRegistrationResult = {
 export function registerTenant(
   payload: TenantRegistrationRequest,
 ): Promise<ApiResult<TenantRegistrationResult>> {
-  return apiPost<TenantRegistrationResult>(TENANT_REGISTER_PATH, payload);
+  return publicApiPost<TenantRegistrationResult>(TENANT_REGISTER_PATH, payload);
 }
 
 /** Shape returned by the token-validate endpoint when a verification link is valid. */
@@ -45,7 +45,7 @@ export type ValidatedToken = {
 export function validateToken(
   token: string,
 ): Promise<ApiResult<ValidatedToken>> {
-  return apiPost<ValidatedToken>(TENANT_TOKEN_VALIDATE_PATH, { token });
+  return publicApiPost<ValidatedToken>(TENANT_TOKEN_VALIDATE_PATH, { token });
 }
 
 export type PasswordSetupRequest = {
@@ -57,5 +57,8 @@ export type PasswordSetupRequest = {
 export function setupPassword(
   payload: PasswordSetupRequest,
 ): Promise<ApiResult<Record<string, unknown>>> {
-  return apiPost<Record<string, unknown>>(TENANT_PASSWORD_SETUP_PATH, payload);
+  return publicApiPost<Record<string, unknown>>(
+    TENANT_PASSWORD_SETUP_PATH,
+    payload,
+  );
 }

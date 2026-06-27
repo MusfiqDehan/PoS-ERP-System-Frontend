@@ -52,12 +52,47 @@ wait_container_healthy() {
   die "Timed out waiting for $name to become healthy."
 }
 
-smoke_check() {
+smoke_check_candidate() {
+  log "Candidate container smoke check: $CANDIDATE_CONTAINER"
+  local response
+  response="$(docker exec "$CANDIDATE_CONTAINER" wget -S -O - http://127.0.0.1:80/ 2>&1)" \
+    || die "Failed to fetch / inside candidate container"
+  if echo "$response" | grep -qi 'location:.*signin'; then
+    die "Candidate root still redirects to /signin — check nginx.conf in the image"
+  fi
+  if ! echo "$response" | grep -qE 'HTTP/[0-9.]+ 200'; then
+    die "Candidate root did not return HTTP 200"
+  fi
+}
+
+smoke_check_external() {
   log "HTTPS smoke check: $SMOKE_URL"
-  curl -fsS --retry 5 --retry-delay 3 --retry-all-errors -o /dev/null "$SMOKE_URL"
+  local headers status
+  headers="$(curl -sSI --max-redirs 0 --retry 5 --retry-delay 3 --retry-all-errors "$SMOKE_URL")" \
+    || die "HTTPS smoke check failed (no response)"
+  status="$(echo "$headers" | awk 'toupper($0) ~ /^HTTP/ { print $2; exit }')"
+  if [[ "$status" != "200" ]]; then
+    if echo "$headers" | grep -qi '^location:.*signin'; then
+      die "Root URL redirects to /signin (HTTP $status)"
+    fi
+    die "Root URL returned HTTP $status (expected 200)"
+  fi
 }
 
 export IMAGE_TAG
+
+finalize_deploy_tree() {
+  # CI syncs this directory via rsync (see .github/workflows/production.yml).
+  # rsync excludes .git/, so an old clone leaves HEAD behind while files on disk
+  # match GitHub — git status then shows thousands of phantom changes.
+  if [[ -d .git ]]; then
+    log "Removing stale .git metadata (deploy tree is rsync-managed, not git-managed)."
+    rm -rf .git
+  fi
+  printf '%s\n' "${IMAGE_TAG}" > .deploy-revision
+}
+
+finalize_deploy_tree
 
 log "Phase 1: build frontend image (tag=$IMAGE_TAG) while live serves..."
 IMAGE_TAG="$IMAGE_TAG" "${COMPOSE[@]}" build frontend
@@ -68,8 +103,8 @@ IMAGE_TAG="$IMAGE_TAG" "${COMPOSE_DEPLOY[@]}" up -d --no-deps frontend_candidate
 log "Phase 3: wait for candidate health..."
 wait_container_healthy "$CANDIDATE_CONTAINER"
 
-log "Phase 4: external smoke check..."
-smoke_check
+log "Phase 4: candidate smoke check (direct — live still in Traefik pool)..."
+smoke_check_candidate
 
 log "Phase 5: graceful drain of live frontend..."
 DRAINED=1
@@ -84,8 +119,8 @@ wait_container_healthy "$LIVE_CONTAINER"
 log "Phase 8: remove candidate..."
 cleanup_candidate
 
-log "Phase 9: final smoke check..."
-smoke_check
+log "Phase 9: final external smoke check..."
+smoke_check_external
 
 trap - ERR
 log "Frontend deploy complete (image tag=$IMAGE_TAG)."

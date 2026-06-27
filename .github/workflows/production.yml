@@ -9,6 +9,7 @@ on:
 
 env:
   NEXT_PUBLIC_API_BASE_URL: /api/v1
+  NEXT_PUBLIC_PUBLIC_API_BASE_URL: https://sortorium.com/api/v1
   NEXT_PUBLIC_PUBLIC_DOMAIN: sortorium.com
   NEXT_PUBLIC_WS_BASE_URL: wss://sortorium.com
 
@@ -17,9 +18,9 @@ jobs:
     name: Lint, type-check, test, build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: "24"
           cache: npm
@@ -48,9 +49,9 @@ jobs:
       group: production-deploy
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7.0.0
 
-      - uses: webfactory/ssh-agent@v0.9.0
+      - uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
@@ -65,10 +66,14 @@ jobs:
           RSYNC_RSH="ssh ${SSH_OPTS}"
 
           # Push checkout to VPS over SSH (VPS cannot git-fetch private HTTPS remotes).
+          # Do not use git on the server for deploy sync — rsync is the source of truth.
           rsync -az --delete \
             --exclude '.git/' \
+            --exclude '.deploy-revision' \
             --exclude 'node_modules/' \
             --exclude '.next/' \
+            --exclude 'out/' \
+            --exclude 'coverage/' \
             --exclude '.env.prod' \
             -e "${RSYNC_RSH}" \
             ./ "${VPS_USER}@${VPS_HOST}:${VPS_DEPLOY_PATH}/"
