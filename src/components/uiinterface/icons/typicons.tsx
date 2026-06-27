@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import Link from "next/link";
 import React from "react";
 import * as Icons from "react-feather";
 
@@ -307,7 +308,7 @@ const TypiconIconsComponent = () => {
               <h3 className="page-title">Typicon Icon</h3>
               <ul className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <a href="/">Dashboard</a>
+                  <Link href="/">Dashboard</Link>
                 </li>
                 <li className="breadcrumb-item active">Typicon Icon</li>
               </ul>
