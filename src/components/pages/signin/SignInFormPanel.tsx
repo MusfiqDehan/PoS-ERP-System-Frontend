@@ -78,43 +78,6 @@ export default function SignInFormPanel() {
     }
   };
 
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<string[]>([]);
-
-  const canSubmit = useMemo(
-    () => email.trim().length > 0 && password.length > 0 && !loading,
-    [email, password, loading],
-  );
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!canSubmit) return;
-
-    setErrors([]);
-    setLoading(true);
-
-    try {
-      const hostname =
-        typeof window !== "undefined" ? window.location.hostname : "";
-      const subdomain = extractSubdomain(hostname);
-
-      const { ok, body } = await login({
-        email: email.trim(),
-        password,
-        subdomain: subdomain || undefined,
-        domain: subdomain ? undefined : hostname || undefined,
-      });
-
-      if (ok && body.success) {
-        router.push(all_routes.newdashboard);
-      } else {
-        setErrors(collectErrorMessages(body));
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <section className="auth-split-page__form-panel">
       <form className="auth-split-page__form" onSubmit={handleSubmit}>
