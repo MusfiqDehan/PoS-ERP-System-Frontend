@@ -11,7 +11,7 @@
  * { success, message, data?, error_code?, errors? }.
  */
 
-import { API_BASE_URL, PUBLIC_API_BASE_URL } from "./env";
+import { API_BASE_URL, PUBLIC_API_BASE_URL, type AuthTokens } from "./env";
 
 export type ApiEnvelope<T = unknown> = {
   success: boolean;
@@ -27,12 +27,55 @@ export type ApiResult<T> = {
   body: ApiEnvelope<T>;
 };
 
+/* ------------------------------------------------------------------ */
+/*  Token helpers                                                      */
+/* ------------------------------------------------------------------ */
+
+const TOKENS_KEY = "sortorium_auth";
+
+export function getStoredTokens(): AuthTokens | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(TOKENS_KEY);
+    return raw ? (JSON.parse(raw) as AuthTokens) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function setStoredTokens(tokens: AuthTokens): void {
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(TOKENS_KEY, JSON.stringify(tokens));
+  }
+}
+
+export function clearStoredTokens(): void {
+  if (typeof window !== "undefined") {
+    window.localStorage.removeItem(TOKENS_KEY);
+  }
+}
+
+function authHeaders(): Record<string, string> {
+  const tokens = getStoredTokens();
+  if (tokens?.access) {
+    return { Authorization: `Bearer ${tokens.access}` };
+  }
+  return {};
+}
+
+/* ------------------------------------------------------------------ */
+/*  Public helpers                                                     */
+/* ------------------------------------------------------------------ */
+
 /** POST JSON to `path` (e.g. "tenancy/register/") using the tenant-scoped base URL. */
 export async function apiPost<T = unknown>(
   path: string,
   payload: unknown,
 ): Promise<ApiResult<T>> {
-  return rawPost(API_BASE_URL, path, payload);
+  return rawRequest<T>(API_BASE_URL, path, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
 /** POST JSON to `path` (e.g. "tenancy/password/setup/") using the **public** base URL.
@@ -41,26 +84,42 @@ export async function publicApiPost<T = unknown>(
   path: string,
   payload: unknown,
 ): Promise<ApiResult<T>> {
-  return rawPost(PUBLIC_API_BASE_URL, path, payload);
+  return rawRequest<T>(PUBLIC_API_BASE_URL, path, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
-async function rawPost<T>(
+/** GET JSON from a tenant-scoped endpoint. Sends Authorization header if token exists. */
+export async function apiGet<T = unknown>(
+  path: string,
+): Promise<ApiResult<T>> {
+  return rawRequest<T>(API_BASE_URL, path);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Internal                                                           */
+/* ------------------------------------------------------------------ */
+
+async function rawRequest<T>(
   base: string,
   path: string,
-  payload: unknown,
+  init?: RequestInit,
 ): Promise<ApiResult<T>> {
   const url = `${base}/${path.replace(/^\//, "")}`;
 
+  const headers: Record<string, string> = {
+    Accept: "application/json",
+    ...authHeaders(),
+  };
+
+  if (init?.body && !(init.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+
   let response: Response;
   try {
-    response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    response = await fetch(url, { ...init, headers });
   } catch {
     return {
       ok: false,
