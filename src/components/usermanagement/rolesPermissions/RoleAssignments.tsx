@@ -3,8 +3,20 @@ import {
   roleAssignmentsData,
   type RoleAssignment,
 } from "./roleAssignmentsData";
+import type { UserRoleAssignment } from "@/lib/roles";
 
 const COLUMNS = ["Email", "Role", "Branch", "Assign At", "Assigned By", "Action"];
+
+function mapToDisplay(a: UserRoleAssignment): RoleAssignment {
+  return {
+    id: a.id,
+    email: a.user.email ?? a.user.full_name ?? "",
+    role: a.role.name,
+    branch: a.branch?.name ?? "—",
+    assignedAt: a.assigned_at?.slice(0, 10) ?? "—",
+    assignedBy: a.assigned_by?.full_name ?? "—",
+  };
+}
 
 function FilterChips() {
   return (
@@ -72,7 +84,13 @@ function AssignmentRow({ row }: { row: RoleAssignment }) {
   );
 }
 
-export default function RoleAssignments() {
+type Props = {
+  data?: UserRoleAssignment[];
+};
+
+export default function RoleAssignments({ data }: Props) {
+  const rows = data?.map(mapToDisplay) ?? roleAssignmentsData;
+
   return (
     <section className="mb-[24px] w-full rounded-lg border border-[#f1f1f1] bg-white p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -114,7 +132,7 @@ export default function RoleAssignments() {
               </p>
             ))}
           </div>
-          {roleAssignmentsData.map((row) => (
+          {rows.map((row) => (
             <AssignmentRow key={row.id} row={row} />
           ))}
         </div>
