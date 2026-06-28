@@ -299,4 +299,5 @@ export const all_routes = {
   layoutBoxed:"/layout-boxed",
   layoutRtl:"/layout-rtl",
   layoutDark:"/layout-dark",
+  branchOverview:"/branch-overview",
 };
