@@ -6,6 +6,7 @@ import {
   setStoredTokens,
   type ApiResult,
 } from "./api";
+import type { AssetSummary } from "./branding";
 import type { AuthTokens } from "./env";
 
 export const TENANT_REGISTER_PATH = "tenancy/register/";
@@ -123,13 +124,13 @@ export type CurrentUser = {
   phone: string;
   full_name: string;
   platform_roles: string[];
-  profile_picture: unknown;
+  profile_picture: AssetSummary | null;
   email_verified: boolean;
   tenant_id: string;
   created_at: string;
   updated_at: string;
 };
 
-export function getMe(): Promise<ApiResult<CurrentUser>> {
-  return apiGet<CurrentUser>(TENANT_ME_PATH);
+export function getMe(accessToken?: string): Promise<ApiResult<CurrentUser>> {
+  return apiGet<CurrentUser>(TENANT_ME_PATH, accessToken);
 }
