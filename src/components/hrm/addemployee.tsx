@@ -10,7 +10,6 @@ import DefaultEditor from "react-simple-wysiwyg";
 /* ── reusable style fragments (Tailwind atomic classes, no Bootstrap) ─── */
 const labelCls = "mb-[6px] block text-[14px] font-medium leading-normal text-[#333333]";
 const inputCls = "w-full rounded-[6px] border border-[#e0e0e0] px-[12px] py-[10px] text-[14px] leading-normal text-[#333333] outline-none transition-colors placeholder:text-[#999999] focus:border-[#089b7c]";
-const selectCls = "w-full rounded-[6px] border border-[#e0e0e0] px-[12px] py-[10px] text-[14px] leading-normal text-[#333333] outline-none transition-colors focus:border-[#089b7c]";
 const sectionCard = "rounded-[12px] border border-[#f0f0f0] bg-white p-[24px]";
 const sectionTitle = "flex items-center gap-[10px] text-[16px] font-semibold leading-normal text-[#333333]";
 const sectionIcon = "text-[#089b7c] text-[18px] leading-none";
@@ -31,7 +30,7 @@ export default function AddEmployeeComponent() {
 
   function togglePasswordVisibility(field: keyof typeof passwordVisibility) {
     setPasswordVisibility(function(prev) {
-      var next = { ...prev };
+      const next = { ...prev };
       next[field] = !prev[field];
       return next;
     });
