@@ -3,6 +3,9 @@
 
 .auth-split-page {
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 24px;
   background: variables.$white;
 
@@ -12,6 +15,7 @@
     justify-content: center;
     gap: clamp(24px, 6vw, 80px);
     width: 100%;
+    max-width: 1300px;
     min-height: calc(100vh - 48px);
     margin: 0 auto;
   }
@@ -20,12 +24,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: min(688px, 100%);
+    flex: 1 1 50%;
+    max-width: 688px;
+    min-width: 0;
     height: min(832px, calc(100vh - 48px));
     overflow: hidden;
     border-radius: 8px;
     background: #e7fbf7;
-    flex-shrink: 0;
   }
 
   &__brand-logo-wrap {
@@ -66,8 +71,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: min(486px, 100%);
-    flex-shrink: 0;
+    flex: 0 1 486px;
+    max-width: 486px;
+    min-width: 0;
   }
 
   &__form {
@@ -341,46 +347,133 @@
     }
   }
 
+  /* ------------------------------------------------------------------ */
+  /*  Mobile / Tablet ≤ 991px – hide brand panel, show clean standalone form */
+  /* ------------------------------------------------------------------ */
   @include mixins.respond-below(custom991) {
-    padding: 16px;
+    padding: 0;
+    background: #f8faf9;
 
     &__layout {
       flex-direction: column;
-      gap: 24px;
-      min-height: auto;
+      gap: 0;
+      min-height: 100vh;
+      max-width: 100%;
     }
 
     &__brand-panel {
-      width: 100%;
-      height: auto;
-      min-height: 360px;
-    }
-
-    &__lottie {
-      padding-bottom: 24px;
-
-      > div,
-      canvas {
-        max-height: 320px;
-      }
+      display: none;
     }
 
     &__form-panel {
+      flex: 1 1 auto;
+      max-width: 100%;
       width: 100%;
+      padding: 32px 24px 40px;
+    }
+
+    &__form {
+      gap: 28px;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 32px 24px 36px;
+      border-radius: 14px;
+      background: variables.$white;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05), 0 1px 4px rgba(0, 0, 0, 0.04);
+      border: 1px solid #eef1f0;
+    }
+
+    &__form-top {
+      gap: 24px;
+    }
+
+    &__form-main {
+      gap: 24px;
+    }
+
+    &__form-header {
+      gap: 10px;
+    }
+
+    &__form-title {
+      font-size: 20px;
+    }
+
+    &__form-subtitle {
+      font-size: 15px;
+    }
+
+    &__credentials {
+      gap: 16px;
+    }
+
+    &__submit {
+      min-height: 48px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    &__primary-actions {
+      gap: 14px;
+    }
+
+    &__prompt {
+      font-size: 14px;
     }
 
     &__options {
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    &__text-link {
+      font-size: 13px;
     }
 
     &__social-row {
-      gap: 12px;
+      gap: 14px;
     }
 
     &__social-btn {
       flex: 1 1 0;
       min-width: 0;
       width: auto;
+      height: 46px;
+      border-radius: 8px;
+    }
+
+    &__divider {
+      gap: 10px;
+    }
+
+    &__checkbox-label {
+      font-size: 13px;
+    }
+
+    /* Tablet (769–991px): wider form, more vertical space */
+    @media (min-width: 769px) {
+      padding: 40px 24px;
+
+      &__layout {
+        min-height: 100vh;
+      }
+
+      &__form-panel {
+        padding: 48px 0 56px;
+      }
+
+      &__form {
+        max-width: 520px;
+        padding: 40px 36px 44px;
+        box-shadow: 0 2px 24px rgba(0, 0, 0, 0.05), 0 1px 6px rgba(0, 0, 0, 0.04);
+      }
+
+      &__options {
+        flex-direction: row;
+        justify-content: space-between;
+      }
     }
   }
 }
