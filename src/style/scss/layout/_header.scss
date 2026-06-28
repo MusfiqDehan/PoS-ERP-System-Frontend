@@ -828,6 +828,27 @@ hr {
       @include mixins.rounded(6px);
     }
   }
+  .avatar-placeholder {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #7367f0, #5e50ee);
+    color: variables.$white;
+    font-weight: variables.$font-weight-bold;
+    font-size: 15px;
+    line-height: 1;
+    &--lg {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+  }
   .user-name {
     font-size: variables.$font-size-15;
     font-weight: variables.$font-weight-semibold;
