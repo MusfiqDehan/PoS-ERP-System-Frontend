@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import type { HeaderRoutes } from "./types";
 
 type HeaderUtilityActionsProps = {
@@ -16,8 +17,20 @@ export default function HeaderUtilityActions({
     isFullscreen,
     onToggleFullscreen,
 }: HeaderUtilityActionsProps) {
+    const { user } = useCurrentUser();
+
+    const displayName = user?.full_name || "User";
+    const displayRole = user?.platform_roles?.[0] || "Tenant";
+    const firstLetter = displayName.charAt(0).toUpperCase();
+
+    const profilePictureUrl =
+        user?.profile_picture && typeof user.profile_picture === "object"
+            ? (user.profile_picture as Record<string, unknown>)?.url
+            : null;
+
     return (
         <>
+            {/* ... POS button, flag, fullscreen, email, bell — unchanged ... */}
             <li className="nav-item pos-nav figma-utility-item figma-utility-pos">
                 <Link
                     href={route.pos}
@@ -163,19 +176,36 @@ export default function HeaderUtilityActions({
                 <Link href="#" className="nav-link userset" data-bs-toggle="dropdown">
                     <span className="user-info p-0">
                         <span className="user-letter">
-                            <img src="assets/img/profiles/avator1.jpg" alt="Sortorium" className="img-fluid" />
+                            {profilePictureUrl ? (
+                                <img
+                                    src={String(profilePictureUrl)}
+                                    alt={displayName}
+                                    className="img-fluid"
+                                />
+                            ) : (
+                                <span className="avatar-placeholder">{firstLetter}</span>
+                            )}
                         </span>
-                        <span className="figma-profile-name">Jamiuddin Saif</span>
+                        <span className="figma-profile-name">{displayName}</span>
                     </span>
                 </Link>
                 <div className="dropdown-menu menu-drop-user">
                     <div className="profileset d-flex align-items-center">
                         <span className="user-img me-2">
-                            <img src="assets/img/profiles/avator1.jpg" alt="Sortorium" />
+                            {profilePictureUrl ? (
+                                <img
+                                    src={String(profilePictureUrl)}
+                                    alt={displayName}
+                                />
+                            ) : (
+                                <span className="avatar-placeholder avatar-placeholder--lg">
+                                    {firstLetter}
+                                </span>
+                            )}
                         </span>
                         <div>
-                            <h6 className="fw-medium">John Smilga</h6>
-                            <p>Admin</p>
+                            <h6 className="fw-medium">{displayName}</h6>
+                            <p className="text-capitalize">{displayRole}</p>
                         </div>
                     </div>
                     <Link className="dropdown-item" href={route.profile}>
