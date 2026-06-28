@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import type { HeaderRoutes } from "./types";
+import LogoutLink from "@/components/auth/LogoutLink";
 
 type HeaderUtilityActionsProps = {
     route: HeaderRoutes;
@@ -221,10 +222,10 @@ export default function HeaderUtilityActions({
                         Settings
                     </Link>
                     <hr className="my-2" />
-                    <Link className="dropdown-item logout pb-0" href={route.signin}>
+                    <LogoutLink className="dropdown-item logout pb-0">
                         <i className="ti ti-logout me-2" />
                         Logout
-                    </Link>
+                    </LogoutLink>
                 </div>
             </li>
         </>

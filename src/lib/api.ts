@@ -13,6 +13,16 @@
 
 import { API_BASE_URL, PUBLIC_API_BASE_URL, type AuthTokens } from "./env";
 
+/** Django requires trailing slashes when APPEND_SLASH=True. */
+export function joinApiUrl(base: string, path: string): string {
+  const normalizedBase = base.replace(/\/+$/, "");
+  const segments = path
+    .split("/")
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+  return `${normalizedBase}/${segments.join("/")}/`;
+}
+
 export type ApiEnvelope<T = unknown> = {
   success: boolean;
   message?: string;
@@ -27,45 +37,21 @@ export type ApiResult<T> = {
   body: ApiEnvelope<T>;
 };
 
-/* ------------------------------------------------------------------ */
-/*  Token helpers                                                      */
-/* ------------------------------------------------------------------ */
-
-const TOKENS_KEY = "sortorium_auth";
-
-export function getStoredTokens(): AuthTokens | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(TOKENS_KEY);
-    return raw ? (JSON.parse(raw) as AuthTokens) : null;
-  } catch {
-    return null;
-  }
+/** GET JSON from `path` using the tenant-scoped base URL with optional Bearer token. */
+export async function apiGet<T = unknown>(
+  path: string,
+  accessToken?: string,
+): Promise<ApiResult<T>> {
+  return rawGet(API_BASE_URL, path, accessToken);
 }
 
-export function setStoredTokens(tokens: AuthTokens): void {
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(TOKENS_KEY, JSON.stringify(tokens));
-  }
+/** GET JSON from `path` using the **public** base URL with optional Bearer token. */
+export async function publicApiGet<T = unknown>(
+  path: string,
+  accessToken?: string,
+): Promise<ApiResult<T>> {
+  return rawGet(PUBLIC_API_BASE_URL, path, accessToken);
 }
-
-export function clearStoredTokens(): void {
-  if (typeof window !== "undefined") {
-    window.localStorage.removeItem(TOKENS_KEY);
-  }
-}
-
-function authHeaders(): Record<string, string> {
-  const tokens = getStoredTokens();
-  if (tokens?.access) {
-    return { Authorization: `Bearer ${tokens.access}` };
-  }
-  return {};
-}
-
-/* ------------------------------------------------------------------ */
-/*  Public helpers                                                     */
-/* ------------------------------------------------------------------ */
 
 /** POST JSON to `path` (e.g. "tenancy/register/") using the tenant-scoped base URL. */
 export async function apiPost<T = unknown>(
@@ -97,16 +83,55 @@ export async function apiGet<T = unknown>(
   return rawRequest<T>(API_BASE_URL, path);
 }
 
-/* ------------------------------------------------------------------ */
-/*  Internal                                                           */
-/* ------------------------------------------------------------------ */
+async function rawGet<T>(
+  base: string,
+  path: string,
+  accessToken?: string,
+): Promise<ApiResult<T>> {
+  const url = joinApiUrl(base, path);
+  const headers: Record<string, string> = {
+    Accept: "application/json",
+  };
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
 
-async function rawRequest<T>(
+  let response: Response;
+  try {
+    response = await fetch(url, { method: "GET", headers });
+  } catch {
+    return {
+      ok: false,
+      status: 0,
+      body: {
+        success: false,
+        message:
+          "Unable to reach the server. Please check your connection and try again.",
+      },
+    };
+  }
+
+  let body: ApiEnvelope<T>;
+  try {
+    body = (await response.json()) as ApiEnvelope<T>;
+  } catch {
+    body = {
+      success: response.ok,
+      message: response.ok
+        ? undefined
+        : "Unexpected response from the server.",
+    };
+  }
+
+  return { ok: response.ok, status: response.status, body };
+}
+
+async function rawPost<T>(
   base: string,
   path: string,
   init?: RequestInit,
 ): Promise<ApiResult<T>> {
-  const url = `${base}/${path.replace(/^\//, "")}`;
+  const url = joinApiUrl(base, path);
 
   const headers: Record<string, string> = {
     Accept: "application/json",

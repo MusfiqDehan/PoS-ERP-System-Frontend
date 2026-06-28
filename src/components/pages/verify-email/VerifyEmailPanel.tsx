@@ -26,6 +26,7 @@ export default function VerifyEmailPanel() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const [loginUrl, setLoginUrl] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -86,6 +87,15 @@ export default function VerifyEmailPanel() {
         confirm_password: confirmPassword,
       });
       if (ok && body.success) {
+        const data = body.data as Record<string, unknown> | undefined;
+        const url =
+          (typeof data?.login_url === "string" && data.login_url) ||
+          (invitation?.tenant_domain
+            ? `http://${invitation.tenant_domain}/login`
+            : "");
+        if (url) {
+          setLoginUrl(url);
+        }
         setStatus("done");
       } else {
         setErrors(collectErrorMessages(body));
@@ -188,9 +198,15 @@ export default function VerifyEmailPanel() {
 
             {status === "done" ? (
               <div className="auth-split-page__primary-actions">
-                <Link href={all_routes.signin} className="auth-split-page__submit">
-                  Go to Sign In
-                </Link>
+                {loginUrl ? (
+                  <a href={loginUrl} className="auth-split-page__submit">
+                    Go to Sign In
+                  </a>
+                ) : (
+                  <Link href={all_routes.signin} className="auth-split-page__submit">
+                    Go to Sign In
+                  </Link>
+                )}
               </div>
             ) : null}
 

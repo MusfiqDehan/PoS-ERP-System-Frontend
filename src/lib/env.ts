@@ -9,7 +9,10 @@
  * Override via NEXT_PUBLIC_API_BASE_URL and NEXT_PUBLIC_PUBLIC_API_BASE_URL (.env / CI).
  */
 
-const raw = (process.env.NEXT_PUBLIC_API_BASE_URL || "https://sortorium.com/api/v1").replace(/\/$/, "");
+const raw = (process.env.NEXT_PUBLIC_API_BASE_URL || "https://sortorium.com/api/v1").replace(
+  /\/$/,
+  "",
+);
 
 const publicRaw = (process.env.NEXT_PUBLIC_PUBLIC_API_BASE_URL || raw).replace(/\/$/, "");
 

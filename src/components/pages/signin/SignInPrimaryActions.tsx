@@ -2,12 +2,10 @@ import Link from "next/link";
 import { all_routes } from "@/data/all_routes";
 
 type SignInPrimaryActionsProps = {
-  disabled?: boolean;
   loading?: boolean;
 };
 
 export default function SignInPrimaryActions({
-  disabled = false,
   loading = false,
 }: SignInPrimaryActionsProps) {
   const route = all_routes;
@@ -17,7 +15,7 @@ export default function SignInPrimaryActions({
       <button
         type="submit"
         className="auth-split-page__submit"
-        disabled={disabled || loading}
+        disabled={loading}
       >
         {loading ? "Signing in…" : "Sign In"}
       </button>

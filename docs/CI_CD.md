@@ -24,6 +24,55 @@ If candidate healthcheck fails, deploy aborts and the live container is **not** 
 
 Compose overlay: `docker-compose.deploy.yml` (`frontend_candidate` with `-candidate` Traefik routers).
 
+### How updates actually work
+
+On every push to `production`:
+
+1. **GitHub Actions** checks out the latest code from GitHub (on the runner).
+2. **rsync** copies that checkout to your VPS at `VPS_DEPLOY_PATH`.
+3. **`scripts/deploy/production.sh`** builds the Docker image and runs the blue-green deploy.
+
+The server is only a **target folder** for synced files — not a git clone. The workflow explicitly excludes `.git/` from rsync, so **git on the VPS is not used** to receive updates.
+
+### What you still need on the VPS
+
+| Required | Purpose |
+|----------|---------|
+| `VPS_DEPLOY_PATH` directory | Where rsync puts code |
+| `.env.prod` | Server secrets — **not** overwritten by rsync |
+| Docker + Compose plugin | Build and run containers |
+| `traefik_proxy` network | Traefik routing (external Docker network) |
+| GitHub Actions secrets | SSH access from the workflow (`VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`, `VPS_DEPLOY_PATH`) |
+| Deploy user in `docker` group | Run compose without sudo |
+
+Removing `.git` from the deploy path is **correct** for this setup. Do not run `git pull` on the server.
+
+### How to verify a deploy worked
+
+After a pipeline run completes:
+
+```bash
+cd /opt/sortorium/frontend   # your VPS_DEPLOY_PATH
+
+# Deployed commit (should match GitHub Actions run SHA)
+cat .deploy-revision
+
+# Containers running
+docker ps
+
+# Frontend (external)
+curl -sf -o /dev/null https://sortorium.com/
+```
+
+You do not need `git status` on the server — the deploy tree is rsync-managed.
+
+### Summary
+
+- The VPS deploy path is **rsync-managed**, not a git working copy.
+- Removing `.git` on the server is fine and avoids phantom `git status` noise.
+- CI/CD delivers code from GitHub via **rsync** on each push to `production`, then runs the blue-green deploy script.
+- Merge or push to `production` → Actions syncs + deploys automatically.
+
 ### GitHub secrets (frontend repo)
 
 | Secret | Purpose |
@@ -32,6 +81,8 @@ Compose overlay: `docker-compose.deploy.yml` (`frontend_candidate` with `-candid
 | `VPS_USER` | SSH user |
 | `VPS_SSH_KEY` | Private key |
 | `VPS_DEPLOY_PATH` | e.g. `/opt/sortorium/frontend` |
+
+CI **rsyncs** code to the VPS (no `git pull` on the server). `.env.prod` is preserved. The deploy script removes any stale `.git` directory (leftover from an old clone) that would otherwise make `git status` show phantom changes. Check deployed SHA with `cat .deploy-revision`.
 
 ### Manual validation after setup
 
