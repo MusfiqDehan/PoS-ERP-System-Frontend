@@ -2,7 +2,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import React, { useState } from 'react'
+import React, { useState, type FormEvent } from 'react'
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 import type { E164Number } from "libphonenumber-js";
@@ -11,6 +11,9 @@ import RefreshIcon from '@/core/common/tooltip-content/refresh';
 import CollapesIcon from '@/core/common/tooltip-content/collapes';
 import Link from 'next/link';
 import CommonFooter from '@/core/common/footer/commonFooter';
+import { changePassword } from '@/lib/password';
+import { getAccessToken } from '@/lib/auth-session';
+import { collectErrorMessages } from '@/lib/api';
 
 
 export default function SecuritySettingsComponent () {
@@ -28,6 +31,50 @@ export default function SecuritySettingsComponent () {
             ...prevState,
             [field]: !prevState[field],
         }));
+    };
+
+    /* ---- change‑password form state ---- */
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [pwSubmitting, setPwSubmitting] = useState(false);
+    const [pwSuccess, setPwSuccess] = useState(false);
+    const [pwErrors, setPwErrors] = useState<string[]>([]);
+
+    const resetPwForm = () => {
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setPwSuccess(false);
+        setPwErrors([]);
+    };
+
+    const handleChangePassword = async (e: FormEvent) => {
+        e.preventDefault();
+
+        const errs: string[] = [];
+        if (!currentPassword) errs.push("Current password is required.");
+        if (!newPassword) errs.push("New password is required.");
+        else if (newPassword.length < 8) errs.push("New password must be at least 8 characters.");
+        if (newPassword !== confirmPassword) errs.push("Passwords do not match.");
+        if (errs.length) { setPwErrors(errs); return; }
+
+        setPwSubmitting(true);
+        setPwErrors([]);
+        setPwSuccess(false);
+
+        const { ok, body } = await changePassword(
+            { current_password: currentPassword, new_password: newPassword },
+            getAccessToken() ?? undefined,
+        );
+        setPwSubmitting(false);
+
+        if (ok && body.success) {
+            setPwSuccess(true);
+            resetPwForm();
+        } else {
+            setPwErrors(collectErrorMessages(body));
+        }
     };
 
 
@@ -72,14 +119,15 @@ export default function SecuritySettingsComponent () {
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <Link
-                                                    href="#"
+                                                <button
+                                                    type="button"
                                                     className="btn btn-primary"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#change-password"
+                                                    onClick={resetPwForm}
                                                 >
                                                     Change Password
-                                                </Link>
+                                                </button>
                                             </div>
                                             <div className="d-flex align-items-center justify-content-between flex-wrap row-gap-3 border-bottom mb-3 pb-3">
                                                 <div className="d-flex align-items-center">
@@ -301,124 +349,121 @@ export default function SecuritySettingsComponent () {
             <div className="modal fade" id="change-password">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
-                        <div className="modal-header">
-                            <div className="page-title">
-                                <h4>Change Password</h4>
+                        <form onSubmit={handleChangePassword}>
+                            <div className="modal-header">
+                                <div className="page-title">
+                                    <h4>Change Password</h4>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                >
+                                    <span aria-hidden="true">×</span>
+                                </button>
                             </div>
-                            <button
-                                type="button"
-                                className="close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            >
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="row">
-                                <div className="col-lg-12">
-                                    <div className="input-blocks">
-                                        <label className="fw-medium">
-                                            Current Password <span className="text-danger">*</span>
-                                        </label>
-                                        <div className="pass-group">
-                                            <input
-                                                type={
-                                                    passwordVisibility.oldPassword
-                                                        ? "text"
-                                                        : "password"
-                                                }
-                                                className="pass-input form-control"
-                                            />
-                                            <span
-                                                className={`ti toggle-passwords ${passwordVisibility.oldPassword
-                                                    ? "ti-eye"
-                                                    : "ti-eye-off"
-                                                    }`}
-                                                onClick={() =>
-                                                    togglePasswordVisibility("oldPassword")
-                                                }
-                                            ></span>
+                            <div className="modal-body">
+                                {pwSuccess && (
+                                    <div className="alert alert-success alert-dismissible fade show py-2 mb-3">
+                                        Password changed successfully.
+                                        <button type="button" className="btn-close" onClick={() => setPwSuccess(false)} aria-label="Close" />
+                                    </div>
+                                )}
+                                {pwErrors.length > 0 && (
+                                    <div className="alert alert-danger alert-dismissible fade show py-2 mb-3">
+                                        {pwErrors.map((e, i) => <div key={i}>{e}</div>)}
+                                        <button type="button" className="btn-close" onClick={() => setPwErrors([])} aria-label="Close" />
+                                    </div>
+                                )}
+                                <div className="row">
+                                    <div className="col-lg-12">
+                                        <div className="input-blocks">
+                                            <label className="fw-medium">
+                                                Current Password <span className="text-danger">*</span>
+                                            </label>
+                                            <div className="pass-group">
+                                                <input
+                                                    type={passwordVisibility.oldPassword ? "text" : "password"}
+                                                    className="pass-input form-control"
+                                                    value={currentPassword}
+                                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                                    disabled={pwSubmitting}
+                                                />
+                                                <span
+                                                    className={`ti toggle-passwords ${passwordVisibility.oldPassword ? "ti-eye" : "ti-eye-off"}`}
+                                                    onClick={() => togglePasswordVisibility("oldPassword")}
+                                                ></span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="input-blocks">
-                                        <label className="fw-medium">
-                                            New Password <span className="text-danger">*</span>
-                                        </label>
-                                        <div className="pass-group">
-                                            <input
-                                                type={
-                                                    passwordVisibility.newPassword
-                                                        ? "text"
-                                                        : "password"
-                                                }
-                                                className="pass-input form-control"
-                                            />
-                                            <span
-                                                className={`ti toggle-passwords ${passwordVisibility.newPassword
-                                                    ? "ti-eye"
-                                                    : "ti-eye-off"
-                                                    }`}
-                                                onClick={() =>
-                                                    togglePasswordVisibility("newPassword")
-                                                }
-                                            ></span>
+                                    <div className="col-lg-12">
+                                        <div className="input-blocks">
+                                            <label className="fw-medium">
+                                                New Password <span className="text-danger">*</span>
+                                            </label>
+                                            <div className="pass-group">
+                                                <input
+                                                    type={passwordVisibility.newPassword ? "text" : "password"}
+                                                    className="pass-input form-control"
+                                                    value={newPassword}
+                                                    onChange={(e) => setNewPassword(e.target.value)}
+                                                    disabled={pwSubmitting}
+                                                />
+                                                <span
+                                                    className={`ti toggle-passwords ${passwordVisibility.newPassword ? "ti-eye" : "ti-eye-off"}`}
+                                                    onClick={() => togglePasswordVisibility("newPassword")}
+                                                ></span>
+                                            </div>
+                                            <div className="password-strength" id="passwordStrength">
+                                                <span id="poor" />
+                                                <span id="weak" />
+                                                <span id="strong" />
+                                                <span id="heavy" />
+                                            </div>
+                                            <div id="passwordInfo" />
                                         </div>
-                                        <div className="password-strength" id="passwordStrength">
-                                            <span id="poor" />
-                                            <span id="weak" />
-                                            <span id="strong" />
-                                            <span id="heavy" />
-                                        </div>
-                                        <div id="passwordInfo" />
                                     </div>
-                                </div>
-                                <div className="col-lg-12">
-                                    <div className="input-blocks mb-0">
-                                        <label className="fw-medium">
-                                            Confirm Password <span className="text-danger">*</span>
-                                        </label>
-                                        <div className="pass-group">
-                                            <input
-                                                type={
-                                                    passwordVisibility.confirmPassword
-                                                        ? "text"
-                                                        : "password"
-                                                }
-                                                className="pass-input form-control"
-                                            />
-                                            <span
-                                                className={`ti toggle-passwords ${passwordVisibility.confirmPassword
-                                                    ? "ti-eye"
-                                                    : "ti-eye-off"
-                                                    }`}
-                                                onClick={() =>
-                                                    togglePasswordVisibility("confirmPassword")
-                                                }
-                                            ></span>
+                                    <div className="col-lg-12">
+                                        <div className="input-blocks mb-0">
+                                            <label className="fw-medium">
+                                                Confirm Password <span className="text-danger">*</span>
+                                            </label>
+                                            <div className="pass-group">
+                                                <input
+                                                    type={passwordVisibility.confirmPassword ? "text" : "password"}
+                                                    className="pass-input form-control"
+                                                    value={confirmPassword}
+                                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                                    disabled={pwSubmitting}
+                                                />
+                                                <span
+                                                    className={`ti toggle-passwords ${passwordVisibility.confirmPassword ? "ti-eye" : "ti-eye-off"}`}
+                                                    onClick={() => togglePasswordVisibility("confirmPassword")}
+                                                ></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="modal-footer">
-                            <Link
-                                href="#"
-                                className="btn btn-secondary me-2"
-                                data-bs-dismiss="modal"
-                            >
-                                Cancel
-                            </Link>
-                            <Link
-                                href="#"
-                                className="btn btn-primary"
-                                data-bs-dismiss="modal"
-                            >
-                                Save Changes
-                            </Link>
-                        </div>
+                            <div className="modal-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary me-2"
+                                    data-bs-dismiss="modal"
+                                    onClick={resetPwForm}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                    disabled={pwSubmitting}
+                                >
+                                    {pwSubmitting ? "Saving…" : "Save Changes"}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
