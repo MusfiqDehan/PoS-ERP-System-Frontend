@@ -25,7 +25,7 @@ const labelCls = "mb-[6px] block text-[14px] font-medium leading-normal text-[#3
 const errCls = "mt-[4px] text-[12px] leading-normal text-[#dc3545]";
 const selectCls = "w-full rounded-[6px] border border-[#e7e7e7] px-[12px] py-[10px] text-[14px] leading-normal text-[#333333] outline-none transition-colors focus:border-[#089b7c] bg-white";
 
-export default function EditBranchModal({ id, branch, onUpdated, onClose }: Props) {
+export default function EditBranchModal({ branch, onUpdated, onClose }: Omit<Props, "id">) {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [address, setAddress] = useState("");
@@ -64,7 +64,7 @@ export default function EditBranchModal({ id, branch, onUpdated, onClose }: Prop
 
   useEffect(function() {
     if (!branch) return;
-    var token = getAccessToken();
+    const token = getAccessToken();
     if (!token) return;
     setUsersLoading(true);
     fetchTenantUsers(token).then(function(result) {
@@ -76,7 +76,7 @@ export default function EditBranchModal({ id, branch, onUpdated, onClose }: Prop
   }, [branch]);
 
   function validate() {
-    var fe: Record<string, string | null> = {};
+    const fe: Record<string, string | null> = {};
     if (!name.trim()) fe.name = "Branch name is required.";
     if (!code.trim()) fe.code = "Branch code is required.";
     if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
@@ -90,12 +90,12 @@ export default function EditBranchModal({ id, branch, onUpdated, onClose }: Prop
     setApiError(null);
     if (!validate() || !branch) return;
 
-    var token = getAccessToken();
+    const token = getAccessToken();
     if (!token) { setApiError("Not authenticated."); return; }
 
     setSubmitting(true);
     try {
-      var result = await updateBranch(branch.id, {
+      const result = await updateBranch(branch.id, {
         name: name.trim(),
         code: code.trim().toUpperCase(),
         address: address.trim() || undefined,
@@ -114,7 +114,7 @@ export default function EditBranchModal({ id, branch, onUpdated, onClose }: Prop
 
       // Assign manager if changed
       if (managerId && managerId !== (branch.manager ?? "")) {
-        var mgrResult = await assignBranchManager(branch.id, managerId, token);
+        const mgrResult = await assignBranchManager(branch.id, managerId, token);
         if (!mgrResult.ok || !mgrResult.body.success) {
           setApiError(mgrResult.body?.message || "Branch updated but manager assignment failed.");
           setSubmitting(false);
@@ -125,7 +125,7 @@ export default function EditBranchModal({ id, branch, onUpdated, onClose }: Prop
       setSuccess(true);
       onUpdated();
       setTimeout(function() { onClose(); }, 800);
-    } catch (err) {
+    } catch {
       setApiError("Network error.");
     } finally {
       setSubmitting(false);
@@ -134,18 +134,18 @@ export default function EditBranchModal({ id, branch, onUpdated, onClose }: Prop
 
   async function handleDelete() {
     if (!branch || !confirm("Delete \"" + branch.name + "\"? This cannot be undone.")) return;
-    var token = getAccessToken();
+    const token = getAccessToken();
     if (!token) return;
     setSubmitting(true);
     try {
-      var result = await deleteBranch(branch.id, token);
+      const result = await deleteBranch(branch.id, token);
       if (result.ok && result.body.success) {
         onUpdated();
         onClose();
       } else {
         setApiError(result.body?.message || "Failed to delete branch.");
       }
-    } catch (err) {
+    } catch {
       setApiError("Network error.");
     } finally {
       setSubmitting(false);
