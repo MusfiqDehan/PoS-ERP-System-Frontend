@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getMe, type CurrentUser } from "@/lib/tenancy";
-import { getStoredTokens, clearStoredTokens } from "@/lib/api";
+import { getAccessToken, clearSession } from "@/lib/auth-session";
 
 type UseCurrentUserResult = {
   user: CurrentUser | null;
@@ -21,9 +21,9 @@ export function useCurrentUser(): UseCurrentUserResult {
 
   useEffect(() => {
     let active = true;
-    const tokens = getStoredTokens();
+    const token = getAccessToken();
 
-    if (!tokens?.access) {
+    if (!token) {
       setLoading(false);
       return;
     }
@@ -31,13 +31,13 @@ export function useCurrentUser(): UseCurrentUserResult {
     setLoading(true);
     setError(null);
 
-    getMe()
+    getMe(token)
       .then(({ ok, body }) => {
         if (!active) return;
         if (ok && body.success && body.data) {
           setUser(body.data);
         } else if (body.error_code === "TOKEN_EXPIRED" || !ok) {
-          clearStoredTokens();
+          clearSession();
           setError(body.message || "Session expired.");
         } else {
           setError(body.message || "Could not load user profile.");
