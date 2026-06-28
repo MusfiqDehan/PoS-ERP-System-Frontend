@@ -20,7 +20,7 @@ export const SidebarData = [
           // Hidden — page kept at /admin-dashboard-two for later use
           // { label: "Admin Dashboard 2", link: "/admin-dashboard-two" },
           { label: "Sales Dashboard", link: "/sales-dashboard" },
-          // Owner's multi-branch overview (branch performance, profits per branch)
+          // Owner's multi-branch overview (now on the main dashboard)
           { label: "Branch Overview", link: "/dashboard", roles: ["owner"] },
         ],
       },
