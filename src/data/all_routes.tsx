@@ -250,7 +250,7 @@ export const all_routes = {
   subscription: "/subscription",
   packagelist: "/packages",
   domain: "/domain",
-  purchasetransaction: "/purchase-transaction",
+  purchasetransaction: "/invoices",
   emailreply: "/email-reply",
   todolist: "/todo-list",
   projects: "/projects",
@@ -290,7 +290,7 @@ export const all_routes = {
   contact:"/contacts",
   superAdminCompanies:"/companies",
   superAdminPackages:"/packages",
-  superAdminPurchaseTransaction:"/purchase-transaction",
+  superAdminInvoices:"/invoices",
   //Layout Pages
   layoutHorizontal:"/layout-horizontal",
   layoutDetached:"/layout-detached",
