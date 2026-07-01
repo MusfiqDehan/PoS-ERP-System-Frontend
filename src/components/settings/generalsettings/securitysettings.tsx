@@ -11,8 +11,8 @@ import RefreshIcon from '@/core/common/tooltip-content/refresh';
 import CollapesIcon from '@/core/common/tooltip-content/collapes';
 import Link from 'next/link';
 import CommonFooter from '@/core/common/footer/commonFooter';
-import { changePassword } from '@/lib/password';
-import { getAccessToken } from '@/lib/auth-session';
+import { changePassword, changePlatformPassword } from '@/lib/password';
+import { getAccessToken, isPlatformSession } from '@/lib/auth-session';
 import { collectErrorMessages } from '@/lib/api';
 
 
@@ -63,10 +63,13 @@ export default function SecuritySettingsComponent () {
         setPwErrors([]);
         setPwSuccess(false);
 
-        const { ok, body } = await changePassword(
-            { current_password: currentPassword, new_password: newPassword },
-            getAccessToken() ?? undefined,
-        );
+        const payload = { current_password: currentPassword, new_password: newPassword };
+        const token = getAccessToken() ?? undefined;
+
+        const { ok, body } = isPlatformSession()
+            ? await changePlatformPassword(payload, token)
+            : await changePassword(payload, token);
+
         setPwSubmitting(false);
 
         if (ok && body.success) {
