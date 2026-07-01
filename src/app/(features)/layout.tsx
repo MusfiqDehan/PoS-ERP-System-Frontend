@@ -1,4 +1,4 @@
-import Header from "@/core/common/header/header";
+import HeaderSwitcher from "@/core/common/header/HeaderSwitcher";
 import HorizontalSidebar from "@/core/common/sidebar/horizontalSidebar";
 import Sidebar from "@/core/common/sidebar/sidebar";
 import ThemeSettings from "@/core/common/sidebar/themeSettings";
@@ -17,7 +17,7 @@ export default function PageLayout({
       <SessionGuard>
         <BranchProvider>
           <div className="main-wrapper">
-            <Header />
+            <HeaderSwitcher />
             <Sidebar />
             <HorizontalSidebar />
             <TwoColumnSidebar />
