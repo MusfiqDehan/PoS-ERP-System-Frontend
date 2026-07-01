@@ -4,7 +4,7 @@ import { useEffect, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { all_routes } from "@/data/all_routes";
-import { getAccessToken } from "@/lib/auth-session";
+import { getAccessToken, getSessionKind } from "@/lib/auth-session";
 import { useAuth } from "@/providers/auth-provider";
 
 const PLATFORM_ONLY_PREFIXES = [
@@ -13,13 +13,23 @@ const PLATFORM_ONLY_PREFIXES = [
   "/subscription",
   "/domain",
   "/vendor-dashboard",
-  "/purchase-transaction",
+  "/invoices",
 ];
 
 function isPlatformOnlyPath(pathname: string): boolean {
   return PLATFORM_ONLY_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
+}
+
+/** Returns the tenant subdomain (e.g. "jubayer") when on a .localhost tenant host, else empty. */
+function getTenantSubdomain(): string {
+  if (typeof window === "undefined") return "";
+  const h = window.location.hostname;
+  if (h.endsWith(".localhost")) {
+    return h.replace(/\.localhost$/, "");
+  }
+  return "";
 }
 
 export function SessionGuard({ children }: { children: ReactNode }) {
@@ -31,20 +41,34 @@ export function SessionGuard({ children }: { children: ReactNode }) {
     if (loading) return;
 
     const token = getAccessToken();
-    if (!token || !sessionKind) {
+    const storedKind = getSessionKind();
+
+    // No session — figure out the best redirect.
+    if (!token || !storedKind) {
+      if (isPlatformOnlyPath(pathname)) {
+        const sub = getTenantSubdomain();
+        if (sub) {
+          // Tenant subdomain (e.g. jubayer.localhost) — stay on this host,
+          // redirect to the tenant dashboard.
+          router.replace(all_routes.newdashboard);
+          return;
+        }
+      }
+
+      // Not a platform-only path or bare localhost: just go to signin.
       router.replace(all_routes.signin);
       return;
     }
 
-    if (sessionKind === "tenant" && isPlatformOnlyPath(pathname)) {
+    // Session exists, but maybe it's the wrong kind for this path.
+    if (storedKind === "tenant" && isPlatformOnlyPath(pathname)) {
       router.replace(all_routes.newdashboard);
       return;
     }
 
     if (
-      sessionKind === "platform" &&
+      storedKind === "platform" &&
       (pathname === all_routes.newdashboard ||
-        pathname === "/dashboard" ||
         pathname === "/sales-dashboard")
     ) {
       router.replace(all_routes.vendorDashboard);
@@ -55,7 +79,10 @@ export function SessionGuard({ children }: { children: ReactNode }) {
     return null;
   }
 
-  if (!getAccessToken() || !sessionKind) {
+  const token = getAccessToken();
+  const storedKind = getSessionKind();
+
+  if (!token || !storedKind) {
     return null;
   }
 
