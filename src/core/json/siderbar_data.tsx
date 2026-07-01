@@ -36,7 +36,7 @@ export const SidebarData = [
           { label: "Subscriptions", link: "/subscription" },
           { label: "Packages", link: "/packages" },
           { label: "Domain", link: "/domain" },
-          { label: "Purchase Transaction", link: route.purchasetransaction },
+          { label: "Invoices", link: route.purchasetransaction },
         ],
       },
       {
