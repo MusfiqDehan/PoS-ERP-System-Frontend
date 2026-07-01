@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getMe, type CurrentUser } from "@/lib/tenancy";
-import { getAccessToken, clearSession } from "@/lib/auth-session";
+import { getAccessToken, getSessionKind } from "@/lib/auth-session";
 
 type UseCurrentUserResult = {
   user: CurrentUser | null;
@@ -12,7 +12,8 @@ type UseCurrentUserResult = {
 
 /**
  * Fetch the currently logged-in tenant user from GET /api/v1/tenancy/me/.
- * Returns null when no JWT token is stored (user not logged in).
+ * Only runs for "tenant" sessions; returns null for "platform" sessions.
+ * Does NOT clear tokens — that's the AuthProvider's responsibility.
  */
 export function useCurrentUser(): UseCurrentUserResult {
   const [user, setUser] = useState<CurrentUser | null>(null);
@@ -21,9 +22,12 @@ export function useCurrentUser(): UseCurrentUserResult {
 
   useEffect(() => {
     let active = true;
-    const token = getAccessToken();
 
-    if (!token) {
+    const token = getAccessToken();
+    const kind = getSessionKind();
+
+    // No token or not a tenant session — bail without fetching.
+    if (!token || kind !== "tenant") {
       setLoading(false);
       return;
     }
@@ -36,9 +40,6 @@ export function useCurrentUser(): UseCurrentUserResult {
         if (!active) return;
         if (ok && body.success && body.data) {
           setUser(body.data);
-        } else if (body.error_code === "TOKEN_EXPIRED" || !ok) {
-          clearSession();
-          setError(body.message || "Session expired.");
         } else {
           setError(body.message || "Could not load user profile.");
         }
