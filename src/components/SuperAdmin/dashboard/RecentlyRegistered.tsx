@@ -11,7 +11,7 @@ export default function RecentlyRegistered() {
               <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                 <h5 className="mb-2 custome-heading">Recently Registered</h5>
                 <Link
-                  href={routes.superAdminPurchaseTransaction}
+                  href={routes.companies}
                   className="btn btn-light btn-md mb-2"
                 >
                   View All
