@@ -898,8 +898,8 @@ hr {
     }
   }
   .nav-searchinputs {
-    margin-right: auto;
-    margin-left: 24px;
+    margin-left: 0;
+    margin-right: 0;
   }
   .nav-item-box > a {
     display: -webkit-box;
@@ -1405,7 +1405,13 @@ hr {
   }
 
   .figma-header-group--left {
+    flex: 0 0 auto;
+  }
+
+  .header-search-center {
     flex: 1;
+    display: flex;
+    justify-content: center;
   }
 
   .figma-header-group--right {
