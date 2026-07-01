@@ -34,6 +34,7 @@ export default function SignInFormPanel() {
 
   const tenantSubdomain = getTenantSubdomainFromHost();
   const isTenantHost = !isPublicMarketingHost() && tenantSubdomain.length > 0;
+  const isPlatform = !isTenantHost;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -83,17 +84,10 @@ export default function SignInFormPanel() {
       <form className="auth-split-page__form" onSubmit={handleSubmit}>
         <div className="auth-split-page__form-top">
           <div className="auth-split-page__form-main">
-            <SignInFormHeader />
-
-            {isTenantHost ? (
-              <p className="auth-form-field__hint">
-                Signing in to <strong>{tenantSubdomain}</strong> workspace.
-              </p>
-            ) : (
-              <p className="auth-form-field__hint">
-                Platform administrator sign-in.
-              </p>
-            )}
+            <SignInFormHeader
+              isPlatform={isPlatform}
+              tenantSubdomain={isTenantHost ? tenantSubdomain : undefined}
+            />
 
             {errors.length > 0 ? (
               <div
@@ -132,7 +126,7 @@ export default function SignInFormPanel() {
             </div>
           </div>
 
-          <SignInPrimaryActions loading={loading} />
+          <SignInPrimaryActions loading={loading} hideRegister={isPlatform} />
         </div>
 
         <AuthSocialSection />
