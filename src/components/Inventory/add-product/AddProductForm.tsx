@@ -32,12 +32,6 @@ export default function AddProductForm({
   onRemovePrimaryImage,
   onRemoveSecondaryImage,
 }: AddProductFormProps) {
-  // Render the form only after the client mounts. The fields rely on
-  // third-party widgets (WYSIWYG editor, antd date picker, react-select)
-  // whose markup differs between server and client; rendering them during
-  // SSR triggers a hydration mismatch that wipes the entire form subtree.
-  // Gating on mount keeps server/client output identical (an empty
-  // placeholder) and avoids the mismatch entirely.
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -50,25 +44,23 @@ export default function AddProductForm({
   }
 
   return (
-    <form>
-      <div id="accordionSpacingExample">
-        <ProductInformationSection />
-        <PricingStocksSection
-          showVariant={showVariant}
-          showTags={showTags}
-          tags={tags}
-          onTagsChange={onTagsChange}
-          onVariantSelect={onVariantSelect}
-          onRemoveTags={onRemoveTags}
-        />
-        <ImagesSection
-          showPrimaryImage={showPrimaryImage}
-          showSecondaryImage={showSecondaryImage}
-          onRemovePrimaryImage={onRemovePrimaryImage}
-          onRemoveSecondaryImage={onRemoveSecondaryImage}
-        />
-        <CustomFieldsSection />
-      </div>
+    <form className="space-y-5">
+      <ProductInformationSection />
+      <PricingStocksSection
+        showVariant={showVariant}
+        showTags={showTags}
+        tags={tags}
+        onTagsChange={onTagsChange}
+        onVariantSelect={onVariantSelect}
+        onRemoveTags={onRemoveTags}
+      />
+      <ImagesSection
+        showPrimaryImage={showPrimaryImage}
+        showSecondaryImage={showSecondaryImage}
+        onRemovePrimaryImage={onRemovePrimaryImage}
+        onRemoveSecondaryImage={onRemoveSecondaryImage}
+      />
+      <CustomFieldsSection />
       <FormActions />
     </form>
   );
