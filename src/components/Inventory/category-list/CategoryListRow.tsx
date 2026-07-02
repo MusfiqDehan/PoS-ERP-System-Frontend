@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { CategoryRecord } from "./types";
 
 export function CategoryStatusCell({ status }: { status: string }) {
   return (
@@ -15,13 +16,24 @@ export function CategoryStatusCell({ status }: { status: string }) {
   );
 }
 
-export function CategoryActionsCell() {
+type CategoryActionsCellProps = {
+  record: CategoryRecord;
+  onSelectForEdit: (record: CategoryRecord) => void;
+  onSelectForDelete: (record: CategoryRecord) => void;
+};
+
+export function CategoryActionsCell({
+  record,
+  onSelectForEdit,
+  onSelectForDelete,
+}: CategoryActionsCellProps) {
   return (
     <div className="inline-flex items-center gap-2">
       <Link
         href="#"
         data-bs-toggle="modal"
         data-bs-target="#edit-category"
+        onClick={() => onSelectForEdit(record)}
         className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#0ac79e] hover:border-[#0ac79e] transition-colors"
       >
         <i className="ti ti-edit" />
@@ -30,6 +42,7 @@ export function CategoryActionsCell() {
         href="#"
         data-bs-toggle="modal"
         data-bs-target="#delete-modal"
+        onClick={() => onSelectForDelete(record)}
         className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#c80000] hover:border-[#c80000] transition-colors"
       >
         <i className="ti ti-trash" />
