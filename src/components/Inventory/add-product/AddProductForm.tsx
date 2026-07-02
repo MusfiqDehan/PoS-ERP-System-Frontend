@@ -61,7 +61,7 @@ export default function AddProductForm({
         onRemoveSecondaryImage={onRemoveSecondaryImage}
       />
       <CustomFieldsSection />
-      <FormActions />
+      <FormActions submitting={false} />
     </form>
   );
 }
