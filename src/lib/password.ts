@@ -103,9 +103,16 @@ export function confirmPlatformPasswordReset(
 /* ------------------------------------------------------------------ */
 
 const TENANT_PASSWORD_RESET_REQUEST_PATH = "tenancy/password/reset/request/";
+const TENANT_PASSWORD_RESET_CONFIRM_PATH = "tenancy/password/reset/confirm/";
 
 export function requestTenantPasswordReset(
   email: string,
 ): Promise<ApiResult<unknown>> {
   return publicApiPost<unknown>(TENANT_PASSWORD_RESET_REQUEST_PATH, { email });
+}
+
+export function confirmTenantPasswordReset(
+  payload: PlatformPasswordResetConfirmPayload,
+): Promise<ApiResult<unknown>> {
+  return publicApiPost<unknown>(TENANT_PASSWORD_RESET_CONFIRM_PATH, payload);
 }
