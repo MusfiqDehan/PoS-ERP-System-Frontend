@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, type FormEvent } from "react";
-import { inviteTenantUser, type InviteUserPayload } from "@/lib/roles";
+import { inviteEmployee, type InviteEmployeePayload } from "@/lib/roles";
+import { fetchAllTenantBranches, type Branch } from "@/lib/branches";
 import { getAccessToken } from "@/lib/auth-session";
 
 type AddUsersProps = {
@@ -10,12 +11,17 @@ type AddUsersProps = {
   onSuccess?: () => void;
 };
 
-const field =
+/** Roles that are org-wide and do not need a branch assignment. */
+const ORG_WIDE_ROLES = new Set(["admin"]);
+
+const fieldCls =
   "w-full rounded-[6px] border border-[#e7e7e7] px-[12px] py-[10px] text-[14px] leading-normal text-[#333333] outline-none transition-colors placeholder:text-[#999999] focus:border-[#089b7c]";
-const fieldErr =
+const fieldErrCls =
   "w-full rounded-[6px] border border-[#dc3545] px-[12px] py-[10px] text-[14px] leading-normal text-[#333333] outline-none";
-const label = "mb-[6px] block text-[14px] font-medium leading-normal text-[#333333]";
-const err = "mt-[4px] text-[12px] leading-normal text-[#dc3545]";
+const selectCls =
+  "w-full appearance-none rounded-[6px] border border-[#e7e7e7] px-[12px] py-[10px] pr-[32px] text-[14px] leading-normal text-[#333333] outline-none transition-colors focus:border-[#089b7c] bg-white";
+const lblCls = "mb-[6px] block text-[14px] font-medium leading-normal text-[#333333]";
+const errCls = "mt-[4px] text-[12px] leading-normal text-[#dc3545]";
 
 export default function AddUsers({
   id = "add-units",
@@ -23,30 +29,48 @@ export default function AddUsers({
   onSuccess,
 }: AddUsersProps) {
   const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
-  const [showPw2, setShowPw2] = useState(false);
+  const [selectedBranchId, setSelectedBranchId] = useState("");
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [branchesLoading, setBranchesLoading] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string | null>>({});
   const [success, setSuccess] = useState(false);
 
-  /* Reset on open */
+  const roleSlug = preselectedRole?.slug ?? "";
+  const needsBranch = roleSlug !== "" && !ORG_WIDE_ROLES.has(roleSlug);
+
+  /* Load branches when modal is shown for a branch-scoped role */
+  useEffect(() => {
+    if (!needsBranch) return;
+    let cancelled = false;
+    setBranchesLoading(true);
+    const token = getAccessToken();
+    if (!token) {
+      setBranchesLoading(false);
+      return;
+    }
+    (async () => {
+      const res = await fetchAllTenantBranches(token);
+      if (cancelled) return;
+      if (res.ok && res.body.success && Array.isArray(res.body.data)) {
+        setBranches(res.body.data as Branch[]);
+      }
+      setBranchesLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, [needsBranch, preselectedRole?.slug]);
+
+  /* Reset on modal open */
   useEffect(() => {
     const el = document.getElementById(id);
     if (!el) return;
     const reset = () => {
       setFullName("");
-      setPhone("");
       setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setShowPw(false);
-      setShowPw2(false);
+      setSelectedBranchId("");
       setSubmitting(false);
       setApiError(null);
       setFieldErrors({});
@@ -61,10 +85,9 @@ export default function AddUsers({
     if (!email.trim()) fe.email = "Email is required.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
       fe.email = "Enter a valid email.";
-    if (!password) fe.password = "Password is required.";
-    else if (password.length < 8) fe.password = "At least 8 characters.";
-    if (password && confirmPassword !== password)
-      fe.confirmPassword = "Passwords do not match.";
+    if (needsBranch && !selectedBranchId) {
+      fe.branch_id = "Branch is required for this role.";
+    }
     setFieldErrors(fe);
     return Object.keys(fe).length === 0;
   }
@@ -80,14 +103,16 @@ export default function AddUsers({
       return;
     }
 
-    const payload: InviteUserPayload = { email: email.trim(), password };
+    const payload: InviteEmployeePayload = { email: email.trim() };
     if (fullName.trim()) payload.full_name = fullName.trim();
-    if (phone.trim()) payload.phone = phone.trim();
     if (preselectedRole?.slug) payload.role_slug = preselectedRole.slug;
+    if (needsBranch && selectedBranchId) {
+      payload.branch_id = selectedBranchId;
+    }
 
     setSubmitting(true);
     try {
-      const result = await inviteTenantUser(payload, token);
+      const result = await inviteEmployee(payload, token);
       if (result.ok && result.body.success) {
         setSuccess(true);
         onSuccess?.();
@@ -104,7 +129,7 @@ export default function AddUsers({
           }
         }, 1500);
       } else {
-        const msg = result.body?.message || "Failed to invite user.";
+        const msg = result.body?.message || "Failed to send invitation.";
         setApiError(msg);
         if (result.body.errors && typeof result.body.errors === "object") {
           const se: Record<string, string | null> = {};
@@ -133,7 +158,7 @@ export default function AddUsers({
                   Add User
                 </h4>
                 <p className="mt-[4px] mb-0 text-[13px] font-normal leading-normal text-[#666666]">
-                  Invite a member and assign them a role.
+                  Invite a member. They will receive an email to set their own password.
                 </p>
               </div>
               <button
@@ -148,7 +173,7 @@ export default function AddUsers({
 
             <form onSubmit={handleSubmit}>
               <div className="px-[24px] py-[20px]">
-                {/* Photo upload (optional, cosmetic) */}
+                {/* Photo upload (cosmetic) */}
                 <div className="mb-[18px] flex items-center gap-[16px]">
                   <span className="flex h-[64px] w-[64px] shrink-0 items-center justify-center rounded-full bg-[#f1fcf5] text-[#089b7c]">
                     <i className="ti ti-camera text-[24px] leading-none" />
@@ -164,7 +189,7 @@ export default function AddUsers({
 
                 {success && (
                   <div className="mb-[16px] rounded-[6px] bg-[#f1fcf5] px-[14px] py-[10px] text-[14px] leading-normal text-[#089b7c]">
-                    User invited successfully.
+                    Invitation sent. The user will receive an email to set their password.
                   </div>
                 )}
                 {apiError && !success && (
@@ -174,35 +199,20 @@ export default function AddUsers({
                 )}
 
                 <div className="grid grid-cols-1 gap-[16px] sm:grid-cols-2">
-                  {/* Full Name (optional) */}
                   <div>
-                    <label className={label}>Full Name</label>
+                    <label className={lblCls}>Full Name</label>
                     <input
                       type="text"
                       placeholder="Enter full name (optional)"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className={fieldErrors.full_name ? fieldErr : field}
+                      className={fieldErrors.full_name ? fieldErrCls : fieldCls}
                     />
-                    {fieldErrors.full_name && <p className={err}>{fieldErrors.full_name}</p>}
+                    {fieldErrors.full_name && <p className={errCls}>{fieldErrors.full_name}</p>}
                   </div>
 
-                  {/* Phone (optional) */}
                   <div>
-                    <label className={label}>Phone</label>
-                    <input
-                      type="text"
-                      placeholder="Enter phone (optional)"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className={fieldErrors.phone ? fieldErr : field}
-                    />
-                    {fieldErrors.phone && <p className={err}>{fieldErrors.phone}</p>}
-                  </div>
-
-                  {/* Email (required) */}
-                  <div>
-                    <label className={label}>
+                    <label className={lblCls}>
                       Email <span className="text-[#dc3545]">*</span>
                     </label>
                     <input
@@ -211,15 +221,15 @@ export default function AddUsers({
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className={fieldErrors.email ? fieldErr : field}
+                      className={fieldErrors.email ? fieldErrCls : fieldCls}
                     />
-                    {fieldErrors.email && <p className={err}>{fieldErrors.email}</p>}
+                    {fieldErrors.email && <p className={errCls}>{fieldErrors.email}</p>}
                   </div>
 
-                  {/* Role (read-only preselected) */}
+                  {/* Role (read-only) */}
                   <div>
-                    <label className={label}>Role</label>
-                    <div className={`${field} flex items-center gap-[8px] bg-[#f9f9f9]`}>
+                    <label className={lblCls}>Role</label>
+                    <div className={`${fieldCls} flex items-center gap-[8px] bg-[#f9f9f9]`}>
                       <i className="ti ti-shield text-[16px] text-[#666666]" />
                       <span className="text-[14px] font-medium text-[#333333]">
                         {preselectedRole?.name ?? "Not selected"}
@@ -236,57 +246,37 @@ export default function AddUsers({
                     </div>
                   </div>
 
-                  {/* Password (required) */}
-                  <div>
-                    <label className={label}>
-                      Password <span className="text-[#dc3545]">*</span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showPw ? "text" : "password"}
-                        placeholder="Enter password"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className={`${fieldErrors.password ? fieldErr : field} pr-[40px]`}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPw((v) => !v)}
-                        aria-label={showPw ? "Hide password" : "Show password"}
-                        className="absolute right-[12px] top-1/2 -translate-y-1/2 text-[#666666]"
-                      >
-                        <i className={`ti ${showPw ? "ti-eye" : "ti-eye-off"} text-[16px] leading-none`} />
-                      </button>
+                  {/* Branch selector (branch-scoped roles only) */}
+                  {needsBranch && (
+                    <div>
+                      <label className={lblCls}>
+                        Branch <span className="text-[#dc3545]">*</span>
+                      </label>
+                      {branchesLoading ? (
+                        <div className={`${fieldCls} flex items-center gap-[8px] text-[#999999]`}>
+                          <span className="h-[14px] w-[14px] animate-spin rounded-full border-2 border-[#e7e7e7] border-t-[#089b7c]" />
+                          Loading branches...
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <select
+                            value={selectedBranchId}
+                            onChange={(e) => setSelectedBranchId(e.target.value)}
+                            className={fieldErrors.branch_id ? fieldErrCls : selectCls}
+                          >
+                            <option value="">Select a branch</option>
+                            {branches.map((b) => (
+                              <option key={b.id} value={b.id}>
+                                {b.name}{b.is_headquarters ? " (HQ)" : ""}
+                              </option>
+                            ))}
+                          </select>
+                          <i className="ti ti-chevron-down pointer-events-none absolute right-[12px] top-1/2 -translate-y-1/2 text-[14px] leading-none text-[#666666]" />
+                        </div>
+                      )}
+                      {fieldErrors.branch_id && <p className={errCls}>{fieldErrors.branch_id}</p>}
                     </div>
-                    {fieldErrors.password && <p className={err}>{fieldErrors.password}</p>}
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div>
-                    <label className={label}>
-                      Confirm Password <span className="text-[#dc3545]">*</span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showPw2 ? "text" : "password"}
-                        placeholder="Re-enter password"
-                        required
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className={`${fieldErrors.confirmPassword ? fieldErr : field} pr-[40px]`}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPw2((v) => !v)}
-                        aria-label={showPw2 ? "Hide password" : "Show password"}
-                        className="absolute right-[12px] top-1/2 -translate-y-1/2 text-[#666666]"
-                      >
-                        <i className={`ti ${showPw2 ? "ti-eye" : "ti-eye-off"} text-[16px] leading-none`} />
-                      </button>
-                    </div>
-                    {fieldErrors.confirmPassword && <p className={err}>{fieldErrors.confirmPassword}</p>}
-                  </div>
+                  )}
                 </div>
               </div>
 
@@ -308,10 +298,10 @@ export default function AddUsers({
                   {submitting ? (
                     <span className="inline-flex items-center gap-[6px]">
                       <span className="h-[14px] w-[14px] animate-spin rounded-full border-2 border-white border-t-transparent" />
-                      Inviting…
+                      Sending\u00a0invite...
                     </span>
                   ) : (
-                    "Submit"
+                    "Send Invitation"
                   )}
                 </button>
               </div>
