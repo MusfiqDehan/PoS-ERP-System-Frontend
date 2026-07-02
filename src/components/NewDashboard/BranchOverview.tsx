@@ -453,7 +453,6 @@ export default function BranchOverview() {
         {/* Edit Modal */}
         {editingBranch && (
           <EditBranchModal
-            id="edit-branch-modal"
             branch={editingBranch}
             onUpdated={loadBranches}
             onClose={() => setEditingBranch(null)}

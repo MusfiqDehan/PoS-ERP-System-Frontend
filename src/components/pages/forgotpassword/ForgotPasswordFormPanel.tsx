@@ -85,7 +85,6 @@ export default function ForgotPasswordFormPanel() {
             <ForgotPasswordPrimaryActions
               disabled={!canSubmit}
               submitting={submitting}
-              onSubmit={handleSubmit}
             />
           )}
         </div>

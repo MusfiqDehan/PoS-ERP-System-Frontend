@@ -189,7 +189,7 @@ const filterDropdowns = [
 
 export default function InvoicesTable({ searchText }: { searchText: string }) {
   const [rows, setRows] = useState<TxnRow[]>(function() {
-    const cached = cacheGet<TxnRow[]>(CACHE_KEYS.INVOICES_TABLE_TABLE);
+    const cached = cacheGet<TxnRow[]>(CACHE_KEYS.INVOICES_TABLE);
     return cached ?? purchase_transaction;
   });
 

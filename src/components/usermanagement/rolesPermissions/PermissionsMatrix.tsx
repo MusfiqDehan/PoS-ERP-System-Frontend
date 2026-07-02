@@ -125,7 +125,7 @@ export default function PermissionsMatrix({ roles, rolesLoading, refreshKey, onP
         result.value.ok &&
         result.value.body.success
       ) {
-        const raw = result.value.body.data as Record<string, unknown>;
+        const raw = result.value.body.data as unknown as Record<string, unknown>;
         const perms: Array<{ feature_key: string; permission_level: string }> =
           Array.isArray(raw)
             ? (raw as Array<{ feature_key: string; permission_level: string }>)
