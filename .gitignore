@@ -78,6 +78,7 @@ docs/
 BACKEND_BUG_NOTES/
 NOTES/
 *.notes.md
+daily-task.md
 TODO_*.md
 
 # ---------------------------------------------------------------------------
