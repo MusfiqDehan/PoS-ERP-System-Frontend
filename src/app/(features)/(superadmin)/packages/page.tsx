@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import CommonFooter from "@/core/common/footer/commonFooter";
 import AddPlanModal from "@/components/SuperAdmin/packages/AddPlanModal";
 import DeletePackageModal from "@/components/SuperAdmin/packages/DeletePackageModal";
@@ -11,6 +11,30 @@ import StatsCards from "@/components/SuperAdmin/packages/StatsCards";
 
 export default function Package() {
   const [searchText, setSearchText] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [deletingPackage, setDeletingPackage] = useState<{ id: string; name: string } | null>(null);
+  const [editingPackageId, setEditingPackageId] = useState<string | null>(null);
+
+  const handleDelete = useCallback(function (id: string, name: string) {
+    setDeletingPackage({ id, name });
+  }, []);
+
+  const handleDeleted = useCallback(function () {
+    setDeletingPackage(null);
+    setRefreshKey(function (k) { return k + 1; });
+    // Close the Bootstrap modal
+    if (typeof window !== "undefined") {
+      const modalEl = document.getElementById("delete_modal");
+      if (modalEl) {
+        const modal = (window as any).bootstrap?.Modal?.getInstance(modalEl);
+        if (modal) modal.hide();
+      }
+    }
+  }, []);
+
+  const handleEdit = useCallback(function (id: string) {
+    setEditingPackageId(id);
+  }, []);
 
   return (
     <>
@@ -18,13 +42,35 @@ export default function Package() {
         <div className="content">
           <PageHeader searchText={searchText} onSearchChange={setSearchText} />
           <StatsCards />
-          <PackagesTable searchText={searchText} />
+          <PackagesTable
+            searchText={searchText}
+            onDeletePackage={handleDelete}
+            onEditPackage={handleEdit}
+            refreshKey={refreshKey}
+          />
         </div>
         <CommonFooter />
       </div>
       <AddPlanModal />
-      <EditPlanModal />
-      <DeletePackageModal />
+      <EditPlanModal
+        packageId={editingPackageId}
+        onUpdated={function () {
+          setEditingPackageId(null);
+          setRefreshKey(function (k) { return k + 1; });
+          if (typeof window !== "undefined") {
+            const modalEl = document.getElementById("edit_plans");
+            if (modalEl) {
+              const modal = (window as any).bootstrap?.Modal?.getInstance(modalEl);
+              if (modal) modal.hide();
+            }
+          }
+        }}
+      />
+      <DeletePackageModal
+        packageId={deletingPackage?.id ?? null}
+        packageName={deletingPackage?.name}
+        onDeleted={handleDeleted}
+      />
     </>
   );
 }
