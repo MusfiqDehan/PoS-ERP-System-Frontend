@@ -10,11 +10,11 @@ const COLUMNS = ["Email", "Role", "Branch", "Assign At", "Assigned By", "Action"
 function mapToDisplay(a: UserRoleAssignment): RoleAssignment {
   return {
     id: a.id,
-    email: a.user.email ?? a.user.full_name ?? "",
-    role: a.role.name,
-    branch: a.branch?.name ?? "—",
-    assignedAt: a.assigned_at?.slice(0, 10) ?? "—",
-    assignedBy: a.assigned_by?.full_name ?? "—",
+    email: a.user_email ?? "",
+    role: a.role_name ?? "",
+    branch: a.branch_name ?? "\u2014",
+    assignedAt: a.created_at?.slice(0, 10) ?? "\u2014",
+    assignedBy: a.assigned_by_email ?? "\u2014",
   };
 }
 

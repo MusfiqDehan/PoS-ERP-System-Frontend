@@ -1,6 +1,6 @@
 /** Tenant role & permission management API. */
 
-import { apiGet, apiPost, apiDelete, apiPatch, apiPut, type ApiResult } from "./api";
+import { apiGet, apiPost, apiDelete, apiPatch, apiPut, publicApiPost, type ApiResult } from "./api";
 
 export const ACCESS_ROLES_PATH = "access/roles/";
 export const ACCESS_USER_ROLES_PATH = "access/user-roles/";
@@ -20,7 +20,7 @@ export type TenantRole = {
 
 export type PermissionEntry = {
   feature_key: string;
-  access_level: string;
+  permission_level: string;
 };
 
 export type CreateRolePayload = {
@@ -36,25 +36,15 @@ export type UpdateRolePayload = {
 
 export type UserRoleAssignment = {
   id: string;
-  user: {
-    id: string;
-    email?: string;
-    full_name?: string;
-  };
-  role: {
-    id: string;
-    slug: string;
-    name: string;
-  };
-  branch?: {
-    id: string;
-    name: string;
-  } | null;
-  assigned_by?: {
-    id: string;
-    full_name?: string;
-  };
-  assigned_at?: string;
+  user_id: string;
+  user_email?: string;
+  role: string; // role UUID
+  role_name?: string;
+  role_slug?: string;
+  branch?: string | null;
+  branch_name?: string;
+  assigned_by_email?: string;
+  created_at?: string;
 };
 
 export type CreateAssignmentPayload = {
@@ -189,24 +179,82 @@ export function deleteUserRoleAssignment(
 }
 
 /* ------------------------------------------------------------------ */
-/*  Invite a new tenant user (creates user + optional role assignment) */
+/*  Employee invitation (invite-only onboarding — invitee sets password) */
 /* ------------------------------------------------------------------ */
 
-export type InviteUserPayload = {
+export type InviteEmployeePayload = {
   email: string;
-  password: string;
   full_name?: string;
-  phone?: string;
   role_slug?: string;
+  branch_id?: string;
 };
 
-export function inviteTenantUser(
-  payload: InviteUserPayload,
+export type EmployeeInvitation = {
+  id: string;
+  email: string;
+  full_name: string;
+  role_slug: string;
+  branch_id?: string | null;
+  expires_at: string;
+  status: "pending" | "used" | "expired";
+  created_at: string;
+};
+
+export function inviteEmployee(
+  payload: InviteEmployeePayload,
   accessToken?: string,
-): Promise<ApiResult<{ email: string }>> {
-  return apiPost<{ email: string }>(
-    "tenancy/users/invite/",
+): Promise<ApiResult<EmployeeInvitation>> {
+  return apiPost<EmployeeInvitation>(
+    "tenancy/invitations/",
     payload,
     accessToken,
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Public invitation acceptance (no auth — token-based)               */
+/* ------------------------------------------------------------------ */
+
+export type ValidateInvitationTokenResult = {
+  token_type: string;
+  email: string;
+  full_name: string;
+  role_slug: string;
+  role_name: string;
+  branch_id: string | null;
+  branch_name: string;
+  company_name: string;
+  subdomain: string;
+  expires_at: string;
+};
+
+export type AcceptEmployeeInvitationPayload = {
+  token: string;
+  password: string;
+};
+
+export type EmployeeInvitationAccepted = {
+  access: string;
+  refresh: string;
+  access_token_expiry: number;
+  user: Record<string, unknown>;
+  tenant_domain: string;
+};
+
+export function validateEmployeeInvitationToken(
+  token: string,
+): Promise<ApiResult<ValidateInvitationTokenResult>> {
+  return publicApiPost<ValidateInvitationTokenResult>(
+    "tenancy/invitations/validate/",
+    { token },
+  );
+}
+
+export function acceptEmployeeInvitation(
+  payload: AcceptEmployeeInvitationPayload,
+): Promise<ApiResult<EmployeeInvitationAccepted>> {
+  return publicApiPost<EmployeeInvitationAccepted>(
+    "tenancy/invitations/accept/",
+    payload,
   );
 }
