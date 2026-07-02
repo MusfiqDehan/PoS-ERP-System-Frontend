@@ -2,9 +2,10 @@ import type { RoleCardData } from "./rolesData";
 
 type RoleCardProps = {
   role: RoleCardData;
+  onSelectRole?: (slug: string, name: string) => void;
 };
 
-export default function RoleCard({ role }: RoleCardProps) {
+export default function RoleCard({ role, onSelectRole }: RoleCardProps) {
   const iconChipClass = role.highlight ? "bg-[#ffeed4]" : "bg-[#e7e7e7]";
   const iconColorClass = role.highlight ? "text-[#e8a33d]" : "text-[#666666]";
 
@@ -34,6 +35,7 @@ export default function RoleCard({ role }: RoleCardProps) {
           type="button"
           data-bs-toggle="modal"
           data-bs-target="#assign-role-member"
+          onClick={() => onSelectRole?.(role.id, role.name)}
           className="inline-flex items-center gap-1 rounded-[2px] border border-[#666666] py-1 pl-1 pr-2.5 text-sm font-medium leading-normal text-[#666666]"
         >
           <i className="ti ti-user-plus text-lg leading-none" />

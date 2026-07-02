@@ -20,7 +20,7 @@ export const SidebarData = [
           // Hidden — page kept at /admin-dashboard-two for later use
           // { label: "Admin Dashboard 2", link: "/admin-dashboard-two" },
           { label: "Sales Dashboard", link: "/sales-dashboard" },
-          // Owner's multi-branch overview (branch performance, profits per branch)
+          // Owner's multi-branch overview (now on the main dashboard)
           { label: "Branch Overview", link: "/dashboard", roles: ["owner"] },
         ],
       },
@@ -35,8 +35,9 @@ export const SidebarData = [
           { label: "Companies", link: "/companies" },
           { label: "Subscriptions", link: "/subscription" },
           { label: "Packages", link: "/packages" },
+          { label: "Products", link: "/software-products" },
           { label: "Domain", link: "/domain" },
-          { label: "Purchase Transaction", link: route.purchasetransaction },
+          { label: "Invoices", link: route.purchasetransaction },
         ],
       },
       {
@@ -913,7 +914,13 @@ export const SidebarData = [
       },
     ],
   },
-
+  {
+    label: "Billing",
+    link: "/billing",
+    icon: "credit-card",
+    showSubRoute: false,
+    roles: ["owner", "manager"],
+  },
   {
     label: "Settings",
     submenu: true,

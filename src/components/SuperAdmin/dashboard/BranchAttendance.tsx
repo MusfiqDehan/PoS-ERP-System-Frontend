@@ -1,42 +1,33 @@
 "use client";
 
-import { CSSProperties } from "react";
+import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
+import { fetchBranches, type Branch } from "@/lib/branches";
+import { getAccessToken } from "@/lib/auth-session";
 
-type Trend = "up" | "flat" | "down";
-
-type AttendanceRow = {
-  sn: number;
-  branch: string;
-  code: string;
-  city: string;
-  total: string;
-  present: string;
-  absent: string;
-  late: string;
-  leave: string;
-  trend: Trend;
-  trendText: string;
-};
-
-const rows: AttendanceRow[] = [
-  { sn: 1, branch: "Mirpur-12", code: "DHK-01", city: "Dhaka", total: "16", present: "94%", absent: "6%", late: "12%", leave: "7%", trend: "up", trendText: "+1% vs Last Month" },
-  { sn: 2, branch: "Mirpur-10", code: "DHK-02", city: "Dhaka", total: "14", present: "100%", absent: "0%", late: "0%", leave: "0%", trend: "flat", trendText: "0% vs Last Month" },
-  { sn: 3, branch: "Uttara-07", code: "DHK-04", city: "Dhaka", total: "14", present: "71%", absent: "29%", late: "0%", leave: "29%", trend: "down", trendText: "-1% vs Last Month" },
-  { sn: 4, branch: "Dhanmondi", code: "DHK-05", city: "Dhaka", total: "15", present: "94%", absent: "6%", late: "13%", leave: "7%", trend: "up", trendText: "+1% vs Last Month" },
-  { sn: 5, branch: "Shaheb Bazar", code: "RAJ-01", city: "Rajshahi", total: "12", present: "99%", absent: "0%", late: "1%", leave: "0%", trend: "up", trendText: "+1% vs Last Month" },
-  { sn: 6, branch: "Mirpur-2", code: "DHK-03", city: "Dhaka", total: "10", present: "90%", absent: "10%", late: "0%", leave: "10%", trend: "flat", trendText: "0% vs Last Month" },
-  { sn: 7, branch: "Agrabad", code: "CTG-01", city: "Chittagong", total: "10", present: "100%", absent: "0%", late: "10%", leave: "0%", trend: "up", trendText: "+1% vs Last Month" },
-  { sn: 8, branch: "Sonadanga", code: "KHU-01", city: "Khulna", total: "09", present: "55%", absent: "45%", late: "0%", leave: "44%", trend: "down", trendText: "-1% vs Last Month" },
-];
-
-const trendConfig: Record<Trend, { icon: string; color: string }> = {
-  up: { icon: "ti ti-arrow-up", color: "#237e46" },
-  flat: { icon: "ti ti-minus", color: "#666" },
-  down: { icon: "ti ti-arrow-down", color: "#e84245" },
-};
+/* ------------------------------------------------------------------ */
+/*  No backend attendance API exists yet — attendance columns show 0.    */
+/* ------------------------------------------------------------------ */
 
 export default function BranchAttendance() {
+  const token = getAccessToken();
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadBranches = useCallback(async () => {
+    if (!token) return;
+    setLoading(true);
+    const { ok, body } = await fetchBranches(token);
+    if (ok && body.success && body.data) {
+      setBranches(body.data);
+    }
+    setLoading(false);
+  }, [token]);
+
+  useEffect(() => {
+    void loadBranches();
+  }, [loadBranches]);
+
   return (
     <div className="card flex-fill mb-0" style={{ borderColor: "#f1f1f1", borderRadius: 8 }}>
       <div className="card-body">
@@ -70,34 +61,48 @@ export default function BranchAttendance() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row) => {
-                const trend = trendConfig[row.trend];
-                return (
-                  <tr key={row.code} style={{ borderBottom: "1px solid #e7e7e7" }}>
-                    <td style={{ ...tdStyle, color: "#666" }}>{row.sn}.</td>
-                    <td style={tdStyle}>
-                      <div className="fw-semibold" style={{ color: "#333" }}>{row.branch}</div>
-                      <div style={{ color: "#646b72", fontSize: 12 }}>{row.code}</div>
-                    </td>
-                    <td style={{ ...tdStyle, color: "#666" }}>{row.city}</td>
-                    <td style={{ ...tdStyle, color: "#666", fontWeight: 600 }}>{row.total}</td>
-                    <td style={{ ...tdStyle, color: "#237e46", fontWeight: 600 }}>{row.present}</td>
-                    <td style={{ ...tdStyle, color: "#e84245", fontWeight: 600 }}>{row.absent}</td>
-                    <td style={{ ...tdStyle, color: "#e5950d", fontWeight: 600 }}>{row.late}</td>
-                    <td style={{ ...tdStyle, color: "#4687f4", fontWeight: 600 }}>{row.leave}</td>
-                    <td style={tdStyle}>
-                      <span className="d-inline-flex align-items-center gap-1" style={{ color: trend.color, fontSize: 12 }}>
-                        <i className={trend.icon} /> {row.trendText}
-                      </span>
-                    </td>
-                    <td style={tdStyle}>
-                      <Link href="#" style={{ color: "#089b7c" }}>
-                        <i className="ti ti-arrow-right" />
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
+              {loading ? (
+                <tr>
+                  <td colSpan={10} style={{ ...tdStyle, textAlign: "center", color: "#999", padding: "32px 12px" }}>
+                    Loading branches...
+                  </td>
+                </tr>
+              ) : branches.length === 0 ? (
+                <tr>
+                  <td colSpan={10} style={{ ...tdStyle, textAlign: "center", color: "#999", padding: "32px 12px" }}>
+                    No branches found.
+                  </td>
+                </tr>
+              ) : (
+                branches.map((branch, idx) => {
+                  const sn = idx + 1;
+                  return (
+                    <tr key={branch.id} style={{ borderBottom: "1px solid #e7e7e7" }}>
+                      <td style={{ ...tdStyle, color: "#666" }}>{sn}.</td>
+                      <td style={tdStyle}>
+                        <div className="fw-semibold" style={{ color: "#333" }}>{branch.name}</div>
+                        <div style={{ color: "#646b72", fontSize: 12 }}>{branch.code}</div>
+                      </td>
+                      <td style={{ ...tdStyle, color: "#666" }}>{branch.city || "---"}</td>
+                      <td style={{ ...tdStyle, color: "#666", fontWeight: 600 }}>0</td>
+                      <td style={{ ...tdStyle, color: "#237e46", fontWeight: 600 }}>0</td>
+                      <td style={{ ...tdStyle, color: "#e84245", fontWeight: 600 }}>0</td>
+                      <td style={{ ...tdStyle, color: "#e5950d", fontWeight: 600 }}>0</td>
+                      <td style={{ ...tdStyle, color: "#4687f4", fontWeight: 600 }}>0</td>
+                      <td style={tdStyle}>
+                        <span className="d-inline-flex align-items-center gap-1" style={{ color: "#666", fontSize: 12 }}>
+                          <i className="ti ti-minus" /> 0
+                        </span>
+                      </td>
+                      <td style={tdStyle}>
+                        <Link href="#" style={{ color: "#089b7c" }}>
+                          <i className="ti ti-arrow-right" />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

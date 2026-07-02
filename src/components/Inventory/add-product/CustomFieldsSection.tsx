@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import DateField from "@/core/common/form/DateField";
-import FormCol from "@/core/common/form/FormCol";
 import SelectField from "@/core/common/form/SelectField";
 import TextField from "@/core/common/form/TextField";
-import { Calendar, List } from "react-feather";
+import { Calendar } from "react-feather";
 import { warrantyOptions } from "./selectOptions";
 
 const checks = [
@@ -15,62 +13,50 @@ const checks = [
 ];
 
 export default function CustomFieldsSection() {
-  const [open, setOpen] = useState(true);
-
   return (
-    <div className="bg-white border border-[#f1f1f1] rounded-[8px] mb-4">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        className="w-full flex items-center justify-between gap-2 px-4 py-3.5 text-left"
-      >
-        <span className="flex items-center gap-2 text-[16px] font-semibold text-[#212B36]">
-          <List size={18} className="text-[#0ac79e]" />
-          Custom Fields
-        </span>
-        <i className={`ti ti-chevron-${open ? "up" : "down"} text-[#646B72]`} />
-      </button>
-      {open && (
-        <div className="border-t border-[#f1f1f1] p-4">
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 p-3 bg-[#f9fafb] rounded border border-[#f1f1f1] mb-4">
-            {checks.map((c) => (
-              <label key={c.id} htmlFor={c.id} className="inline-flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  id={c.id}
-                  className="w-4 h-4 rounded border-[#d1d5db] text-[#0ac79e] accent-[#0ac79e]"
-                />
-                <span className="text-[14px] text-[#212B36]">{c.label}</span>
-              </label>
-            ))}
-          </div>
-          <div className="row">
-            <FormCol>
-              <SelectField label="Warranty" required options={warrantyOptions} />
-            </FormCol>
-            <FormCol>
-              <TextField label="Manufacturer" required className="mb-3" />
-            </FormCol>
-          </div>
-          <div className="row">
-            <FormCol>
-              <DateField
-                label="Manufactured Date"
-                required
-                icon={<Calendar className="info-img" />}
+    <div className="bg-white rounded-[12px] border border-[#E2E8F0] shadow-sm">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-[#F1F5F9]">
+        <div className="w-8 h-8 rounded-[9px] bg-gradient-to-br from-[#0ac79e]/15 to-[#089e7e]/15 flex items-center justify-center">
+          <i className="ti ti-list text-[16px] text-[#0ac79e]" />
+        </div>
+        <div>
+          <h5 className="m-0 text-[15px] font-bold text-[#0F172A]">Custom Fields</h5>
+          <p className="m-0 text-[12px] text-[#94A3B8]">Additional product metadata</p>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="px-5 py-5">
+        {/* Checkbox toggles */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 p-3.5 bg-[#F8FAFC] rounded-xl border border-[#F1F5F9] mb-5">
+          {checks.map((c) => (
+            <label key={c.id} htmlFor={c.id} className="inline-flex items-center gap-2.5 cursor-pointer">
+              <input
+                type="checkbox"
+                id={c.id}
+                className="w-[18px] h-[18px] rounded border-[#CBD5E1] text-[#0ac79e] accent-[#0ac79e] focus:ring-[#0ac79e]/20 focus:ring-1"
               />
-            </FormCol>
-            <FormCol>
-              <DateField
-                label="Expiry On"
-                required
-                icon={<Calendar className="info-img" />}
-              />
-            </FormCol>
+              <span className="text-[14px] font-medium text-[#0F172A]">{c.label}</span>
+            </label>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+          <div>
+            <SelectField label="Warranty" required options={warrantyOptions} />
+          </div>
+          <div>
+            <TextField label="Manufacturer" required />
+          </div>
+          <div>
+            <DateField label="Manufactured Date" required icon={<Calendar className="info-img" />} />
+          </div>
+          <div>
+            <DateField label="Expiry On" required icon={<Calendar className="info-img" />} />
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

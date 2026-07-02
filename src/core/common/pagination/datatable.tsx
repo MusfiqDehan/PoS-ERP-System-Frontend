@@ -1,25 +1,41 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 
-const Datatable = ({ props, columns, dataSource }:any) => {
-  const [searchText, setSearchText] = useState("");
+const Datatable = ({ props, columns, dataSource, searchText }:any) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [filteredDataSource, setFilteredDataSource] = useState(dataSource);
+  const [filteredDataSource, setFilteredDataSource] = useState(Array.isArray(dataSource) ? dataSource : []);
+
+  const safeSource: any[] = Array.isArray(dataSource) ? dataSource : [];
+
+  // Sync filteredDataSource whenever dataSource or external searchText changes.
+  useEffect(() => {
+    if (searchText === undefined) {
+      setFilteredDataSource(safeSource);
+      return;
+    }
+    const filteredData = safeSource.filter((record:any) =>
+      Object.values(record).some((field) =>
+        String(field).toLowerCase().includes(searchText.toLowerCase())
+      )
+    );
+    setFilteredDataSource(filteredData);
+  }, [searchText, safeSource.length]);
+
   const onSelectChange = (newSelectedRowKeys:any) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
   const handleSearch = (value:any) => {
-    setSearchText(value);
-    const filteredData = dataSource.filter((record:any) =>
+    const filteredData = safeSource.filter((record:any) =>
       Object.values(record).some((field) =>
         String(field).toLowerCase().includes(value.toLowerCase())
       )
     );
     setFilteredDataSource(filteredData);
   };
+
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -27,6 +43,7 @@ const Datatable = ({ props, columns, dataSource }:any) => {
 
   return (
     <>
+      {searchText === undefined && (
       <div className="search-set table-search-set">
   <div className="search-input">
     <a href="#" className="btn btn-searchset">
@@ -46,6 +63,7 @@ const Datatable = ({ props, columns, dataSource }:any) => {
     </div>
   </div>
 </div>
+      )}
 
 
     <Table

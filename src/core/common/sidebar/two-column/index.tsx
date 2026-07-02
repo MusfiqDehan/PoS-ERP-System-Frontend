@@ -226,7 +226,7 @@ const TwoColumnSidebar = () => {
                                             <Link href={route.domain}>Domain</Link>
                                         </li>
                                         <li>
-                                            <Link href={route.purchasetransaction}>Purchase Transaction</Link>
+                                            <Link href={route.purchasetransaction}>Invoices</Link>
                                         </li>
                                     </ul>
                                 </div>

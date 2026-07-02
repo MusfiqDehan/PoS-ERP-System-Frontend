@@ -1,6 +1,6 @@
 "use client";
 
-export default function DeletePurchaseTransactionModal() {
+export default function DeleteInvoiceModal() {
   return (
     <div className="modal fade" id="delete_modal">
       <div className="modal-dialog modal-dialog-centered">

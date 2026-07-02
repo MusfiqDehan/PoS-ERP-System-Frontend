@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import FormCol from "@/core/common/form/FormCol";
 import FormField from "@/core/common/form/FormField";
 import SelectField from "@/core/common/form/SelectField";
 import TextField from "@/core/common/form/TextField";
 import TextEditor from "@/core/common/texteditor/texteditor";
-import { Info, PlusCircle } from "react-feather";
+import { PlusCircle } from "react-feather";
 import Link from "next/link";
 import {
   barcodeSymbolOptions,
@@ -20,106 +18,93 @@ import {
 } from "./selectOptions";
 
 export default function ProductInformationSection() {
-  const [open, setOpen] = useState(true);
-
   return (
-    <div className="bg-white border border-[#f1f1f1] rounded-[8px] mb-4">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        className="w-full flex items-center justify-between gap-2 px-4 py-3.5 text-left"
-      >
-        <span className="flex items-center gap-2 text-[16px] font-semibold text-[#212B36]">
-          <Info size={18} className="text-[#0ac79e]" />
-          Product Information
-        </span>
-        <i className={`ti ti-chevron-${open ? "up" : "down"} text-[#646B72]`} />
-      </button>
-      {open && (
-        <div className="border-t border-[#f1f1f1] p-4">
-          <div className="row">
-            <FormCol>
-              <SelectField label="Store" required options={storeOptions} />
-            </FormCol>
-            <FormCol>
-              <SelectField label="Warehouse" required options={warehouseOptions} />
-            </FormCol>
-          </div>
-          <div className="row">
-            <FormCol>
-              <TextField label="Product Name" required />
-            </FormCol>
-            <FormCol>
-              <TextField label="Slug" required />
-            </FormCol>
-          </div>
-          <div className="row">
-            <FormCol>
-              <TextField
-                label="SKU"
-                required
-                inputClassName="list"
-                action={{ label: "Generate" }}
-              />
-            </FormCol>
-            <FormCol>
-              <SelectField label="Selling Type" required options={sellingTypeOptions} />
-            </FormCol>
-          </div>
-          <div className="row">
-            <FormCol>
-              <SelectField
-                label="Category"
-                required
-                options={categoryOptions}
-                labelWrapperClassName="flex items-center justify-between"
-                labelAddon={
-                  <Link
-                    href="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#add-units-category"
-                    className="inline-flex items-center gap-1 text-[13px] font-medium text-[#0ac79e] hover:underline"
-                  >
-                    <PlusCircle size={14} />
-                    <span>Add New</span>
-                  </Link>
-                }
-              />
-            </FormCol>
-            <FormCol>
-              <SelectField label="Sub Category" required options={subcategoryOptions} />
-            </FormCol>
-          </div>
-          <div className="row">
-            <FormCol>
-              <SelectField label="Brand" required options={brandOptions} />
-            </FormCol>
-            <FormCol>
-              <SelectField label="Unit" required options={unitOptions} />
-            </FormCol>
-          </div>
-          <div className="row">
-            <FormCol lg={6}>
-              <SelectField label="Barcode Symbology" required options={barcodeSymbolOptions} />
-            </FormCol>
-            <FormCol lg={6}>
-              <TextField
-                label="Item Code"
-                required
-                inputClassName="list"
-                action={{ label: "Generate", type: "submit" }}
-              />
-            </FormCol>
+    <div className="bg-white rounded-[12px] border border-[#E2E8F0] shadow-sm">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-[#F1F5F9]">
+        <div className="w-8 h-8 rounded-[9px] bg-gradient-to-br from-[#0ac79e]/15 to-[#089e7e]/15 flex items-center justify-center">
+          <i className="ti ti-info-circle text-[16px] text-[#0ac79e]" />
+        </div>
+        <div>
+          <h5 className="m-0 text-[15px] font-bold text-[#0F172A]">Product Information</h5>
+          <p className="m-0 text-[12px] text-[#94A3B8]">Basic details about your product</p>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="px-5 py-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+          <div>
+            <SelectField label="Store" required options={storeOptions} />
           </div>
           <div>
-            <FormField label="Description">
-              <TextEditor />
-              <p className="text-[14px] mt-1 text-[#646B72]">Maximum 60 Words</p>
-            </FormField>
+            <SelectField label="Warehouse" required options={warehouseOptions} />
+          </div>
+          <div>
+            <TextField label="Product Name" required />
+          </div>
+          <div>
+            <TextField label="Slug" required />
+          </div>
+          <div>
+            <TextField
+              label="SKU"
+              required
+              inputClassName="list"
+              action={{ label: "Generate" }}
+            />
+          </div>
+          <div>
+            <SelectField label="Selling Type" required options={sellingTypeOptions} />
+          </div>
+          <div>
+            <SelectField
+              label="Category"
+              required
+              options={categoryOptions}
+              labelWrapperClassName="flex items-center justify-between"
+              labelAddon={
+                <Link
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add-units-category"
+                  className="inline-flex items-center gap-1 text-[13px] font-medium text-[#0ac79e] hover:underline"
+                >
+                  <PlusCircle size={14} />
+                  <span>Add New</span>
+                </Link>
+              }
+            />
+          </div>
+          <div>
+            <SelectField label="Sub Category" required options={subcategoryOptions} />
+          </div>
+          <div>
+            <SelectField label="Brand" required options={brandOptions} />
+          </div>
+          <div>
+            <SelectField label="Unit" required options={unitOptions} />
+          </div>
+          <div>
+            <SelectField label="Barcode Symbology" required options={barcodeSymbolOptions} />
+          </div>
+          <div>
+            <TextField
+              label="Item Code"
+              required
+              inputClassName="list"
+              action={{ label: "Generate", type: "submit" }}
+            />
           </div>
         </div>
-      )}
+
+        <div className="mt-5">
+          <FormField label="Description">
+            <TextEditor />
+            <p className="text-[12px] mt-1.5 text-[#94A3B8]">Maximum 60 characters</p>
+          </FormField>
+        </div>
+      </div>
     </div>
   );
 }

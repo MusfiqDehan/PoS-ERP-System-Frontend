@@ -59,9 +59,7 @@ const SettingsSideBar = (props: any) => {
       <div className="sidebar-inner slimscroll">
         <PerfectScrollbar
           style={{ marginRight: -5, height: 800 }}
-          autoHide
-          autoHeight
-          autoHeightMin={400} // Set a minimum height for the scrollbar
+          option={{ suppressScrollX: true }}
           {...props}
         // width={100}
         // autoHideTimeout={1000}

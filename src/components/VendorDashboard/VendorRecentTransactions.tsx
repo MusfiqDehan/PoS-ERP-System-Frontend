@@ -12,8 +12,8 @@ export default function VendorRecentTransactions() {
       title="Recent Transactions"
       action={
         <Link
-          href={routes.superAdminPurchaseTransaction}
-          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium text-[#0ac79e] bg-[#0ac79e]/10 hover:bg-[#0ac79e]/15 transition-colors"
+          href={routes.purchasetransaction}
+          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[14px] font-medium text-[#0ac79e] bg-[#0ac79e]/10 hover:bg-[#0ac79e]/15 transition-colors"
         >
           View All
         </Link>
@@ -38,7 +38,7 @@ export default function VendorRecentTransactions() {
                     {item.name}
                   </Link>
                 </h6>
-                <p className="m-0 mt-0.5 text-[12px] text-[#667085] inline-flex items-center gap-1">
+                <p className="m-0 mt-0.5 text-[14px] text-[#667085] inline-flex items-center gap-1">
                   <span className="text-[#0ac79e] font-medium">
                     {item.invoice}
                   </span>
@@ -51,7 +51,7 @@ export default function VendorRecentTransactions() {
               <p className="m-0 text-[14px] font-bold text-[#067647]">
                 {item.amount}
               </p>
-              <p className="m-0 mt-0.5 text-[12px] text-[#667085]">{item.plan}</p>
+              <p className="m-0 mt-0.5 text-[14px] text-[#667085]">{item.plan}</p>
             </div>
           </div>
         ))}

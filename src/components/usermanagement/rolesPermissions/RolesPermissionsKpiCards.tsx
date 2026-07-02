@@ -9,8 +9,13 @@ function renderKpiCard(card: RolesPermissionsKpiCardData) {
   return <RolesPermissionsKpiCard key={card.id} card={card} />;
 }
 
-export default function RolesPermissionsKpiCards() {
+type Props = {
+  data?: RolesPermissionsKpiCardData[];
+};
+
+export default function RolesPermissionsKpiCards({ data }: Props) {
+  const cards = data ?? rolesPermissionsKpiData;
   return (
-    <div className={kpiGridClassName}>{rolesPermissionsKpiData.map(renderKpiCard)}</div>
+    <div className={kpiGridClassName}>{cards.map(renderKpiCard)}</div>
   );
 }

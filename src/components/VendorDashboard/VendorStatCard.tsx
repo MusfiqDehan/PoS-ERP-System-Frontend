@@ -20,7 +20,7 @@ export default function VendorStatCard({ stat }: Props) {
 
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="m-0 text-[13px] font-medium text-[#667085] truncate">
+          <p className="m-0 text-[16px] font-medium text-[#667085] truncate">
             {stat.label}
           </p>
           <h4 className="m-0 mt-1.5 text-[28px] font-bold leading-[1.1] text-[#101828] tracking-tight">
@@ -39,18 +39,18 @@ export default function VendorStatCard({ stat }: Props) {
 
       <div className="mt-4 flex items-center gap-2">
         <span
-          className={`inline-flex items-center gap-1 px-2 py-[3px] rounded-full text-[12px] font-semibold ${
+          className={`inline-flex items-center gap-1 px-2 py-[3px] rounded-full text-[14px] font-semibold ${
             trendUp
               ? "text-[#067647] bg-[#ecfdf3]"
               : "text-[#b42318] bg-[#fef3f2]"
           }`}
         >
           <i
-            className={`ti ti-trending-${trendUp ? "up" : "down"} text-[13px]`}
+            className={`ti ti-trending-${trendUp ? "up" : "down"} text-[14px]`}
           />
           {stat.change}
         </span>
-        <span className="text-[12px] text-[#98a2b3]">vs last month</span>
+        <span className="text-[14px] text-[#98a2b3]">vs last month</span>
       </div>
     </div>
   );

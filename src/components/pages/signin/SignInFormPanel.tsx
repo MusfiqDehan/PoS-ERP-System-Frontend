@@ -17,6 +17,13 @@ import SignInFormHeader from "./SignInFormHeader";
 import SignInFormOptions from "./SignInFormOptions";
 import SignInPrimaryActions from "./SignInPrimaryActions";
 
+/** Extract the subdomain from a hostname (e.g. "robin.sortorium.com" → "robin"). */
+function extractSubdomain(host: string): string {
+  const parts = host.split(".");
+  if (parts.length > 2) return parts[0];
+  return "";
+}
+
 export default function SignInFormPanel() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -27,6 +34,7 @@ export default function SignInFormPanel() {
 
   const tenantSubdomain = getTenantSubdomainFromHost();
   const isTenantHost = !isPublicMarketingHost() && tenantSubdomain.length > 0;
+  const isPlatform = !isTenantHost;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -76,17 +84,10 @@ export default function SignInFormPanel() {
       <form className="auth-split-page__form" onSubmit={handleSubmit}>
         <div className="auth-split-page__form-top">
           <div className="auth-split-page__form-main">
-            <SignInFormHeader />
-
-            {isTenantHost ? (
-              <p className="auth-form-field__hint">
-                Signing in to <strong>{tenantSubdomain}</strong> workspace.
-              </p>
-            ) : (
-              <p className="auth-form-field__hint">
-                Platform administrator sign-in.
-              </p>
-            )}
+            <SignInFormHeader
+              isPlatform={isPlatform}
+              tenantSubdomain={isTenantHost ? tenantSubdomain : undefined}
+            />
 
             {errors.length > 0 ? (
               <div
@@ -106,7 +107,11 @@ export default function SignInFormPanel() {
             ) : null}
 
             <div className="auth-split-page__credentials">
-              <AuthEmailField id="sign-in-email" value={email} onChange={setEmail} />
+              <AuthEmailField
+                id="sign-in-email"
+                value={email}
+                onChange={setEmail}
+              />
               <div className="auth-split-page__password-group">
                 <AuthPasswordField
                   id="sign-in-password"
@@ -121,7 +126,7 @@ export default function SignInFormPanel() {
             </div>
           </div>
 
-          <SignInPrimaryActions loading={loading} />
+          <SignInPrimaryActions loading={loading} hideRegister={isPlatform} />
         </div>
 
         <AuthSocialSection />

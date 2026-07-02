@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import CounterThree from "@/core/common/counter/counterThree";
-import FormCol from "@/core/common/form/FormCol";
 import SelectField from "@/core/common/form/SelectField";
 import TextField from "@/core/common/form/TextField";
 import TextInput from "@/core/common/form/TextInput";
 import TagInput from "@/core/common/Taginput";
-import { LifeBuoy, Plus } from "react-feather";
+import { Plus } from "react-feather";
 import Link from "next/link";
 import { discountTypeOptions, taxTypeOptions } from "./selectOptions";
 
@@ -20,8 +19,8 @@ type PricingStocksSectionProps = {
   onRemoveTags: () => void;
 };
 
-const pillCls =
-  "px-4 py-2 rounded-full border border-[#e7e7e7] text-[14px] font-medium text-[#646B72] cursor-pointer transition-colors [&.active]:bg-[#0ac79e] [&.active]:text-white [&.active]:border-[#0ac79e]";
+const pillBase =
+  "px-5 py-2 rounded-full border text-[13px] font-semibold cursor-pointer transition-all [&.active]:bg-[#0ac79e] [&.active]:text-white [&.active]:border-[#0ac79e] [&.active]:shadow-sm [&.active]:shadow-[#0ac79e]/25";
 
 const variantRows = [
   { variation: "color", value: "red", sku: 1234, price: 50000, editTarget: "#add-variation" },
@@ -36,187 +35,167 @@ export default function PricingStocksSection({
   onVariantSelect,
   onRemoveTags,
 }: PricingStocksSectionProps) {
-  const [open, setOpen] = useState(true);
+  const [pill, setPill] = useState("single");
 
   return (
-    <div className="bg-white border border-[#f1f1f1] rounded-[8px] mb-4">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        className="w-full flex items-center justify-between gap-2 px-4 py-3.5 text-left"
-      >
-        <span className="flex items-center gap-2 text-[16px] font-semibold text-[#212B36]">
-          <LifeBuoy size={18} className="text-[#0ac79e]" />
-          Pricing &amp; Stocks
-        </span>
-        <i className={`ti ti-chevron-${open ? "up" : "down"} text-[#646B72]`} />
-      </button>
-      {open && (
-        <div className="border-t border-[#f1f1f1] p-4">
-          <div className="mb-4">
-            <label className="block text-[13px] font-medium text-[#212B36] mb-2">
-              Product Type<span className="text-[#dc3545] ms-1">*</span>
-            </label>
-            <ul className="nav nav-pills flex flex-wrap gap-3 p-0 m-0" id="pills-tab1" role="tablist">
-              <li className="nav-item" role="presentation">
-                <span
-                  className={`${pillCls} active`}
-                  id="pills-home-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#pills-home"
-                  role="tab"
-                  aria-controls="pills-home"
-                  aria-selected="true"
-                >
-                  Single Product
-                </span>
-              </li>
-              <li className="nav-item" role="presentation">
-                <span
-                  className={pillCls}
-                  id="pills-profile-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#pills-profile"
-                  role="tab"
-                  aria-controls="pills-profile"
-                  aria-selected="false"
-                >
-                  Variable Product
-                </span>
-              </li>
-            </ul>
-          </div>
+    <div className="bg-white rounded-[12px] border border-[#E2E8F0] shadow-sm">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-[#F1F5F9]">
+        <div className="w-8 h-8 rounded-[9px] bg-gradient-to-br from-[#0ac79e]/15 to-[#089e7e]/15 flex items-center justify-center">
+          <i className="ti ti-lifebuoy text-[16px] text-[#0ac79e]" />
+        </div>
+        <div>
+          <h5 className="m-0 text-[15px] font-bold text-[#0F172A]">Pricing &amp; Stocks</h5>
+          <p className="m-0 text-[12px] text-[#94A3B8]">Set pricing, stock, and product type</p>
+        </div>
+      </div>
 
-          <div className="tab-content" id="pills-tabContent">
-            <div
-              className="tab-pane fade show active"
-              id="pills-home"
-              role="tabpanel"
-              aria-labelledby="pills-home-tab"
+      {/* Body */}
+      <div className="px-5 py-5">
+        {/* Product type pills */}
+        <div className="mb-5">
+          <label className="block text-[13px] font-semibold text-[#0F172A] mb-2.5">
+            Product Type<span className="text-[#EF4444] ms-1">*</span>
+          </label>
+          <div className="flex flex-wrap gap-3" role="tablist">
+            <button
+              type="button"
+              className={`${pillBase} ${pill === "single" ? "active" : "border-[#E2E8F0] text-[#64748B] hover:border-[#CBD5E1]"}`}
+              onClick={() => setPill("single")}
+              role="tab"
+              aria-selected={pill === "single"}
             >
-              <div className="row">
-                <FormCol lg={4}>
-                  <TextField label="Quantity" required />
-                </FormCol>
-                <FormCol lg={4}>
-                  <TextField label="Price" required />
-                </FormCol>
-                <FormCol lg={4}>
-                  <SelectField
-                    label="Tax Type"
-                    required
-                    options={taxTypeOptions}
-                    placeholder="Select Option"
-                  />
-                </FormCol>
-                <FormCol lg={4}>
-                  <SelectField label="Discount Type" required options={discountTypeOptions} />
-                </FormCol>
-                <FormCol lg={4}>
-                  <TextField label="Discount Value" required />
-                </FormCol>
-                <FormCol lg={4}>
-                  <TextField label="Quantity Alert" required />
-                </FormCol>
+              Single Product
+            </button>
+            <button
+              type="button"
+              className={`${pillBase} ${pill === "variable" ? "active" : "border-[#E2E8F0] text-[#64748B] hover:border-[#CBD5E1]"}`}
+              onClick={() => setPill("variable")}
+              role="tab"
+              aria-selected={pill === "variable"}
+            >
+              Variable Product
+            </button>
+          </div>
+        </div>
+
+        {/* Single product fields — 3-col grid */}
+        {pill === "single" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+            <div>
+              <TextField label="Quantity" required />
+            </div>
+            <div>
+              <TextField label="Price" required />
+            </div>
+            <div>
+              <SelectField label="Tax Type" required options={taxTypeOptions} placeholder="Select Option" />
+            </div>
+            <div>
+              <SelectField label="Discount Type" required options={discountTypeOptions} />
+            </div>
+            <div>
+              <TextField label="Discount Value" required />
+            </div>
+            <div>
+              <TextField label="Quantity Alert" required />
+            </div>
+          </div>
+        )}
+
+        {/* Variable product */}
+        {pill === "variable" && (
+          <div>
+            <div className="max-w-[500px]">
+              <label className="block text-[13px] font-semibold text-[#0F172A] mb-1.5">
+                Variant Attribute <span className="text-[#EF4444] ms-1">*</span>
+              </label>
+              <div className="flex items-center gap-2">
+                <select
+                  className="flex-1 border border-[#E2E8F0] rounded-lg px-3 py-2.5 text-[13px] text-[#0F172A] bg-white focus:border-[#0ac79e] focus:outline-none focus:ring-1 focus:ring-[#0ac79e]/20 transition-all"
+                  onChange={onVariantSelect}
+                  defaultValue=""
+                >
+                  <option value="" disabled>Choose attribute</option>
+                  <option>Color</option>
+                  <option value="red">Red</option>
+                  <option value="black">Black</option>
+                </select>
+                <Link
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#add-units"
+                  className="w-[38px] h-[38px] shrink-0 inline-flex items-center justify-center rounded-lg bg-[#0ac79e] text-white hover:bg-[#089b7c] transition-colors"
+                >
+                  <Plus size={16} />
+                </Link>
               </div>
+
+              {showVariant && showTags && (
+                <div className="mt-4">
+                  <label className="block text-[13px] font-semibold text-[#0F172A] mb-1.5">
+                    Variant Values <span className="text-[#EF4444] ms-1">*</span>
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1">
+                      <TagInput initialTags={tags} onTagsChange={onTagsChange} />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={onRemoveTags}
+                      className="w-[38px] h-[38px] shrink-0 inline-flex items-center justify-center rounded-lg border border-[#E2E8F0] text-[#64748B] hover:text-[#EF4444] hover:border-[#EF4444] transition-all"
+                    >
+                      <i className="far fa-trash-alt" />
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
-            <div
-              className="tab-pane fade"
-              id="pills-profile"
-              role="tabpanel"
-              aria-labelledby="pills-profile-tab"
-            >
-              <div className="lg:max-w-[50%]">
-                <label className="block text-[13px] font-medium text-[#212B36] mb-1.5">
-                  Variant Attribute <span className="text-[#dc3545] ms-1">*</span>
-                </label>
-                <div className="flex items-center gap-2">
-                  <select
-                    className="flex-1 border border-[#e7e7e7] rounded-md px-3 py-2 text-[14px] text-[#212B36] focus:border-[#0ac79e] focus:outline-none focus:ring-1 focus:ring-[#0ac79e]"
-                    id="colorSelect"
-                    onChange={onVariantSelect}
-                  >
-                    <option>Choose</option>
-                    <option>Color</option>
-                    <option value="red">Red</option>
-                    <option value="black">Black</option>
-                  </select>
-                  <Link
-                    href="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#add-units"
-                    className="w-[38px] h-[38px] shrink-0 inline-flex items-center justify-center rounded-md bg-[#0ac79e] text-white hover:bg-[#089b7c] transition-colors"
-                  >
-                    <i className="feather feather-plus-circle" />
-                  </Link>
-                </div>
-
-                {showVariant && showTags && (
-                  <div className="mt-3" id="input-show">
-                    <label className="block text-[13px] font-medium text-[#212B36] mb-1.5">
-                      Variant Attribute <span className="text-[#dc3545] ms-1">*</span>
-                    </label>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1">
-                        <TagInput initialTags={tags} onTagsChange={onTagsChange} />
-                      </div>
-                      <Link
-                        href="#"
-                        onClick={onRemoveTags}
-                        className="w-[38px] h-[38px] shrink-0 inline-flex items-center justify-center rounded-md border border-[#e7e7e7] text-[#646B72] hover:text-[#c80000] hover:border-[#c80000] transition-colors"
-                      >
-                        <i className="far fa-trash-alt" />
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {showVariant && (
-                <div className="mt-4 overflow-x-auto rounded-md border border-[#e7e7e7]" id="variant-table">
+            {showVariant && (
+              <div className="mt-5">
+                <div className="overflow-x-auto rounded-lg border border-[#E2E8F0]">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-[#e7e7e7] text-[13px] text-[#646B72]">
-                        <th className="px-3 py-2.5 font-semibold">Variantion</th>
-                        <th className="px-3 py-2.5 font-semibold">Variant Value</th>
-                        <th className="px-3 py-2.5 font-semibold">SKU</th>
-                        <th className="px-3 py-2.5 font-semibold">Quantity</th>
-                        <th className="px-3 py-2.5 font-semibold">Price</th>
-                        <th className="px-3 py-2.5" />
+                      <tr className="bg-[#F8FAFC] border-b border-[#E2E8F0] text-[12px] text-[#64748B] font-semibold uppercase tracking-wider">
+                        <th className="px-4 py-3">Variation</th>
+                        <th className="px-4 py-3">Value</th>
+                        <th className="px-4 py-3">SKU</th>
+                        <th className="px-4 py-3">Quantity</th>
+                        <th className="px-4 py-3">Price</th>
+                        <th className="px-4 py-3" />
                       </tr>
                     </thead>
                     <tbody>
                       {variantRows.map((row, i) => (
-                        <tr key={i} className="border-b border-[#f1f1f1] last:border-0 align-middle">
-                          <td className="px-3 py-2.5">
+                        <tr key={i} className="border-b border-[#F1F5F9] last:border-0 align-middle">
+                          <td className="px-4 py-3">
                             <TextInput defaultValue={row.variation} />
                           </td>
-                          <td className="px-3 py-2.5">
+                          <td className="px-4 py-3">
                             <TextInput defaultValue={row.value} />
                           </td>
-                          <td className="px-3 py-2.5">
+                          <td className="px-4 py-3">
                             <TextInput defaultValue={row.sku} />
                           </td>
-                          <td className="px-3 py-2.5">
+                          <td className="px-4 py-3">
                             <CounterThree />
                           </td>
-                          <td className="px-3 py-2.5">
+                          <td className="px-4 py-3">
                             <TextInput defaultValue={row.price} />
                           </td>
-                          <td className="px-3 py-2.5">
-                            <div className="flex items-center gap-2">
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-1.5">
                               <input
                                 type="checkbox"
                                 defaultChecked
-                                className="w-4 h-4 rounded border-[#d1d5db] accent-[#0ac79e]"
+                                className="w-4 h-4 rounded border-[#CBD5E1] accent-[#0ac79e]"
                               />
                               <Link
                                 href="#"
                                 data-bs-toggle="modal"
                                 data-bs-target={row.editTarget}
-                                className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#0ac79e] hover:border-[#0ac79e] transition-colors"
+                                className="w-8 h-8 inline-flex items-center justify-center border border-[#E2E8F0] rounded-lg text-[#64748B] hover:text-[#0ac79e] hover:border-[#0ac79e] transition-all"
                               >
                                 <Plus size={14} />
                               </Link>
@@ -224,7 +203,7 @@ export default function PricingStocksSection({
                                 href="#"
                                 data-bs-toggle="modal"
                                 data-bs-target="#delete-modal"
-                                className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#c80000] hover:border-[#c80000] transition-colors"
+                                className="w-8 h-8 inline-flex items-center justify-center border border-[#E2E8F0] rounded-lg text-[#64748B] hover:text-[#EF4444] hover:border-[#EF4444] transition-all"
                               >
                                 <i className="ti ti-trash" />
                               </Link>
@@ -235,11 +214,11 @@ export default function PricingStocksSection({
                     </tbody>
                   </table>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -18,3 +18,9 @@ const publicRaw = (process.env.NEXT_PUBLIC_PUBLIC_API_BASE_URL || raw).replace(/
 
 export const API_BASE_URL = raw;
 export const PUBLIC_API_BASE_URL = publicRaw;
+
+/** JWT token pair stored after login. */
+export type AuthTokens = {
+  access: string;
+  refresh: string;
+};

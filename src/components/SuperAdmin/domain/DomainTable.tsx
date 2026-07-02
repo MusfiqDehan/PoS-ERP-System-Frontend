@@ -105,7 +105,7 @@ const filterDropdowns = [
   },
 ];
 
-export default function DomainTable() {
+export default function DomainTable({ searchText }: { searchText: string }) {
   return (
     <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
       <div className="flex items-center justify-between flex-wrap gap-3 p-4 border-b border-[#f1f1f1]">
@@ -135,7 +135,7 @@ export default function DomainTable() {
         </div>
       </div>
       <div className="overflow-x-auto">
-        <Table dataSource={data} columns={columns} Selection={true} />
+        <Table dataSource={data} columns={columns} Selection={true} searchText={searchText} />
       </div>
     </div>
   );

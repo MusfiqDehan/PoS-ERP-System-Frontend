@@ -1,10 +1,23 @@
-/** Tenant self-registration + email verification — wires public auth flows to the DRF backend. */
+/** Tenant auth + self-registration — wires public auth flows and tenant user APIs to the DRF backend. */
 
-import { publicApiPost, type ApiResult } from "./api";
+import {
+  apiGet,
+  publicApiPost,
+  setStoredTokens,
+  type ApiResult,
+} from "./api";
+import type { AssetSummary } from "./branding";
+import type { AuthTokens } from "./env";
 
 export const TENANT_REGISTER_PATH = "tenancy/register/";
 export const TENANT_TOKEN_VALIDATE_PATH = "tenancy/tokens/validate/";
 export const TENANT_PASSWORD_SETUP_PATH = "tenancy/password/setup/";
+export const TENANT_LOGIN_PATH = "tenancy/auth/login/";
+export const TENANT_ME_PATH = "tenancy/me/";
+
+/* ------------------------------------------------------------------ */
+/*  Registration / verification / password setup                      */
+/* ------------------------------------------------------------------ */
 
 export type TenantRegistrationRequest = {
   subdomain: string;
@@ -30,7 +43,6 @@ export function registerTenant(
   return publicApiPost<TenantRegistrationResult>(TENANT_REGISTER_PATH, payload);
 }
 
-/** Shape returned by the token-validate endpoint when a verification link is valid. */
 export type ValidatedToken = {
   token_type: string;
   email: string;
@@ -61,4 +73,64 @@ export function setupPassword(
     TENANT_PASSWORD_SETUP_PATH,
     payload,
   );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Login                                                              */
+/* ------------------------------------------------------------------ */
+
+export type LoginRequest = {
+  email: string;
+  password: string;
+  subdomain?: string;
+  domain?: string;
+};
+
+export type LoginTenantInfo = {
+  id: string;
+  name: string;
+  schema_name: string;
+  domain: string;
+  company_logo?: unknown;
+};
+
+export type LoginResult = AuthTokens & {
+  tenant: LoginTenantInfo;
+};
+
+export async function login(
+  payload: LoginRequest,
+): Promise<ApiResult<LoginResult>> {
+  const result = await publicApiPost<LoginResult>(
+    TENANT_LOGIN_PATH,
+    payload,
+  );
+  if (result.ok && result.body.data?.access) {
+    setStoredTokens({
+      access: result.body.data.access,
+      refresh: result.body.data.refresh,
+    });
+  }
+  return result;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Current user profile                                               */
+/* ------------------------------------------------------------------ */
+
+export type CurrentUser = {
+  id: string;
+  email: string;
+  phone: string;
+  full_name: string;
+  platform_roles: string[];
+  profile_picture: AssetSummary | null;
+  email_verified: boolean;
+  tenant_id: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export function getMe(accessToken?: string): Promise<ApiResult<CurrentUser>> {
+  return apiGet<CurrentUser>(TENANT_ME_PATH, accessToken);
 }

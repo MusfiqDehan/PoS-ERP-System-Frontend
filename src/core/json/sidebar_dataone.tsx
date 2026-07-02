@@ -80,10 +80,10 @@ export const SidebarData1 = [
             subRoutes: [],
           },
           {
-            tittle: 'Purchase Transaction',
+            tittle: 'Invoices',
             hasSubRoute: false,
             showSubRoute: false,
-            route: "/purchase-transaction",
+            route: "/invoices",
             subRoutes: [],
           },
         ],
