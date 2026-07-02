@@ -1,4 +1,4 @@
-import { apiPost, type ApiResult } from "./api";
+import { apiPost, publicApiPost, type ApiResult } from "./api";
 
 export type ChangePasswordPayload = {
   current_password: string;
@@ -63,4 +63,49 @@ export async function changePlatformPassword(
       },
     };
   }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Platform owner password reset (public schema, no auth)             */
+/* ------------------------------------------------------------------ */
+
+export const PLATFORM_PASSWORD_RESET_REQUEST_PATH =
+  "platform-owner/password/reset/request/";
+export const PLATFORM_PASSWORD_RESET_CONFIRM_PATH =
+  "platform-owner/password/reset/confirm/";
+
+export type PlatformPasswordResetRequestPayload = {
+  email: string;
+};
+
+export type PlatformPasswordResetConfirmPayload = {
+  token: string;
+  password: string;
+};
+
+export function requestPlatformPasswordReset(
+  email: string,
+): Promise<ApiResult<unknown>> {
+  return publicApiPost<unknown>(PLATFORM_PASSWORD_RESET_REQUEST_PATH, { email });
+}
+
+export function confirmPlatformPasswordReset(
+  payload: PlatformPasswordResetConfirmPayload,
+): Promise<ApiResult<unknown>> {
+  return publicApiPost<unknown>(
+    PLATFORM_PASSWORD_RESET_CONFIRM_PATH,
+    payload,
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Tenant password reset (public schema, no auth)                     */
+/* ------------------------------------------------------------------ */
+
+const TENANT_PASSWORD_RESET_REQUEST_PATH = "tenancy/password/reset/request/";
+
+export function requestTenantPasswordReset(
+  email: string,
+): Promise<ApiResult<unknown>> {
+  return publicApiPost<unknown>(TENANT_PASSWORD_RESET_REQUEST_PATH, { email });
 }
