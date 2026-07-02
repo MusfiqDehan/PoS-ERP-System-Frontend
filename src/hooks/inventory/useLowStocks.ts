@@ -1,10 +1,27 @@
-import { lowstockdata } from "@/core/json/lowstockdata";
-import type { LowStockRecord } from "@/components/Inventory/low-stocks/types";
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { getAccessToken } from "@/lib/auth-session";
+import { fetchLowStocks, type LowStockRow } from "@/lib/inventory";
 
 export function useLowStocks() {
-  const dataSource = lowstockdata as LowStockRecord[];
+  const [dataSource, setDataSource] = useState<LowStockRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  return {
-    dataSource,
-  };
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    const result = await fetchLowStocks(getAccessToken());
+    if (result.ok && result.body.data) {
+      setDataSource(Array.isArray(result.body.data) ? result.body.data : []);
+    } else {
+      setError(result.body.message ?? "Failed to load low-stock items.");
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  return { dataSource, loading, error, reload: load };
 }
