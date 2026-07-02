@@ -1,23 +1,7 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
 import type { SubCategoryRecord } from "./types";
-
-type SubCategoryRowCellProps = {
-  record: SubCategoryRecord;
-};
-
-export function SubCategoryImageCell({ record }: SubCategoryRowCellProps) {
-  return (
-    <Link
-      href="#"
-      className="w-10 h-10 inline-flex items-center justify-center rounded-md border border-[#f1f1f1] overflow-hidden"
-    >
-      <img alt="" src={record.img} className="max-w-full max-h-full object-contain" />
-    </Link>
-  );
-}
 
 export function SubCategoryStatusCell({ status }: { status: string }) {
   return (
@@ -32,13 +16,24 @@ export function SubCategoryStatusCell({ status }: { status: string }) {
   );
 }
 
-export function SubCategoryActionsCell() {
+type SubCategoryActionsCellProps = {
+  record: SubCategoryRecord;
+  onSelectForEdit: (record: SubCategoryRecord) => void;
+  onSelectForDelete: (record: SubCategoryRecord) => void;
+};
+
+export function SubCategoryActionsCell({
+  record,
+  onSelectForEdit,
+  onSelectForDelete,
+}: SubCategoryActionsCellProps) {
   return (
     <div className="inline-flex items-center gap-2">
       <Link
         href="#"
         data-bs-toggle="modal"
-        data-bs-target="#edit-category"
+        data-bs-target="#edit-sub-category"
+        onClick={() => onSelectForEdit(record)}
         className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#0ac79e] hover:border-[#0ac79e] transition-colors"
       >
         <i className="ti ti-edit" />
@@ -46,7 +41,8 @@ export function SubCategoryActionsCell() {
       <Link
         href="#"
         data-bs-toggle="modal"
-        data-bs-target="#delete-modal"
+        data-bs-target="#delete-sub-category-modal"
+        onClick={() => onSelectForDelete(record)}
         className="w-8 h-8 inline-flex items-center justify-center border border-[#e7e7e7] rounded text-[#646B72] hover:text-[#c80000] hover:border-[#c80000] transition-colors"
       >
         <i className="ti ti-trash" />

@@ -1,8 +1,3 @@
-export type UnitRecord = {
-  id: number;
-  unit: string;
-  shortname: string;
-  noofproducts: string;
-  createdon: string;
-  status: string;
-};
+import type { Unit } from "@/lib/inventory";
+
+export type UnitRecord = Unit;

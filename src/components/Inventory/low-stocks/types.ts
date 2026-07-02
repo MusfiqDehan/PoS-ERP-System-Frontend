@@ -1,11 +1,2 @@
-export type LowStockRecord = {
-  id: number;
-  img: string;
-  warehouse: string;
-  store: string;
-  product: string;
-  category: string;
-  sku: string;
-  qty: string;
-  qtyalert: string;
-};
+import type { LowStockRow } from "@/lib/inventory";
+export type LowStockRecord = LowStockRow;
