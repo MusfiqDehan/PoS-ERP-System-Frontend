@@ -35,6 +35,7 @@ export const SidebarData = [
           { label: "Companies", link: "/companies" },
           { label: "Subscriptions", link: "/subscription" },
           { label: "Packages", link: "/packages" },
+          { label: "Products", link: "/software-products" },
           { label: "Domain", link: "/domain" },
           { label: "Invoices", link: route.purchasetransaction },
         ],
@@ -913,7 +914,13 @@ export const SidebarData = [
       },
     ],
   },
-
+  {
+    label: "Billing",
+    link: "/billing",
+    icon: "credit-card",
+    showSubRoute: false,
+    roles: ["owner", "manager"],
+  },
   {
     label: "Settings",
     submenu: true,

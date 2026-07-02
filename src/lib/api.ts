@@ -130,11 +130,32 @@ export async function apiPut<T = unknown>(
 export async function publicApiPost<T = unknown>(
   path: string,
   payload: unknown,
+  accessToken?: string,
 ): Promise<ApiResult<T>> {
-  return rawPost(PUBLIC_API_BASE_URL, path, undefined, {
+  return rawPost(PUBLIC_API_BASE_URL, path, accessToken, {
     method: "POST",
     body: JSON.stringify(payload),
   });
+}
+
+/** PATCH JSON to `path` using the **public** base URL (platform-owner public schema). */
+export async function publicApiPatch<T = unknown>(
+  path: string,
+  payload: unknown,
+  accessToken?: string,
+): Promise<ApiResult<T>> {
+  return rawPost(PUBLIC_API_BASE_URL, path, accessToken, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
+/** DELETE an entity at `path` using the **public** base URL (platform-owner public schema). */
+export async function publicApiDelete<T = unknown>(
+  path: string,
+  accessToken?: string,
+): Promise<ApiResult<T>> {
+  return rawPost(PUBLIC_API_BASE_URL, path, accessToken, { method: "DELETE" });
 }
 
 async function rawGet<T>(
