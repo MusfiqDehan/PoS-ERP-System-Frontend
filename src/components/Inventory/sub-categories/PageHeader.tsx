@@ -15,7 +15,7 @@ export default function PageHeader() {
         <Link
           href="#"
           data-bs-toggle="modal"
-          data-bs-target="#add-category"
+          data-bs-target="#add-sub-category"
           className="inline-flex items-center gap-1 px-4 py-[10px] rounded-[6px] bg-[#0ac79e] text-white text-[14px] font-medium hover:bg-[#089b7c] transition-colors"
         >
           <i className="ti ti-circle-plus text-[16px]" /> Add Sub Category
