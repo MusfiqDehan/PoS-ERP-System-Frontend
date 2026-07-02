@@ -1,38 +1,142 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
-import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 import Select from "react-select";
 import {
-  discountType,
-  planName,
-  planPosition,
-  planType,
-  plancurrency,
-  status,
-} from "@/components/SuperAdmin/packages/planSelectOptions";
+  fetchPlatformPackage,
+  updatePlatformPackage,
+  type Package,
+  type PackageUpdatePayload,
+} from "@/lib/billing";
+import { getAccessToken } from "@/lib/auth-session";
+import { status } from "@/components/SuperAdmin/packages/planSelectOptions";
 
 const inputCls =
   "w-full border border-[#e7e7e7] rounded-md px-3 py-2 text-[14px] text-[#212B36] placeholder:text-[#9aa0a6] focus:border-[#0ac79e] focus:outline-none focus:ring-1 focus:ring-[#0ac79e] transition-colors";
 const labelCls = "block text-[13px] font-medium text-[#212B36] mb-1.5";
-const checkboxCls = "w-4 h-4 rounded accent-[#0ac79e]";
 
-const modules = [
-  "Employees", "Invoices", "Reports", "Contacts", "Clients", "Estimates",
-  "Goals", "Deals", "Projects", "Payments", "Assets", "Leads",
-  "Tickets", "Taxes", "Activities", "Pipelines",
-];
+type Props = {
+  packageId?: string | null;
+  onUpdated?: () => void;
+};
 
-function Toggle({ defaultChecked }: { defaultChecked?: boolean }) {
-  return (
-    <label className="inline-flex items-center cursor-pointer">
-      <input type="checkbox" defaultChecked={defaultChecked} className="sr-only peer" />
-      <span className="relative block w-9 h-5 bg-[#e7e7e7] rounded-full transition-colors peer-checked:bg-[#0ac79e] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:w-4 after:h-4 after:bg-white after:rounded-full after:transition-transform peer-checked:after:translate-x-4" />
-    </label>
+export default function EditPlanModal({ packageId, onUpdated }: Props) {
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pkg, setPkg] = useState<Package | null>(null);
+
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [priceMonthly, setPriceMonthly] = useState("");
+  const [priceYearly, setPriceYearly] = useState("");
+  const [sortOrder, setSortOrder] = useState("0");
+  const [maxBranches, setMaxBranches] = useState("");
+  const [maxUsers, setMaxUsers] = useState("");
+  const [maxCustomRoles, setMaxCustomRoles] = useState("");
+  const [maxAdmins, setMaxAdmins] = useState("");
+  const [maxStaff, setMaxStaff] = useState("");
+  const [isTrial, setIsTrial] = useState(false);
+  const [isActive, setIsActive] = useState(true);
+
+  useEffect(
+    function () {
+      if (!packageId) {
+        setPkg(null);
+        return;
+      }
+
+      const token = getAccessToken();
+      if (!token) return;
+
+      setFetching(true);
+      setError(null);
+
+      fetchPlatformPackage(packageId, token).then(function (result) {
+        if (result.ok && result.body.success && result.body.data) {
+          const data = result.body.data as Package;
+          setPkg(data);
+          setName(data.name || "");
+          setDescription(data.description || "");
+          setPriceMonthly(data.price_monthly || "");
+          setPriceYearly(data.price_yearly || "");
+          setSortOrder(String(data.sort_order ?? 0));
+          setMaxBranches(String(data.max_branches ?? ""));
+          setMaxUsers(String(data.max_users ?? ""));
+          setMaxCustomRoles(String(data.max_custom_roles ?? ""));
+          setMaxAdmins(String(data.max_admins ?? ""));
+          setMaxStaff(String(data.max_staff ?? ""));
+          setIsTrial(data.is_trial);
+          setIsActive(data.is_active);
+        } else {
+          setError(result.body.message || "Failed to load package.");
+        }
+        setFetching(false);
+      });
+    },
+    [packageId],
   );
-}
 
-export default function EditPlanModal() {
+  const handleSave = useCallback(
+    async function (e: React.FormEvent) {
+      e.preventDefault();
+      if (!packageId) return;
+
+      const token = getAccessToken();
+      if (!token) {
+        setError("You must be signed in as a platform admin.");
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      const payload: PackageUpdatePayload = {
+        name: name || undefined,
+        description: description || undefined,
+        price_monthly: priceMonthly || undefined,
+        price_yearly: priceYearly || undefined,
+        sort_order: sortOrder ? parseInt(sortOrder, 10) : undefined,
+        max_branches: maxBranches ? parseInt(maxBranches, 10) : undefined,
+        max_users: maxUsers ? parseInt(maxUsers, 10) : undefined,
+        max_custom_roles: maxCustomRoles ? parseInt(maxCustomRoles, 10) : undefined,
+        max_admins: maxAdmins ? parseInt(maxAdmins, 10) : undefined,
+        max_staff: maxStaff ? parseInt(maxStaff, 10) : undefined,
+        is_trial: isTrial,
+        is_active: isActive,
+      };
+
+      try {
+        const result = await updatePlatformPackage(packageId, payload, token);
+        if (result.ok && result.body.success) {
+          if (onUpdated) onUpdated();
+        } else {
+          setError(result.body.message || "Failed to update package.");
+        }
+      } catch {
+        setError("Unable to reach the server.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [
+      packageId,
+      name,
+      description,
+      priceMonthly,
+      priceYearly,
+      sortOrder,
+      maxBranches,
+      maxUsers,
+      maxCustomRoles,
+      maxAdmins,
+      maxStaff,
+      isTrial,
+      isActive,
+      onUpdated,
+    ],
+  );
+
   return (
     <div className="modal fade" id="edit_plans">
       <div className="modal-dialog modal-dialog-centered modal-lg">
@@ -48,133 +152,176 @@ export default function EditPlanModal() {
               <i className="ti ti-x" />
             </button>
           </div>
-          <form>
-            <div className="p-4">
-              <div className="flex items-center flex-wrap gap-3 bg-[#f8f9fa] rounded-md p-3 mb-4">
-                <span className="w-[72px] h-[72px] rounded-full border border-dashed border-[#cfd4da] overflow-hidden flex items-center justify-center shrink-0">
-                  <img src="assets/img/profiles/avatar-30.jpg" alt="img" className="w-full h-full object-cover" />
-                </span>
-                <div>
-                  <h6 className="mb-1 text-[14px] font-semibold text-[#212B36]">Upload Profile Image</h6>
-                  <p className="text-[12px] text-[#646B72] mb-2">Image should be below 4 mb</p>
-                  <div className="flex items-center gap-2">
-                    <label className="relative inline-flex items-center px-3 py-1.5 rounded-md bg-[#0ac79e] text-white text-[13px] font-medium cursor-pointer hover:bg-[#089b7c] transition-colors">
-                      Upload
-                      <input type="file" multiple className="absolute inset-0 opacity-0 cursor-pointer" />
+
+          {fetching ? (
+            <div className="p-6 text-center text-muted">Loading package...</div>
+          ) : pkg ? (
+            <form onSubmit={handleSave}>
+              <div className="p-4">
+                <div className="flex items-center gap-3 bg-[#f8f9fa] rounded-md p-3 mb-4">
+                  <div>
+                    <h6 className="mb-1 text-[14px] font-semibold text-[#212B36]">
+                      {pkg.name}
+                    </h6>
+                    <p className="text-[12px] text-[#646B72] m-0">
+                      {pkg.slug}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-12 gap-4">
+                  <div className="col-span-12 min-[768px]:col-span-6">
+                    <label className={labelCls}>
+                      Plan Name <span className="text-[#dc3545]">*</span>
                     </label>
-                    <Link href="#" className="px-3 py-1.5 rounded-md border border-[#e7e7e7] text-[#646B72] text-[13px] font-medium hover:bg-[#f6f6f6]">
-                      Cancel
-                    </Link>
+                    <input
+                      type="text"
+                      className={inputCls}
+                      value={name}
+                      onChange={function (e) { setName(e.target.value); }}
+                      required
+                    />
+                  </div>
+                  <div className="col-span-12 min-[768px]:col-span-6">
+                    <label className={labelCls}>Sort Order</label>
+                    <input
+                      type="number"
+                      className={inputCls}
+                      value={sortOrder}
+                      onChange={function (e) { setSortOrder(e.target.value); }}
+                    />
+                  </div>
+                  <div className="col-span-12 min-[768px]:col-span-6">
+                    <label className={labelCls}>Monthly Price</label>
+                    <input
+                      type="text"
+                      className={inputCls}
+                      value={priceMonthly}
+                      onChange={function (e) { setPriceMonthly(e.target.value); }}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <div className="col-span-12 min-[768px]:col-span-6">
+                    <label className={labelCls}>Yearly Price</label>
+                    <input
+                      type="text"
+                      className={inputCls}
+                      value={priceYearly}
+                      onChange={function (e) { setPriceYearly(e.target.value); }}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <div className="col-span-6 min-[768px]:col-span-3">
+                    <label className={labelCls}>Max Branches</label>
+                    <input
+                      type="number"
+                      className={inputCls}
+                      value={maxBranches}
+                      onChange={function (e) { setMaxBranches(e.target.value); }}
+                    />
+                  </div>
+                  <div className="col-span-6 min-[768px]:col-span-3">
+                    <label className={labelCls}>Max Users</label>
+                    <input
+                      type="number"
+                      className={inputCls}
+                      value={maxUsers}
+                      onChange={function (e) { setMaxUsers(e.target.value); }}
+                    />
+                  </div>
+                  <div className="col-span-6 min-[768px]:col-span-3">
+                    <label className={labelCls}>Max Custom Roles</label>
+                    <input
+                      type="number"
+                      className={inputCls}
+                      value={maxCustomRoles}
+                      onChange={function (e) { setMaxCustomRoles(e.target.value); }}
+                    />
+                  </div>
+                  <div className="col-span-6 min-[768px]:col-span-3">
+                    <label className={labelCls}>Max Admins</label>
+                    <input
+                      type="number"
+                      className={inputCls}
+                      value={maxAdmins}
+                      onChange={function (e) { setMaxAdmins(e.target.value); }}
+                    />
+                  </div>
+                  <div className="col-span-6 min-[768px]:col-span-3">
+                    <label className={labelCls}>Max Staff</label>
+                    <input
+                      type="number"
+                      className={inputCls}
+                      value={maxStaff}
+                      onChange={function (e) { setMaxStaff(e.target.value); }}
+                    />
+                  </div>
+                  <div className="col-span-6 min-[768px]:col-span-3">
+                    <label className={labelCls}>Status</label>
+                    <Select
+                      classNamePrefix="react-select"
+                      options={status}
+                      value={status.find(function (s) {
+                        return s.value === (isActive ? "Active" : "Inactive");
+                      })}
+                      onChange={function (opt) {
+                        setIsActive((opt as any)?.value === "Active");
+                      }}
+                    />
                   </div>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-12 min-[768px]:col-span-6">
-                  <label className={labelCls}>Plan Name <span className="text-[#dc3545]">*</span></label>
-                  <Select classNamePrefix="react-select" options={planName} placeholder="Choose" />
-                </div>
-                <div className="col-span-12 min-[768px]:col-span-6">
-                  <label className={labelCls}>Plan Type <span className="text-[#dc3545]">*</span></label>
-                  <Select classNamePrefix="react-select" options={planType} placeholder="Choose" />
-                </div>
-                <div className="col-span-12 min-[768px]:col-span-6">
-                  <label className={labelCls}>Plan Position <span className="text-[#dc3545]">*</span></label>
-                  <Select classNamePrefix="react-select" options={planPosition} placeholder="Choose" />
-                </div>
-                <div className="col-span-12 min-[768px]:col-span-6">
-                  <label className={labelCls}>Plan Currency <span className="text-[#dc3545]">*</span></label>
-                  <Select classNamePrefix="react-select" options={plancurrency} placeholder="Choose" />
-                </div>
-                <div className="col-span-12 min-[768px]:col-span-6">
-                  <div className="flex justify-between items-center mb-1.5">
-                    <label className="text-[13px] font-medium text-[#212B36]">Price <span className="text-[#dc3545]">*</span></label>
-                    <span className="text-[12px] text-[#0ac79e] inline-flex items-center gap-1">
-                      <i className="fa-solid fa-circle-exclamation" /> Set 0 for free
-                    </span>
-                  </div>
-                  <Select classNamePrefix="react-select" options={plancurrency} placeholder="Choose" />
-                </div>
-                <div className="col-span-6 min-[768px]:col-span-3">
-                  <label className={labelCls}>Discount Type <span className="text-[#dc3545]">*</span></label>
-                  <Select classNamePrefix="react-select" options={discountType} placeholder="Choose" />
-                </div>
-                <div className="col-span-6 min-[768px]:col-span-3">
-                  <label className={labelCls}>Discount <span className="text-[#dc3545]">*</span></label>
-                  <input type="text" className={inputCls} />
-                </div>
-                <div className="col-span-6 min-[768px]:col-span-3">
-                  <label className={labelCls}>Limitations Invoices</label>
-                  <input type="text" className={inputCls} />
-                </div>
-                <div className="col-span-6 min-[768px]:col-span-3">
-                  <label className={labelCls}>Max Customers</label>
-                  <input type="text" className={inputCls} />
-                </div>
-                <div className="col-span-6 min-[768px]:col-span-3">
-                  <label className={labelCls}>Product</label>
-                  <input type="text" className={inputCls} />
-                </div>
-                <div className="col-span-6 min-[768px]:col-span-3">
-                  <label className={labelCls}>Supplier</label>
-                  <input type="text" className={inputCls} />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between mt-5 mb-3">
-                <h6 className="m-0 text-[14px] font-semibold text-[#212B36]">Plan Modules</h6>
-                <label className="flex items-center gap-2 text-[14px] font-medium text-[#212B36] cursor-pointer">
-                  <input type="checkbox" className={checkboxCls} /> Select All
-                </label>
-              </div>
-              <div className="grid grid-cols-2 min-[992px]:grid-cols-4 gap-3 mb-4">
-                {modules.map((mod) => (
-                  <label key={mod} className="flex items-center gap-2 text-[14px] font-medium text-[#212B36] cursor-pointer">
-                    <input type="checkbox" className={checkboxCls} defaultChecked /> {mod}
+                <div className="flex items-center gap-8 mt-4">
+                  <label className="flex items-center gap-2 text-[14px] font-medium text-[#212B36] cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 rounded accent-[#0ac79e]"
+                      checked={isTrial}
+                      onChange={function (e) { setIsTrial(e.target.checked); }}
+                    />
+                    Trial
                   </label>
-                ))}
-              </div>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-[14px] font-medium text-[#212B36]">Access Trial</span>
-                <Toggle defaultChecked />
+                </div>
+
+                <div className="col-span-12 mt-4">
+                  <label className={labelCls}>Description</label>
+                  <textarea
+                    className={`${inputCls} min-h-[90px]`}
+                    value={description}
+                    onChange={function (e) { setDescription(e.target.value); }}
+                  />
+                </div>
               </div>
 
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-12 min-[768px]:col-span-4">
-                  <label className={labelCls}>Trial Days</label>
-                  <input type="text" className={inputCls} />
-                </div>
-                <div className="col-span-12 min-[768px]:col-span-3">
-                  <span className="block text-[13px] font-medium text-[#212B36] mb-1.5">Is Recommended</span>
-                  <Toggle defaultChecked />
-                </div>
-                <div className="col-span-12 min-[768px]:col-span-5">
-                  <label className={labelCls}>Status <span className="text-[#dc3545]">*</span></label>
-                  <Select classNamePrefix="react-select" options={status} placeholder="Choose" />
-                </div>
-                <div className="col-span-12">
-                  <label className={labelCls}>Description</label>
-                  <textarea className={`${inputCls} min-h-[90px]`} defaultValue="" />
-                </div>
+              {error ? (
+                <p className="px-4 text-[14px] text-[#dc3545]">{error}</p>
+              ) : null}
+
+              <div className="flex items-center justify-end gap-2 p-4 border-t border-[#f1f1f1]">
+                <button
+                  type="button"
+                  data-bs-dismiss="modal"
+                  disabled={loading}
+                  className="px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-4 py-2 rounded-[6px] bg-[#0ac79e] text-white text-[14px] font-medium hover:bg-[#089b7c] transition-colors disabled:opacity-50"
+                >
+                  {loading ? "Saving..." : "Save Changes"}
+                </button>
               </div>
+            </form>
+          ) : error ? (
+            <div className="p-6 text-center text-[#dc3545]">{error}</div>
+          ) : (
+            <div className="p-6 text-center text-muted">
+              Select a package to edit.
             </div>
-            <div className="flex items-center justify-end gap-2 p-4 border-t border-[#f1f1f1]">
-              <button
-                type="button"
-                data-bs-dismiss="modal"
-                className="px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                data-bs-dismiss="modal"
-                className="px-4 py-2 rounded-[6px] bg-[#0ac79e] text-white text-[14px] font-medium hover:bg-[#089b7c] transition-colors"
-              >
-                Save Changes
-              </button>
-            </div>
-          </form>
+          )}
         </div>
       </div>
     </div>

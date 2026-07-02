@@ -1,46 +1,49 @@
 "use client";
 
-import { deletePlatformPackage } from "@/lib/billing";
+import { deletePlatformProduct } from "@/lib/billing";
 import { getAccessToken } from "@/lib/auth-session";
 import { useCallback, useState } from "react";
 
 type Props = {
-  packageId?: string | null;
-  packageName?: string;
+  productId?: string | null;
+  productName?: string;
   onDeleted?: () => void;
 };
 
-export default function DeletePackageModal({ packageId, packageName, onDeleted }: Props) {
+export default function SoftwareProductDeleteModal({ productId, productName, onDeleted }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleDelete = useCallback(async function () {
-    if (!packageId) return;
-    const token = getAccessToken();
-    if (!token) {
-      setError("You must be signed in as a platform admin.");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const result = await deletePlatformPackage(packageId, token);
-      if (result.ok && result.body.success) {
-        if (onDeleted) onDeleted();
-      } else {
-        setError(result.body.message || "Failed to delete package.");
+  const handleDelete = useCallback(
+    async function () {
+      if (!productId) return;
+      const token = getAccessToken();
+      if (!token) {
+        setError("You must be signed in as a platform admin.");
+        return;
       }
-    } catch {
-      setError("Unable to reach the server.");
-    } finally {
-      setLoading(false);
-    }
-  }, [packageId, onDeleted]);
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const result = await deletePlatformProduct(productId, token);
+        if (result.ok && result.body.success) {
+          if (onDeleted) onDeleted();
+        } else {
+          setError(result.body.message || "Failed to delete product.");
+        }
+      } catch {
+        setError("Unable to reach the server.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [productId, onDeleted],
+  );
 
   return (
-    <div className="modal fade" id="delete_modal">
+    <div className="modal fade" id="delete_product">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="p-6 text-center">
@@ -49,11 +52,13 @@ export default function DeletePackageModal({ packageId, packageName, onDeleted }
                 <i className="ti ti-trash-x text-[32px]" />
               </span>
             </div>
-            <h4 className="mb-1 text-[20px] font-bold text-[#212B36]">Delete Packages</h4>
+            <h4 className="mb-1 text-[20px] font-bold text-[#212B36]">
+              Delete Product
+            </h4>
             <p className="mb-4 text-[14px] text-[#646B72]">
-              {packageName
-                ? `Are you sure you want to delete "${packageName}"?`
-                : "Are you sure you want to delete this package?"}
+              {productName
+                ? `Are you sure you want to delete "${productName}"?`
+                : "Are you sure you want to delete this product?"}
             </p>
             {error ? (
               <p className="mb-3 text-[14px] text-[#dc3545]">{error}</p>
@@ -69,7 +74,7 @@ export default function DeletePackageModal({ packageId, packageName, onDeleted }
               </button>
               <button
                 type="button"
-                disabled={loading || !packageId}
+                disabled={loading || !productId}
                 onClick={handleDelete}
                 className="px-4 py-2 rounded-[6px] bg-[#dc3545] text-white text-[14px] font-medium hover:bg-[#bb2d3b] transition-colors disabled:opacity-50"
               >
