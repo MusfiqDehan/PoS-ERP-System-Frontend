@@ -321,3 +321,23 @@
     }
     }
 }
+
+/* Platform owner pages — header is sticky so content padding is redundant */
+.main-wrapper:has(.header-platform) .page-wrapper {
+    padding-top: 0;
+}
+
+/* Platform owner header — sit to the right of sidebar */
+@include mixins.respond-above(custom991) {
+    .main-wrapper:has(.header-platform) .header-platform {
+        margin-left: 252px;
+    }
+    .mini-sidebar .main-wrapper:has(.header-platform) .header-platform {
+        margin-left: 86px;
+    }
+}
+
+/* Platform owner sidebar — full height from the top */
+.main-wrapper:has(.header-platform) .sidebar {
+    top: 0;
+}

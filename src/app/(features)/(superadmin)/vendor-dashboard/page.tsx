@@ -18,7 +18,7 @@ export default function VendorDashboard() {
             <h2 className="m-0 text-[22px] font-bold text-[#101828]">
               Overview Dashboard
             </h2>
-            <p className="m-0 mt-0.5 text-[14px] text-[#667085]">
+            <p className="m-0 mt-0.5 text-[16px] text-[#667085]">
               Real-time platform performance &amp; metrics
             </p>
           </div>

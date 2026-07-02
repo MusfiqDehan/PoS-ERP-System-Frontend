@@ -12,8 +12,8 @@ export default function VendorRecentlyRegistered() {
       title="Recently Registered"
       action={
         <Link
-          href={routes.superAdminPurchaseTransaction}
-          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium text-[#0ac79e] bg-[#0ac79e]/10 hover:bg-[#0ac79e]/15 transition-colors"
+          href={routes.companies}
+          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[14px] font-medium text-[#0ac79e] bg-[#0ac79e]/10 hover:bg-[#0ac79e]/15 transition-colors"
         >
           View All
         </Link>
@@ -38,12 +38,12 @@ export default function VendorRecentlyRegistered() {
                     {item.name}
                   </Link>
                 </h6>
-                <p className="m-0 mt-0.5 text-[12px] text-[#667085]">
+                <p className="m-0 mt-0.5 text-[14px] text-[#667085]">
                   {item.plan}
                 </p>
               </div>
             </div>
-            <span className="shrink-0 text-[13px] font-semibold text-[#344054] whitespace-nowrap">
+            <span className="shrink-0 text-[14px] font-semibold text-[#344054] whitespace-nowrap">
               {item.users}
             </span>
           </div>

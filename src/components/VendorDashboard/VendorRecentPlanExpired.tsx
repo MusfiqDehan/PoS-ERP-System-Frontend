@@ -23,7 +23,7 @@ export default function VendorRecentPlanExpired() {
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key)}
-              className={`px-3 py-1.5 text-[12px] font-semibold rounded-[7px] transition-all duration-200 ${
+              className={`px-3 py-1.5 text-[14px] font-semibold rounded-[7px] transition-all duration-200 ${
                 activeTab === tab.key
                   ? "bg-white text-[#101828] shadow-sm"
                   : "text-[#667085] hover:text-[#101828]"
@@ -59,14 +59,14 @@ export default function VendorRecentPlanExpired() {
                         {item.name}
                       </Link>
                     </h6>
-                    <p className="m-0 mt-0.5 text-[12px] text-[#667085]">
+                    <p className="m-0 mt-0.5 text-[14px] text-[#667085]">
                       Expired: {item.expiredDate}
                     </p>
                   </div>
                 </div>
                 <Link
                   href="#"
-                  className="shrink-0 text-[12px] font-semibold text-[#0ac79e] hover:text-[#089b7c] whitespace-nowrap"
+                  className="shrink-0 text-[14px] font-semibold text-[#0ac79e] hover:text-[#089b7c] whitespace-nowrap"
                 >
                   Send Reminder
                 </Link>
@@ -94,7 +94,7 @@ export default function VendorRecentPlanExpired() {
                         {item.name}
                       </Link>
                     </h6>
-                    <p className="m-0 mt-0.5 text-[12px] text-[#0ac79e] truncate">
+                    <p className="m-0 mt-0.5 text-[14px] text-[#0ac79e] truncate">
                       {item.domain}
                     </p>
                   </div>
@@ -102,13 +102,13 @@ export default function VendorRecentPlanExpired() {
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     type="button"
-                    className="px-2.5 py-1 rounded-md text-[11px] font-semibold text-[#067647] bg-[#ecfdf3] hover:bg-[#067647] hover:text-white transition-all"
+                    className="px-2.5 py-1 rounded-md text-[13px] font-semibold text-[#067647] bg-[#ecfdf3] hover:bg-[#067647] hover:text-white transition-all"
                   >
                     Approve
                   </button>
                   <button
                     type="button"
-                    className="px-2.5 py-1 rounded-md text-[11px] font-semibold text-[#b42318] bg-[#fef3f2] hover:bg-[#b42318] hover:text-white transition-all"
+                    className="px-2.5 py-1 rounded-md text-[13px] font-semibold text-[#b42318] bg-[#fef3f2] hover:bg-[#b42318] hover:text-white transition-all"
                   >
                     Reject
                   </button>

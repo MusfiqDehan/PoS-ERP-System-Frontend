@@ -12,13 +12,14 @@ import StatsCards from "@/components/SuperAdmin/companies/StatsCards";
 import UpgradeInfoModal from "@/components/SuperAdmin/companies/UpgradeInfoModal";
 
 export default function Companies() {
+  const [searchText, setSearchText] = useState("");
   const [passwordVisibility, setPasswordVisibility] = useState({
     password: false,
     confirmPassword: false,
   });
 
   const togglePasswordVisibility = (
-    field: "password" | "confirmPassword"
+    field: "password" | "confirmPassword",
   ) => {
     setPasswordVisibility((prevState) => ({
       ...prevState,
@@ -35,9 +36,9 @@ export default function Companies() {
     <>
       <div className="page-wrapper">
         <div className="content">
-          <PageHeader />
+          <PageHeader searchText={searchText} onSearchChange={setSearchText} />
           <StatsCards />
-          <CompaniesTable />
+          <CompaniesTable searchText={searchText} />
         </div>
         <CommonFooter />
       </div>
