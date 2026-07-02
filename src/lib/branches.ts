@@ -151,3 +151,35 @@ export function assignBranchManager(
 ): Promise<ApiResult<Branch>> {
   return apiPost<Branch>(`${BRANCH_LIST_PATH}${branchId}/assign-manager/`, { user_id: userId }, accessToken);
 }
+
+/** Fetch ALL tenant branches (unscoped) for the header branch switcher.
+ *  Uses the summary endpoint which bypasses per-user branch access scoping. */
+export async function fetchAllTenantBranches(
+  accessToken?: string,
+): Promise<ApiResult<Branch[]>> {
+  const result = await apiGet<BranchSummary[]>("branches/summary/", accessToken);
+  if (result.ok && result.body.success && result.body.data) {
+    const d = result.body.data;
+    const arr: BranchSummary[] = Array.isArray(d)
+      ? (d as BranchSummary[])
+      : ((d as Record<string, unknown>)?.items as BranchSummary[]) ?? [];
+    return {
+      ...result,
+      body: {
+        ...result.body,
+        data: arr.map<Branch>((s) => ({
+          id: s.id,
+          name: s.name,
+          code: s.code,
+          status: s.status,
+          staff_count: s.staff_count,
+          monthly_revenue: s.monthly_revenue,
+          rating: s.rating,
+          is_headquarters: false,
+          is_active: true,
+        })),
+      },
+    };
+  }
+  return result as unknown as ApiResult<Branch[]>;
+}

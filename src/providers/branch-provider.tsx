@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { fetchBranches, type Branch } from "@/lib/branches";
+import { fetchBranches, fetchAllTenantBranches, type Branch } from "@/lib/branches";
 import { getAccessToken } from "@/lib/auth-session";
 import { useAuth } from "@/providers/auth-provider";
 
@@ -61,9 +61,24 @@ export function BranchProvider({ children }: { children: ReactNode }) {
     }
 
     setLoading(true);
-    const { ok, body } = await fetchBranches(token);
-    if (ok && body.success && body.data) {
-      const raw = body.data as unknown;
+
+    // Tenant admins get the full branch list (unscoped).
+    // Non-owners get their scoped branch list.
+    let result: { ok: boolean; body: { success: boolean; data?: unknown; message?: string } };
+    if (tier === "owner") {
+      const summaryRes = await fetchAllTenantBranches(token);
+      if (summaryRes.ok && summaryRes.body.success) {
+        result = summaryRes;
+      } else {
+        // Fall back to scoped list if summary fails (e.g., not admin in backend)
+        result = await fetchBranches(token);
+      }
+    } else {
+      result = await fetchBranches(token);
+    }
+
+    if (result.ok && result.body.success && result.body.data) {
+      const raw = result.body.data as unknown;
       const list: Branch[] = Array.isArray(raw)
         ? (raw as Branch[])
         : ((raw as Record<string, unknown>)?.results as Branch[]) ?? [];
@@ -76,7 +91,7 @@ export function BranchProvider({ children }: { children: ReactNode }) {
       if (branch) persistBranchId(branch.id);
     }
     setLoading(false);
-  }, []);
+  }, [tier]);
 
   useEffect(() => {
     void reloadBranches();
