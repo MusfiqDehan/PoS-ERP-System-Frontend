@@ -65,6 +65,7 @@ export type PosConfig = {
   points_per_currency_unit: string;
   min_subtotal_to_earn_points: string;
   low_stock_threshold: number;
+  scan_sound_enabled: boolean;
 };
 
 export type CheckoutLine = {
