@@ -9,6 +9,7 @@ import PosSaleModals, { useFinalizeSale } from "./PosSaleModals";
 import PosOrderDetails from "./PosOrderDetails";
 import PosOrderSidebar from "./PosOrderSidebar";
 import PosProductsPanel from "./PosProductsPanel";
+import PosScannerPanel from "./PosScannerPanel";
 import { usePosCart } from "@/hooks/pos/usePosCart";
 import { usePosCategories } from "@/hooks/pos/usePosCategories";
 import {
@@ -28,7 +29,6 @@ import {
   scanOutOfStockMessage,
   scanStockLimitMessage,
 } from "@/lib/posScanFeedback";
-import { debugScanLog } from "@/lib/debugScanLog";
 
 function scanFailureMessage(apiMessage: string): string {
   if (
@@ -89,29 +89,8 @@ export default function PosComponent() {
         return;
       }
 
-      // #region agent log
-      debugScanLog(
-        "index.tsx:handleBarcodeScan",
-        "scan handler invoked",
-        { codeLength: trimmed.length, branchId: branchId ?? null },
-        "D",
-      );
-      // #endregion
-
       try {
         const result = await scanBarcode(trimmed);
-        // #region agent log
-        debugScanLog(
-          "index.tsx:handleBarcodeScan",
-          "scan API result",
-          {
-            ok: result.ok,
-            message: result.ok ? "success" : result.message,
-            branchId: branchId ?? null,
-          },
-          "E",
-        );
-        // #endregion
         if (!result.ok) {
           if (scanSoundEnabled) {
             playScanSound("error");
@@ -179,6 +158,8 @@ export default function PosComponent() {
               Select a branch in the header before scanning products.
             </output>
           )}
+
+          <PosScannerPanel onBarcodeScan={handleBarcodeScan} />
 
           <div className="pos-wrapper">
             <PosProductsPanel
