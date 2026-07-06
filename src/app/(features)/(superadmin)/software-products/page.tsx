@@ -5,6 +5,7 @@ import CommonFooter from "@/core/common/footer/commonFooter";
 import SoftwareProductsTable from "@/components/SuperAdmin/products/SoftwareProductsTable";
 import SoftwareProductFormModal from "@/components/SuperAdmin/products/SoftwareProductFormModal";
 import SoftwareProductDeleteModal from "@/components/SuperAdmin/products/SoftwareProductDeleteModal";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 
 export default function SoftwareProducsPage() {
   const [searchText, setSearchText] = useState("");
@@ -55,7 +56,7 @@ export default function SoftwareProducsPage() {
   }, []);
 
   return (
-    <>
+    <PermissionGuard featureKey="platform.products">
       <div className="page-wrapper">
         <div className="content">
           <div className="page-header settings-pg-header">
@@ -108,6 +109,6 @@ export default function SoftwareProducsPage() {
         productName={deleting?.name}
         onDeleted={handleDeleted}
       />
-    </>
+    </PermissionGuard>
   );
 }
