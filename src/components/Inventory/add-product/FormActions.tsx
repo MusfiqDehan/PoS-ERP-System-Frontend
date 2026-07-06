@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { all_routes } from "@/data/all_routes";
 
-type Props = { submitting: boolean };
+type Props = { submitting: boolean; submitLabel?: string };
 
-export default function FormActions({ submitting }: Props) {
+export default function FormActions({ submitting, submitLabel = "Add Product" }: Props) {
   return (
     <div className="flex items-center justify-end gap-3">
       <Link
@@ -19,7 +19,7 @@ export default function FormActions({ submitting }: Props) {
         disabled={submitting}
         className="px-5 py-[10px] rounded-[10px] bg-[#0ac79e] text-white text-[13px] font-semibold hover:bg-[#089b7c] transition-all shadow-sm shadow-[#0ac79e]/20 disabled:opacity-50"
       >
-        {submitting ? "Saving..." : "Add Product"}
+        {submitting ? "Saving..." : submitLabel}
       </button>
     </div>
   );
