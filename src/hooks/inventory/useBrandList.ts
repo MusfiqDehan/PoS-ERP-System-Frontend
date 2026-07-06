@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getAccessToken } from "@/lib/auth-session";
+import { extractListItems } from "@/lib/api";
 import {
   fetchBrands,
   createBrand,
@@ -22,7 +23,7 @@ export function useBrandList() {
     setError(null);
     const result = await fetchBrands(getAccessToken());
     if (result.ok && result.body.data) {
-      setDataSource(Array.isArray(result.body.data) ? result.body.data : []);
+      setDataSource(extractListItems<Brand>(result.body.data));
     } else {
       setError(result.body.message ?? "Failed to load brands.");
     }
