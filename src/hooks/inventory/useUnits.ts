@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getAccessToken } from "@/lib/auth-session";
+import { extractListItems } from "@/lib/api";
 import {
   fetchUnits,
   createUnit,
@@ -22,7 +23,7 @@ export function useUnits() {
     setError(null);
     const result = await fetchUnits(getAccessToken());
     if (result.ok && result.body.data) {
-      setDataSource(Array.isArray(result.body.data) ? result.body.data : []);
+      setDataSource(extractListItems<Unit>(result.body.data));
     } else {
       setError(result.body.message ?? "Failed to load units.");
     }
