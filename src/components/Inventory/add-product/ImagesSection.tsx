@@ -80,35 +80,35 @@ export default function ImagesSection({
           )}
 
           {images.map((image, index) => (
-            <div
-              key={image.id}
-              className="relative w-[130px] h-[130px] rounded-xl border border-[#F1F5F9] overflow-hidden group shadow-sm"
-            >
-              <img
-                src={resolveProductImageUrl(image.uploadedUrl ?? image.previewUrl)}
-                alt={`Product ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
-              {image.uploading && (
-                <div className="absolute inset-0 bg-white/70 flex items-center justify-center text-[11px] font-medium text-[#64748B]">
-                  Uploading...
-                </div>
-              )}
-              {image.error && (
-                <div className="absolute inset-x-0 bottom-0 bg-[#FEE2E2] text-[#B91C1C] text-[10px] px-1 py-0.5 truncate">
-                  {image.error}
-                </div>
-              )}
-              {index === 0 && !image.uploading && (
-                <span className="absolute bottom-1 left-1 text-[10px] font-semibold bg-[#0ac79e] text-white px-1.5 py-0.5 rounded">
-                  Primary
-                </span>
-              )}
+            <div key={image.id} className="relative w-[130px] h-[130px]">
+              <div className="relative w-full h-full rounded-xl border border-[#F1F5F9] overflow-hidden shadow-sm">
+                <img
+                  src={resolveProductImageUrl(image.uploadedUrl ?? image.previewUrl)}
+                  alt={`Product ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+                {image.uploading && (
+                  <div className="absolute inset-0 bg-white/70 flex items-center justify-center text-[11px] font-medium text-[#64748B]">
+                    Uploading...
+                  </div>
+                )}
+                {image.error && (
+                  <div className="absolute inset-x-0 bottom-0 bg-[#FEE2E2] text-[#B91C1C] text-[10px] px-1 py-0.5 truncate">
+                    {image.error}
+                  </div>
+                )}
+                {index === 0 && !image.uploading && (
+                  <span className="absolute bottom-1 left-1 text-[10px] font-semibold bg-[#0ac79e] text-white px-1.5 py-0.5 rounded">
+                    Primary
+                  </span>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={() => onRemove(image.id)}
                 disabled={disabled || image.uploading}
-                className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-white shadow-md flex items-center justify-center text-[#64748B] hover:text-[#EF4444] transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-40"
+                aria-label={`Remove image ${index + 1}`}
+                className="absolute -top-2 -right-2 z-10 w-6 h-6 rounded-full bg-[#334155] text-white shadow-md flex items-center justify-center hover:bg-[#EF4444] transition-colors disabled:opacity-40 disabled:pointer-events-none"
               >
                 <X size={13} />
               </button>
