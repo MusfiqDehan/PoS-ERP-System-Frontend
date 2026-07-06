@@ -1,10 +1,11 @@
 /** Platform-owner billing API client (public schema). */
 
-import { publicApiGet, publicApiPost, publicApiPatch, publicApiDelete, type ApiResult } from "./api";
+import { publicApiGet, publicApiPost, publicApiPut, publicApiPatch, publicApiDelete, type ApiResult } from "./api";
 
 export const BILLING_INVOICES_PATH = "billing/subscription/invoices/";
 export const BILLING_PACKAGES_PATH = "billing/packages/";
 export const BILLING_PUBLIC_PACKAGES_PATH = "billing/public/packages/";
+export const PLATFORM_FEATURES_PATH = "platform-owner/features/";
 
 export type Package = {
   id: string;
@@ -26,8 +27,22 @@ export type Package = {
   is_active: boolean;
   created_at: string;
   updated_at: string;
-  package_features: any[];
-  role_limits: any[];
+  package_features: PackageFeatureEntry[];
+  role_limits: RoleLimitEntry[];
+};
+
+export type PackageFeatureEntry = {
+  id: string;
+  feature: string;
+  feature_key: string;
+  feature_name: string;
+  limit_value: number | null;
+};
+
+export type RoleLimitEntry = {
+  id: string;
+  role_slug: string;
+  max_users: number;
 };
 
 export type SubscriptionInvoice = {
@@ -224,6 +239,26 @@ export async function deletePlatformGateway(
 /*  Package CRUD (platform-owner, public schema)                      */
 /* ------------------------------------------------------------------ */
 
+export type PackageCreatePayload = {
+  software_product: string;
+  name: string;
+  slug: string;
+  description?: string;
+  price_monthly?: string;
+  price_yearly?: string;
+  is_public?: boolean;
+  is_trial?: boolean;
+  sort_order?: number;
+  max_branches?: number;
+  max_users?: number;
+  max_custom_roles?: number;
+  max_admins?: number;
+  max_staff?: number;
+  is_active?: boolean;
+  feature_ids?: string[];
+  role_limits_data?: { role_slug: string; max_users: number }[];
+};
+
 export type PackageUpdatePayload = Partial<
   Pick<
     Package,
@@ -242,7 +277,17 @@ export type PackageUpdatePayload = Partial<
     | "max_staff"
     | "is_active"
   >
->;
+> & {
+  feature_ids?: string[];
+  role_limits_data?: { role_slug: string; max_users: number }[];
+};
+
+export async function createPlatformPackage(
+  payload: PackageCreatePayload,
+  accessToken?: string,
+): Promise<ApiResult<Package>> {
+  return publicApiPost<Package>(BILLING_PACKAGES_PATH, payload, accessToken);
+}
 
 export async function fetchPlatformPackage(
   id: string,
@@ -308,7 +353,22 @@ export type SoftwareProductWritePayload = Partial<
 export async function fetchPlatformProducts(
   accessToken?: string,
 ): Promise<ApiResult<SoftwareProduct[]>> {
-  return publicApiGet<SoftwareProduct[]>(BILLING_PRODUCTS_PATH, accessToken);
+  const result = await publicApiGet<{ items: SoftwareProduct[] } | SoftwareProduct[]>(
+    BILLING_PRODUCTS_PATH,
+    accessToken,
+  );
+
+  if (result.ok && result.body.success && result.body.data) {
+    const d = result.body.data;
+    if (Array.isArray(d)) {
+      return { ...result, body: { ...result.body, data: d } };
+    }
+    if ((d as { items: SoftwareProduct[] }).items) {
+      return { ...result, body: { ...result.body, data: (d as { items: SoftwareProduct[] }).items } };
+    }
+  }
+
+  return result as ApiResult<SoftwareProduct[]>;
 }
 
 export async function createPlatformProduct(
@@ -343,6 +403,73 @@ export async function deletePlatformProduct(
 ): Promise<ApiResult<SoftwareProduct>> {
   return publicApiDelete<SoftwareProduct>(
     `${BILLING_PRODUCTS_PATH}${id}/`,
+    accessToken,
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Platform Features (for package feature assignment)                 */
+/* ------------------------------------------------------------------ */
+
+export type PlatformFeature = {
+  id: string;
+  key: string;
+  name: string;
+  description: string;
+  scope: string;
+  parent_key: string | null;
+  is_system: boolean;
+  sort_order: number;
+};
+
+export async function fetchPlatformFeatures(
+  accessToken?: string,
+): Promise<ApiResult<PlatformFeature[]>> {
+  const result = await publicApiGet<{ items: PlatformFeature[] } | PlatformFeature[]>(
+    PLATFORM_FEATURES_PATH,
+    accessToken,
+  );
+
+  if (result.ok && result.body.success && result.body.data) {
+    const d = result.body.data;
+    if (Array.isArray(d)) {
+      return { ...result, body: { ...result.body, data: d } };
+    }
+    if ((d as { items: PlatformFeature[] }).items) {
+      return { ...result, body: { ...result.body, data: (d as { items: PlatformFeature[] }).items } };
+    }
+  }
+
+  return result as ApiResult<PlatformFeature[]>;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Package Features (per-package feature assignment)                   */
+/* ------------------------------------------------------------------ */
+
+type PackageFeatureIdsResponse = {
+  package_id: string;
+  feature_ids: string[];
+};
+
+export async function fetchPackageFeatures(
+  packageId: string,
+  accessToken?: string,
+): Promise<ApiResult<PackageFeatureIdsResponse>> {
+  return publicApiGet<PackageFeatureIdsResponse>(
+    `${BILLING_PACKAGES_PATH}${packageId}/features/`,
+    accessToken,
+  );
+}
+
+export async function updatePackageFeatures(
+  packageId: string,
+  featureIds: string[],
+  accessToken?: string,
+): Promise<ApiResult<{ feature_count: number }>> {
+  return publicApiPut<{ feature_count: number }>(
+    `${BILLING_PACKAGES_PATH}${packageId}/features/`,
+    { feature_ids: featureIds },
     accessToken,
   );
 }

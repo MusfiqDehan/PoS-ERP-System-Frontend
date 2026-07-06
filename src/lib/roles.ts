@@ -43,6 +43,8 @@ export type UserRoleAssignment = {
   role_slug?: string;
   branch?: string | null;
   branch_name?: string;
+  warehouse?: string | null;
+  warehouse_name?: string;
   assigned_by_email?: string;
   created_at?: string;
 };
@@ -51,6 +53,7 @@ export type CreateAssignmentPayload = {
   user_id: string;
   role_id: string;
   branch_id?: string;
+  warehouse_id?: string;
 };
 
 /** DRF cursor-paginated response shape. */
@@ -187,6 +190,7 @@ export type InviteEmployeePayload = {
   full_name?: string;
   role_slug?: string;
   branch_id?: string;
+  warehouse_id?: string;
 };
 
 export type EmployeeInvitation = {
@@ -195,6 +199,7 @@ export type EmployeeInvitation = {
   full_name: string;
   role_slug: string;
   branch_id?: string | null;
+  warehouse_id?: string | null;
   expires_at: string;
   status: "pending" | "used" | "expired";
   created_at: string;
