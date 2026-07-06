@@ -101,6 +101,13 @@ export type CheckoutReceipt = {
   qr_data?: string;
 };
 
+export type ReceiptRenderPayload =
+  | string
+  | {
+      formatter: string;
+      body?: string;
+    };
+
 export type SaleResponse = {
   id: string;
   ref_number: string;
@@ -117,7 +124,7 @@ export type SaleResponse = {
   payments: unknown[];
   discounts: unknown[];
   receipt?: CheckoutReceipt;
-  receipt_render?: string;
+  receipt_render?: ReceiptRenderPayload;
 };
 
 export type PosOrder = {

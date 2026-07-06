@@ -42,7 +42,9 @@ export function isEditableElement(element: HTMLElement): boolean {
   );
 }
 
-export function isPosProductSearchInput(element: EventTarget | null): boolean {
+export function isPosProductSearchInput(
+  element: EventTarget | null,
+): element is HTMLInputElement {
   return (
     element instanceof HTMLInputElement &&
     element.id === POS_PRODUCT_SEARCH_ID
