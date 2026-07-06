@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PosModals from "@/core/modals/pos-modal/posModals";
 import PosManageCategoriesModal from "./categories-modal/PosManageCategoriesModal";
 import { openPosModal } from "./categories-modal/openPosModal";
@@ -18,7 +18,27 @@ import {
 import { usePosPage } from "@/hooks/pos/usePosPage";
 import { usePosProducts } from "@/hooks/pos/usePosProducts";
 import { useActiveBranch } from "@/providers/branch-provider";
+import { getAccessToken } from "@/lib/auth-session";
+import { fetchPosConfig } from "@/lib/pos";
 import { apiRowToPosProduct } from "@/lib/posProductMapping";
+import {
+  playScanSound,
+  scanAddedMessage,
+  scanNotFoundMessage,
+  scanOutOfStockMessage,
+  scanStockLimitMessage,
+} from "@/lib/posScanFeedback";
+import { debugScanLog } from "@/lib/debugScanLog";
+
+function scanFailureMessage(apiMessage: string): string {
+  if (
+    apiMessage === "Select a branch before scanning." ||
+    apiMessage === "Enter a barcode or SKU to scan."
+  ) {
+    return apiMessage;
+  }
+  return scanNotFoundMessage();
+}
 
 export default function PosComponent() {
   const { activeBranch } = useActiveBranch();
@@ -40,16 +60,92 @@ export default function PosComponent() {
     searchQuery: undefined,
   });
 
-  const handleBarcodeScan = useCallback(
-    async (code: string) => {
-      const result = await scanBarcode(code);
-      if (result.ok) {
-        cart.addProduct(apiRowToPosProduct(result.row));
+  const [scanSoundEnabled, setScanSoundEnabled] = useState(true);
+
+  useEffect(() => {
+    if (!branchId) {
+      return;
+    }
+
+    let cancelled = false;
+    void (async () => {
+      const token = getAccessToken();
+      const res = await fetchPosConfig(token, branchId);
+      if (cancelled || !res.ok || !res.body.data) {
         return;
       }
-      cart.showStatus(result.message);
+      setScanSoundEnabled(res.body.data.scan_sound_enabled ?? true);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [branchId]);
+
+  const handleBarcodeScan = useCallback(
+    async (code: string) => {
+      const trimmed = code.trim();
+      if (!trimmed) {
+        return;
+      }
+
+      // #region agent log
+      debugScanLog(
+        "index.tsx:handleBarcodeScan",
+        "scan handler invoked",
+        { codeLength: trimmed.length, branchId: branchId ?? null },
+        "D",
+      );
+      // #endregion
+
+      try {
+        const result = await scanBarcode(trimmed);
+        // #region agent log
+        debugScanLog(
+          "index.tsx:handleBarcodeScan",
+          "scan API result",
+          {
+            ok: result.ok,
+            message: result.ok ? "success" : result.message,
+            branchId: branchId ?? null,
+          },
+          "E",
+        );
+        // #endregion
+        if (!result.ok) {
+          if (scanSoundEnabled) {
+            playScanSound("error");
+          }
+          cart.showStatus(scanFailureMessage(result.message));
+          return;
+        }
+
+        const product = apiRowToPosProduct(result.row);
+        const added = cart.addProduct(product, { quiet: true });
+        if (added) {
+          if (scanSoundEnabled) {
+            playScanSound("success");
+          }
+          cart.showStatus(scanAddedMessage(product.name));
+          return;
+        }
+
+        if (scanSoundEnabled) {
+          playScanSound("error");
+        }
+        cart.showStatus(
+          product.stockStatus === "out-of-stock"
+            ? scanOutOfStockMessage(product.name)
+            : scanStockLimitMessage(product.name),
+        );
+      } catch {
+        if (scanSoundEnabled) {
+          playScanSound("error");
+        }
+        cart.showStatus("Scan failed. Check your connection and try again.");
+      }
     },
-    [cart, scanBarcode],
+    [cart, scanBarcode, scanSoundEnabled, branchId],
   );
 
   const handlePrintLastReceipt = useCallback(() => {
@@ -73,7 +169,15 @@ export default function PosComponent() {
       <div className="page-wrapper pos-pg-wrapper ms-0">
         <div className="content pos-design p-0">
           {cart.statusMessage && (
-            <output className="pos-status-toast">{cart.statusMessage}</output>
+            <output className="pos-status-toast" role="status" aria-live="polite">
+              {cart.statusMessage}
+            </output>
+          )}
+
+          {!branchId && (
+            <output className="pos-status-toast pos-status-toast--warning" role="status">
+              Select a branch in the header before scanning products.
+            </output>
           )}
 
           <div className="pos-wrapper">

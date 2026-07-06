@@ -7,6 +7,7 @@ import PosProductsToolbar from "./products-toolbar";
 import type { PosProduct, PosProductFilter } from "./posProductsData";
 import type { PosProductRow } from "@/lib/pos";
 import { apiRowToPosProduct } from "@/lib/posProductMapping";
+import { usePosBarcodeWedge } from "@/hooks/pos/usePosBarcodeWedge";
 
 type PosProductsPanelProps = {
   categories: PosProductFilter[];
@@ -31,6 +32,12 @@ export default function PosProductsPanel({
   onBarcodeScan,
 }: PosProductsPanelProps) {
   const [searchQuery, setSearchQuery] = useState("");
+
+  usePosBarcodeWedge({
+    enabled: Boolean(onBarcodeScan),
+    onScan: onBarcodeScan,
+    clearSearch: () => setSearchQuery(""),
+  });
 
   const displayProducts = products.map(apiRowToPosProduct).filter((p) => {
     if (!searchQuery.trim()) return true;
