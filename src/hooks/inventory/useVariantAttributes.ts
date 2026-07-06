@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getAccessToken } from "@/lib/auth-session";
+import { extractListItems } from "@/lib/api";
 import {
   fetchVariantAttributes,
   createVariantAttribute,
@@ -22,7 +23,7 @@ export function useVariantAttributes() {
     setError(null);
     const result = await fetchVariantAttributes(getAccessToken());
     if (result.ok && result.body.data) {
-      setDataSource(Array.isArray(result.body.data) ? result.body.data : []);
+      setDataSource(extractListItems<VariantAttribute>(result.body.data));
     } else {
       setError(result.body.message ?? "Failed to load variant attributes.");
     }
