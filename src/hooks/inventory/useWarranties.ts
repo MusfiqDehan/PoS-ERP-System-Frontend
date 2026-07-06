@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getAccessToken } from "@/lib/auth-session";
+import { extractListItems } from "@/lib/api";
 import {
   fetchWarranties,
   createWarranty,
@@ -22,7 +23,7 @@ export function useWarranties() {
     setError(null);
     const result = await fetchWarranties(getAccessToken());
     if (result.ok && result.body.data) {
-      setDataSource(Array.isArray(result.body.data) ? result.body.data : []);
+      setDataSource(extractListItems<Warranty>(result.body.data));
     } else {
       setError(result.body.message ?? "Failed to load warranties.");
     }
