@@ -293,9 +293,13 @@ export function usePosCart() {
   }, []);
 
   const addProduct = useCallback(
-    (product: PosProduct) => {
+    (product: PosProduct, options?: { quiet?: boolean }) => {
+      const quiet = options?.quiet ?? false;
+
       if (product.stockStatus === "out-of-stock") {
-        showStatus(`${product.name} is out of stock`);
+        if (!quiet) {
+          showStatus(`${product.name} is out of stock`);
+        }
         return false;
       }
 
@@ -312,7 +316,9 @@ export function usePosCart() {
           const nextQty = existing.quantity + 1;
           const maxStock = getOrderItemStockMax(existing);
           if (nextQty > maxStock) {
-            showStatus(`Only ${maxStock} left in stock`);
+            if (!quiet) {
+              showStatus(`Only ${maxStock} left in stock`);
+            }
             return current;
           }
 
@@ -328,7 +334,7 @@ export function usePosCart() {
         return [...current, productToOrderItem(product)];
       });
 
-      if (added) {
+      if (added && !quiet) {
         showStatus(`${product.name} added to order`);
       }
 
