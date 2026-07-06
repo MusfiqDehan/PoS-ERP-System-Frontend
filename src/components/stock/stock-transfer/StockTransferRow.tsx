@@ -16,6 +16,8 @@ export function StockTransferActionsCell({ record, onView }: Props) {
         <Link
           className="me-2 p-2"
           href="#"
+          data-bs-toggle="modal"
+          data-bs-target="#edit-units"
           onClick={(e) => {
             e.preventDefault();
             onView(record);
