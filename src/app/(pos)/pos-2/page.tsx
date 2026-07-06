@@ -1,12 +1,21 @@
 "use client";
 
+import { useCallback } from "react";
 import PosManageCategoriesModal from "@/components/pos-module/pos/categories-modal/PosManageCategoriesModal";
 import PosProductsPanel from "@/components/pos-module/pos/PosProductsPanel";
 import { usePosCart } from "@/hooks/pos/usePosCart";
 import { usePosCategories } from "@/hooks/pos/usePosCategories";
 import { usePosPage } from "@/hooks/pos/usePosPage";
+import { usePosProducts } from "@/hooks/pos/usePosProducts";
 import PosOrderDetails from "@/components/pos-module/pos/PosOrderDetails";
 import { useActiveBranch } from "@/providers/branch-provider";
+import { apiRowToPosProduct } from "@/lib/posProductMapping";
+import {
+  scanAddedMessage,
+  scanNotFoundMessage,
+  scanOutOfStockMessage,
+  scanStockLimitMessage,
+} from "@/lib/posScanFeedback";
 
 export default function Pos2() {
   const { activeBranch } = useActiveBranch();
@@ -18,6 +27,45 @@ export default function Pos2() {
     activeTab,
     onTabChange: setActiveTab,
   });
+
+  const { products, loading: productsLoading, scanBarcode } = usePosProducts({
+    branchId,
+    categoryId: activeTab,
+    searchQuery: undefined,
+  });
+
+  const handleBarcodeScan = useCallback(
+    async (code: string) => {
+      const trimmed = code.trim();
+      if (!trimmed) {
+        return;
+      }
+
+      try {
+        const result = await scanBarcode(trimmed);
+        if (!result.ok) {
+          cart.showStatus(result.message || scanNotFoundMessage());
+          return;
+        }
+
+        const product = apiRowToPosProduct(result.row);
+        const added = cart.addProduct(product, { quiet: true });
+        if (added) {
+          cart.showStatus(scanAddedMessage(product.name));
+          return;
+        }
+
+        cart.showStatus(
+          product.stockStatus === "out-of-stock"
+            ? scanOutOfStockMessage(product.name)
+            : scanStockLimitMessage(product.name),
+        );
+      } catch {
+        cart.showStatus("Scan failed. Check your connection and try again.");
+      }
+    },
+    [cart, scanBarcode],
+  );
 
   return (
     <div className="main-wrapper pos-five">
@@ -34,6 +82,10 @@ export default function Pos2() {
               onTabChange={setActiveTab}
               onProductSelect={cart.addProduct}
               cartProductIds={cart.cartProductIds}
+              products={products}
+              productsLoading={productsLoading}
+              onBarcodeScan={handleBarcodeScan}
+              branchId={branchId}
             />
 
             <PosOrderDetails
