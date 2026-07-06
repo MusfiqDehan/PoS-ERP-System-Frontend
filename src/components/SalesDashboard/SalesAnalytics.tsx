@@ -2,16 +2,34 @@
 
 import ImageWithBasePath from "@/core/common/image-with-base-path";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useSalesDashboardData } from "@/hooks/dashboard/useSalesDashboard";
+import { formatCurrency, parseCurrency } from "@/lib/currency";
 import SalesAnalyticsBarChart from "./SalesAnalyticsBarChart";
 import {
   salesAnalyticsAssets,
   salesAnalyticsFilterOptions,
+  salesAnalyticsMonths,
 } from "./salesAnalyticsData";
 
 export default function SalesAnalytics() {
-  const [activeYear, setActiveYear] = useState(
-    salesAnalyticsFilterOptions[0],
+  const { sales } = useSalesDashboardData();
+  const years = useMemo(() => {
+    const fromTrend = [
+      ...new Set(
+        (sales?.sales_trend ?? []).map((point) => point.period_key.slice(0, 4)),
+      ),
+    ];
+    return fromTrend.length ? fromTrend : salesAnalyticsFilterOptions;
+  }, [sales?.sales_trend]);
+  const [activeYear, setActiveYear] = useState(years[0] ?? salesAnalyticsFilterOptions[0]);
+
+  const trendForYear = useMemo(
+    () =>
+      (sales?.sales_trend ?? []).filter((point) =>
+        point.period_key.startsWith(String(activeYear)),
+      ),
+    [sales?.sales_trend, activeYear],
   );
 
   return (
@@ -44,7 +62,7 @@ export default function SalesAnalytics() {
               />
             </button>
             <ul className="dropdown-menu dropdown-menu-end">
-              {salesAnalyticsFilterOptions.map((year) => (
+              {years.map((year) => (
                 <li key={year}>
                   <Link
                     href="#"
@@ -63,7 +81,7 @@ export default function SalesAnalytics() {
         </div>
 
         <div className="sales-analytics__body">
-          <SalesAnalyticsBarChart />
+          <SalesAnalyticsBarChart trend={trendForYear} />
         </div>
       </div>
     </div>
