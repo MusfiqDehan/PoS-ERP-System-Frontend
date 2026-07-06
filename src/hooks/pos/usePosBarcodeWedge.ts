@@ -13,7 +13,6 @@ import {
   POS_SEARCH_SUBMIT_IDLE_MS,
   shouldResetWedgeBuffer,
 } from "@/lib/posBarcodeWedge";
-import { debugScanLog } from "@/lib/debugScanLog";
 
 type Options = {
   enabled?: boolean;
@@ -38,25 +37,8 @@ export function usePosBarcodeWedge({
 
   useEffect(() => {
     if (!enabled) {
-      // #region agent log
-      debugScanLog(
-        "usePosBarcodeWedge.ts:mount",
-        "wedge hook disabled",
-        { enabled },
-        "C",
-      );
-      // #endregion
       return;
     }
-
-    // #region agent log
-    debugScanLog(
-      "usePosBarcodeWedge.ts:mount",
-      "wedge hook active",
-      { enabled },
-      "C",
-    );
-    // #endregion
 
     const bufferRef = { value: "" };
     const lastKeyAtRef = { value: 0 };
@@ -68,17 +50,9 @@ export function usePosBarcodeWedge({
       lastKeyAtRef.value = 0;
     };
 
-    const submitCode = (code: string, source: string) => {
+    const submitCode = (code: string) => {
       const trimmed = code.trim();
       if (trimmed.length < POS_SCAN_MIN_LENGTH) {
-        // #region agent log
-        debugScanLog(
-          "usePosBarcodeWedge.ts:submitCode",
-          "code too short",
-          { source, length: trimmed.length },
-          "C",
-        );
-        // #endregion
         return;
       }
 
@@ -87,27 +61,11 @@ export function usePosBarcodeWedge({
         trimmed === lastSubmitRef.code &&
         now - lastSubmitRef.at < POS_SCAN_DEDUP_MS
       ) {
-        // #region agent log
-        debugScanLog(
-          "usePosBarcodeWedge.ts:submitCode",
-          "deduped duplicate scan",
-          { source, codeLength: trimmed.length },
-          "C",
-        );
-        // #endregion
         return;
       }
 
       lastSubmitRef.code = trimmed;
       lastSubmitRef.at = now;
-      // #region agent log
-      debugScanLog(
-        "usePosBarcodeWedge.ts:submitCode",
-        "calling onScan",
-        { source, codeLength: trimmed.length, codePrefix: trimmed.slice(0, 4) },
-        "C",
-      );
-      // #endregion
       onScanRef.current(trimmed);
     };
 
@@ -117,85 +75,43 @@ export function usePosBarcodeWedge({
       }
       idleTimer = setTimeout(() => {
         if (bufferRef.value.length >= POS_SCAN_MIN_LENGTH) {
-          submitCode(bufferRef.value, "global-idle");
+          submitCode(bufferRef.value);
         }
         resetBuffer();
       }, POS_SCAN_IDLE_MS);
     };
 
-    const completeSearchScan = (input: HTMLInputElement, source: string) => {
+    const completeSearchScan = (input: HTMLInputElement) => {
       const code = input.value.trim();
       if (code.length < POS_SCAN_MIN_LENGTH) {
         return;
       }
-      submitCode(code, source);
+      submitCode(code);
       clearSearchRef.current?.();
       resetBuffer();
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target;
-      const targetId =
-        target instanceof HTMLElement ? target.id || target.tagName : "unknown";
 
       if (isPosProductSearchInput(target)) {
         if (!isScanTerminatorKey(event)) {
-          // #region agent log
-          if (event.key.length === 1 || event.key === "Enter") {
-            debugScanLog(
-              "usePosBarcodeWedge.ts:keydown",
-              "key in search field",
-              {
-                key: event.key,
-                keyCode: event.keyCode,
-                targetId,
-                searchLen:
-                  target instanceof HTMLInputElement
-                    ? target.value.length
-                    : 0,
-              },
-              "B",
-            );
-          }
-          // #endregion
           return;
         }
 
         event.preventDefault();
-        completeSearchScan(target, "search-keydown-terminator");
+        completeSearchScan(target);
         return;
       }
 
       if (target instanceof HTMLElement && isEditableElement(target)) {
-        // #region agent log
-        if (event.key.length === 1 || isScanTerminatorKey(event)) {
-          debugScanLog(
-            "usePosBarcodeWedge.ts:keydown",
-            "ignored editable target",
-            { key: event.key, keyCode: event.keyCode, targetId },
-            "B",
-          );
-        }
-        // #endregion
         return;
       }
 
       if (isScanTerminatorKey(event)) {
-        // #region agent log
-        debugScanLog(
-          "usePosBarcodeWedge.ts:keydown",
-          "terminator key",
-          {
-            key: event.key,
-            keyCode: event.keyCode,
-            bufferLen: bufferRef.value.length,
-          },
-          "A",
-        );
-        // #endregion
         if (bufferRef.value.length >= POS_SCAN_MIN_LENGTH) {
           event.preventDefault();
-          submitCode(bufferRef.value, "global-keydown-terminator");
+          submitCode(bufferRef.value);
         }
         resetBuffer();
         return;
@@ -217,19 +133,6 @@ export function usePosBarcodeWedge({
 
       lastKeyAtRef.value = now;
       bufferRef.value += event.key;
-      // #region agent log
-      debugScanLog(
-        "usePosBarcodeWedge.ts:keydown",
-        "global buffer char",
-        {
-          key: event.key,
-          keyCode: event.keyCode,
-          bufferLen: bufferRef.value.length,
-          targetId,
-        },
-        "A",
-      );
-      // #endregion
       scheduleBufferIdleSubmit();
     };
 
@@ -240,7 +143,7 @@ export function usePosBarcodeWedge({
 
       const target = event.target;
       if (isPosProductSearchInput(target)) {
-        completeSearchScan(target, "search-keyup-terminator");
+        completeSearchScan(target);
         return;
       }
 
@@ -249,7 +152,7 @@ export function usePosBarcodeWedge({
       }
 
       if (bufferRef.value.length >= POS_SCAN_MIN_LENGTH) {
-        submitCode(bufferRef.value, "global-keyup-terminator");
+        submitCode(bufferRef.value);
       }
       resetBuffer();
     };
@@ -278,17 +181,8 @@ export function usePosBarcodeWedge({
       searchSubmitTimer = setTimeout(() => {
         const code = input.value.trim();
         const duration = Date.now() - searchStartedAtRef.value;
-        const rapid = isRapidWedgeInput(duration, code.length);
-        // #region agent log
-        debugScanLog(
-          "usePosBarcodeWedge.ts:searchInput",
-          "search input idle",
-          { codeLength: code.length, durationMs: duration, rapid },
-          "B",
-        );
-        // #endregion
-        if (rapid) {
-          submitCode(code, "search-rapid-idle");
+        if (isRapidWedgeInput(duration, code.length)) {
+          submitCode(code);
           clearSearchRef.current?.();
         }
         searchStartedAtRef.value = 0;
@@ -301,24 +195,8 @@ export function usePosBarcodeWedge({
     const attachSearchListener = () => {
       const searchEl = document.getElementById(POS_PRODUCT_SEARCH_ID);
       if (!(searchEl instanceof HTMLInputElement)) {
-        // #region agent log
-        debugScanLog(
-          "usePosBarcodeWedge.ts:attachSearch",
-          "search input not found",
-          {},
-          "B",
-        );
-        // #endregion
         return null;
       }
-      // #region agent log
-      debugScanLog(
-        "usePosBarcodeWedge.ts:attachSearch",
-        "search input listener attached",
-        { id: searchEl.id },
-        "B",
-      );
-      // #endregion
       searchEl.addEventListener("input", handleSearchInput);
       return searchEl;
     };
