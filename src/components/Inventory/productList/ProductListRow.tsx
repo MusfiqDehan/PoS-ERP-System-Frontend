@@ -3,16 +3,18 @@
 
 import Link from "next/link";
 import { all_routes } from "@/data/all_routes";
+import { resolveProductImageUrl } from "@/lib/media";
 import type { ProductListRecord } from "./types";
 
 type Props = { record: ProductListRecord; onSelectForDelete: (r: ProductListRecord) => void };
 
 export function ProductListProductCell({ record }: { record: ProductListRecord }) {
   const img = record.images?.[0];
+  const imageSrc = img ? resolveProductImageUrl(img) : null;
   return (
     <div className="flex items-center gap-2">
       <Link href="#" className="w-10 h-10 rounded-md border border-[#f1f1f1] overflow-hidden flex items-center justify-center shrink-0">
-        {img ? <img alt="" src={img} className="w-full h-full object-cover" /> : <i className="ti ti-package text-[#646B72] text-[16px]" />}
+        {imageSrc ? <img alt="" src={imageSrc} className="w-full h-full object-cover" /> : <i className="ti ti-package text-[#646B72] text-[16px]" />}
       </Link>
       <Link href="#" className="text-[14px] font-medium text-[#212B36] hover:text-[#0ac79e]">{record.name}</Link>
     </div>
