@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import PosCashRegisterModal from "./PosCashRegisterModal";
+import PosPrintReceiptModal from "./PosPrintReceiptModal";
+import PosTodaySaleModal from "./PosTodaySaleModal";
 import {
   posKeyboardShortcuts,
   posTodayProfitStats,
-  posTodaySaleStats,
 } from "./posHeaderData";
+import { closePosModal } from "./categories-modal/closePosModal";
 
 const CALC_KEYS = [
   "C",
@@ -93,8 +96,8 @@ function PosCalculatorModal() {
             <button
               type="button"
               className="pos-sale-modal__close"
-              data-bs-dismiss="modal"
               aria-label="Close"
+              onClick={() => closePosModal("pos-calculator")}
             >
               ×
             </button>
@@ -136,149 +139,6 @@ function PosCalculatorModal() {
   );
 }
 
-function PosCashRegisterModal() {
-  const openingBalance = 5000;
-  const [movement, setMovement] = useState<"in" | "out">("in");
-  const [amount, setAmount] = useState("");
-  const [note, setNote] = useState("");
-  const [confirmed, setConfirmed] = useState<string | null>(null);
-
-  const parsedAmount = Number.parseFloat(amount) || 0;
-  const projectedBalance = useMemo(() => {
-    return movement === "in"
-      ? openingBalance + parsedAmount
-      : openingBalance - parsedAmount;
-  }, [movement, parsedAmount]);
-
-  const canSubmit = parsedAmount > 0;
-
-  const handleConfirm = () => {
-    if (!canSubmit) {
-      return;
-    }
-    setConfirmed(
-      `${movement === "in" ? "Cash In" : "Cash Out"} of $${parsedAmount.toFixed(
-        2,
-      )} recorded. Drawer balance: $${projectedBalance.toFixed(2)}.`,
-    );
-    setAmount("");
-    setNote("");
-  };
-
-  return (
-    <div
-      className="modal fade pos-sale-modal"
-      id="pos-cash-register"
-      tabIndex={-1}
-      aria-labelledby="pos-cash-register-title"
-      aria-hidden="true"
-    >
-      <div className="modal-dialog modal-dialog-centered pos-sale-modal__dialog">
-        <div className="modal-content pos-sale-modal__content">
-          <div className="pos-sale-modal__header">
-            <div>
-              <h5 className="pos-sale-modal__title" id="pos-cash-register-title">
-                Cash Register
-              </h5>
-              <p className="pos-sale-modal__subtitle">Record cash in / cash out</p>
-            </div>
-            <button
-              type="button"
-              className="pos-sale-modal__close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            >
-              ×
-            </button>
-          </div>
-
-          <div className="pos-sale-modal__body">
-            <div className="pos-sale-modal__total-card">
-              <span className="pos-sale-modal__total-label">Drawer Balance</span>
-              <span className="pos-sale-modal__total-value">
-                ${projectedBalance.toFixed(2)}
-              </span>
-            </div>
-
-            <div className="pos-cash-toggle">
-              <button
-                type="button"
-                className={`pos-cash-toggle__btn ${
-                  movement === "in" ? "pos-cash-toggle__btn--active" : ""
-                }`}
-                onClick={() => setMovement("in")}
-              >
-                Cash In
-              </button>
-              <button
-                type="button"
-                className={`pos-cash-toggle__btn ${
-                  movement === "out" ? "pos-cash-toggle__btn--active" : ""
-                }`}
-                onClick={() => setMovement("out")}
-              >
-                Cash Out
-              </button>
-            </div>
-
-            <div className="pos-sale-modal__field-row">
-              <label className="pos-sale-modal__label" htmlFor="pos-cash-amount">
-                Amount
-              </label>
-              <div className="pos-sale-modal__input-wrap">
-                <span className="pos-sale-modal__input-prefix">$</span>
-                <input
-                  id="pos-cash-amount"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  className="pos-sale-modal__input"
-                  value={amount}
-                  onChange={(event) => setAmount(event.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="pos-sale-modal__field-row">
-              <label className="pos-sale-modal__label" htmlFor="pos-cash-note">
-                Note (optional)
-              </label>
-              <input
-                id="pos-cash-note"
-                type="text"
-                className="pos-sale-modal__input pos-sale-modal__input--full"
-                placeholder="Reason for cash movement"
-                value={note}
-                onChange={(event) => setNote(event.target.value)}
-              />
-            </div>
-
-            {confirmed && <p className="pos-cash-confirm">{confirmed}</p>}
-          </div>
-
-          <div className="pos-sale-modal__footer">
-            <button
-              type="button"
-              className="pos-sale-modal__btn pos-sale-modal__btn--ghost"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              type="button"
-              className="pos-sale-modal__btn pos-sale-modal__btn--primary"
-              disabled={!canSubmit}
-              onClick={handleConfirm}
-            >
-              Record
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 type StatModalProps = {
   readonly id: string;
   readonly title: string;
@@ -307,8 +167,8 @@ function PosStatModal({ id, title, subtitle, stats }: StatModalProps) {
             <button
               type="button"
               className="pos-sale-modal__close"
-              data-bs-dismiss="modal"
               aria-label="Close"
+              onClick={() => closePosModal(id)}
             >
               ×
             </button>
@@ -329,7 +189,7 @@ function PosStatModal({ id, title, subtitle, stats }: StatModalProps) {
             <button
               type="button"
               className="pos-sale-modal__btn pos-sale-modal__btn--primary"
-              data-bs-dismiss="modal"
+              onClick={() => closePosModal(id)}
             >
               Done
             </button>
@@ -358,8 +218,8 @@ function PosKeyboardShortcutsModal() {
             <button
               type="button"
               className="pos-sale-modal__close"
-              data-bs-dismiss="modal"
               aria-label="Close"
+              onClick={() => closePosModal("pos-keyboard-shortcuts")}
             >
               ×
             </button>
@@ -374,78 +234,6 @@ function PosKeyboardShortcutsModal() {
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PosPrintReceiptModal() {
-  const handlePrint = () => {
-    globalThis.print();
-  };
-
-  return (
-    <div
-      className="modal fade pos-sale-modal"
-      id="pos-print-receipt"
-      tabIndex={-1}
-      aria-labelledby="pos-print-receipt-title"
-      aria-hidden="true"
-    >
-      <div className="modal-dialog modal-dialog-centered pos-sale-modal__dialog">
-        <div className="modal-content pos-sale-modal__content">
-          <div className="pos-sale-modal__header">
-            <h5 className="pos-sale-modal__title" id="pos-print-receipt-title">
-              Last Receipt
-            </h5>
-            <button
-              type="button"
-              className="pos-sale-modal__close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            >
-              ×
-            </button>
-          </div>
-
-          <div className="pos-sale-modal__body">
-            <div className="pos-receipt">
-              <p className="pos-receipt__store">Sortorium · Mirpur-12</p>
-              <p className="pos-receipt__meta">Invoice #INV-2026-0086</p>
-              <div className="pos-receipt__divider" />
-              <div className="pos-receipt__row">
-                <span>2 × Americano</span>
-                <span>$9.00</span>
-              </div>
-              <div className="pos-receipt__row">
-                <span>1 × Blueberry Muffin</span>
-                <span>$4.50</span>
-              </div>
-              <div className="pos-receipt__divider" />
-              <div className="pos-receipt__row pos-receipt__row--total">
-                <span>Total</span>
-                <span>$13.50</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="pos-sale-modal__footer">
-            <button
-              type="button"
-              className="pos-sale-modal__btn pos-sale-modal__btn--ghost"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              type="button"
-              className="pos-sale-modal__btn pos-sale-modal__btn--primary"
-              onClick={handlePrint}
-            >
-              Print Receipt
-            </button>
           </div>
         </div>
       </div>
@@ -469,12 +257,7 @@ export default function PosHeaderModals() {
       <PosKeyboardShortcutsModal />
       <PosCashRegisterModal />
       <PosPrintReceiptModal />
-      <PosStatModal
-        id="pos-today-sale"
-        title="Today's Sale"
-        subtitle="Summary for the current session"
-        stats={posTodaySaleStats}
-      />
+      <PosTodaySaleModal />
       <PosStatModal
         id="pos-today-profit"
         title="Today's Profit"
