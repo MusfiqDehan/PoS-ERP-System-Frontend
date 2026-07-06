@@ -48,7 +48,7 @@ describe("mapPosOrderToRecord", () => {
       paid_amount: 50,
       payment_status: "paid",
       created_at: "2026-07-05T15:59:38.626523+06:00",
-    } as PosOrder);
+    } as unknown as PosOrder);
     expect(row.total).toContain("50");
     expect(row.paid).toContain("50");
     expect(row.due).toContain("0");
