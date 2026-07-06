@@ -17,7 +17,7 @@ export default function LowStockProducts() {
         id: item.id,
         name: item.product_name,
         productId: item.product_sku,
-        stockCount: formatLowStockCount(item.quantity),
+        stock: Number(item.quantity),
         imageSrc: "assets/img/products/product-01.jpg",
       }))
     : loading
@@ -69,7 +69,7 @@ export default function LowStockProducts() {
                         In Stock
                       </span>
                       <span className="low-stock-products__stock-value">
-                        {product.stockCount}
+                        {formatLowStockCount(product.stock)}
                       </span>
                     </div>
                   </div>

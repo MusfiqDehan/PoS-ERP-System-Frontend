@@ -12,12 +12,14 @@ type PosManageCategoriesModalProps = {
     totalCategories: number;
     totalProducts: number;
   };
-  onCreateCategory: (label: string) => { ok: boolean; error?: string };
+  onCreateCategory: (
+    label: string,
+  ) => Promise<{ ok: boolean; error?: string }>;
   onUpdateCategory: (
     id: string,
     label: string,
-  ) => { ok: boolean; error?: string };
-  onDeleteCategory: (id: string) => { ok: boolean; error?: string };
+  ) => Promise<{ ok: boolean; error?: string }>;
+  onDeleteCategory: (id: string) => Promise<{ ok: boolean; error?: string }>;
 };
 
 export default function PosManageCategoriesModal({
@@ -70,10 +72,10 @@ export default function PosManageCategoriesModal({
     closePosModal(POS_MANAGE_CATEGORIES_MODAL_ID);
   };
 
-  const handleSubmit = () => {
-    const result = isEditing
+  const handleSubmit = async () => {
+    const result = await (isEditing
       ? onUpdateCategory(editingId, name)
-      : onCreateCategory(name);
+      : onCreateCategory(name));
 
     if (!result.ok) {
       setFormError(result.error);
@@ -98,8 +100,8 @@ export default function PosManageCategoriesModal({
     setDeleteError(undefined);
   };
 
-  const handleConfirmDelete = (id: string) => {
-    const result = onDeleteCategory(id);
+  const handleConfirmDelete = async (id: string) => {
+    const result = await onDeleteCategory(id);
     if (!result.ok) {
       setDeleteError(result.error);
       return;
