@@ -4,6 +4,11 @@ export type PosStockStatus = "in-stock" | "low-stock" | "out-of-stock";
 
 export type PosProduct = {
   id: string;
+  /** Base catalog product id; defaults to `id` when omitted (mock/static data). */
+  productId?: string;
+  variantId?: string | null;
+  packageId?: string | null;
+  entityType?: "product" | "variant" | "package";
   name: string;
   sku: string;
   price: string;
