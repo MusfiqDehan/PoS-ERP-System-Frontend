@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { parseCurrency } from "@/lib/currency";
 import {
   formatOrderCurrency,
@@ -10,6 +10,7 @@ import {
 } from "@/components/pos-module/pos/orderDetailsData";
 import type { PosProduct } from "@/components/pos-module/pos/posProductsData";
 import type { CreateCustomerInput } from "@/components/pos-module/pos/PosCreateCustomerModal";
+import { buildCartLineKey } from "@/lib/posProductMapping";
 import {
   calculateOrderTotals,
   resolveLoyaltyForOrder,
@@ -17,12 +18,55 @@ import {
 } from "@/components/pos-module/pos/posLoyaltyConfig";
 import {
   defaultTransactionCustomer,
-  transactionCustomers,
   transactionPaymentMethods,
   type TransactionCustomer,
+  type TransactionPaymentMethod,
 } from "@/components/pos-module/pos/transactionDetailsData";
+import {
+  fetchPosConfig,
+  fetchPosCustomers,
+  createPosCustomer,
+  fetchPaymentMethods,
+  type PosCustomer,
+  type PaymentMethod,
+} from "@/lib/pos";
+import { getAccessToken } from "@/lib/auth-session";
 
-const TAX_RATE = 0.12;
+const DEFAULT_TAX_RATE = 0;
+
+const WALK_IN_CUSTOMER_ID = "walk-in";
+
+const PAYMENT_ICONS: Record<string, { iconSrc: string; bgColor: string }> = {
+  card: { iconSrc: "assets/img/pos/transaction-details/card.svg", bgColor: "#4687f4" },
+  cash: { iconSrc: "assets/img/pos/transaction-details/cash.png", bgColor: "#f5805a" },
+  giftcard: { iconSrc: "assets/img/pos/transaction-details/giftcard.svg", bgColor: "#fe9f43" },
+  cheque: { iconSrc: "assets/img/pos/transaction-details/cheque.png", bgColor: "#0bdbae" },
+  "mobile-banking": { iconSrc: "assets/img/pos/transaction-details/mobile-banking.png", bgColor: "#d8526e" },
+  mobile_banking: { iconSrc: "assets/img/pos/transaction-details/mobile-banking.png", bgColor: "#d8526e" },
+};
+
+const DEFAULT_ICON = { iconSrc: "assets/img/pos/transaction-details/card.svg", bgColor: "#888" };
+
+function posCustomerToTransaction(c: PosCustomer): TransactionCustomer {
+  return {
+    id: c.id,
+    name: c.name,
+    phone: c.phone ?? "",
+    points: c.points ?? 0,
+  };
+}
+
+function paymentMethodToTransaction(m: PaymentMethod & { color?: string; modal_target?: string; width?: string }): TransactionPaymentMethod {
+  const visual = PAYMENT_ICONS[m.code] ?? PAYMENT_ICONS[m.label.toLowerCase().replace(/\s+/g, "-")] ?? DEFAULT_ICON;
+  return {
+    id: m.id,
+    code: m.code,
+    label: m.label,
+    iconSrc: m.icon ?? visual.iconSrc,
+    bgColor: m.color ?? visual.bgColor,
+    width: m.width === "half" ? "half" : undefined,
+  };
+}
 
 export type PosCartSummary = {
   subtotal: number;
@@ -49,6 +93,9 @@ export type PosReceiptSnapshot = {
   totalPayable: number;
   paymentLabel: string;
   invoiceId: string;
+  saleId?: string;
+  receipt?: unknown;
+  receiptRender?: string;
 };
 
 export function parseProductPrice(price: string): number {
@@ -67,9 +114,15 @@ export function parseStockLimit(
 
 export function productToOrderItem(product: PosProduct): OrderDetailItem {
   const stockMax = parseOrderStockMax(product.stockLabel, product.stockStatus);
+  const productId = product.productId ?? product.id;
+  const variantId = product.variantId ?? null;
+  const packageId = product.packageId ?? null;
 
   return {
-    id: product.id,
+    id: buildCartLineKey({ productId, variantId, packageId }),
+    productId,
+    variantId,
+    packageId,
     name: product.name,
     sku: product.sku,
     price: parseProductPrice(product.price),
@@ -122,7 +175,7 @@ export function buildSummaryLines(summary: PosCartSummary): PosSummaryLine[] {
 export function usePosCart() {
   const [items, setItems] = useState<OrderDetailItem[]>([]);
   const [customers, setCustomers] =
-    useState<TransactionCustomer[]>(transactionCustomers);
+    useState<TransactionCustomer[]>([defaultTransactionCustomer]);
   const [selectedCustomer, setSelectedCustomer] =
     useState<TransactionCustomer>(defaultTransactionCustomer);
   const [invoiceSeq, setInvoiceSeq] = useState(3001);
@@ -133,6 +186,51 @@ export function usePosCart() {
   const [receiptSnapshot, setReceiptSnapshot] =
     useState<PosReceiptSnapshot | null>(null);
   const [loyaltyMode, setLoyaltyMode] = useState<LoyaltyMode>("accumulate");
+  const [taxRate, setTaxRate] = useState(DEFAULT_TAX_RATE);
+  const [taxEnabled, setTaxEnabled] = useState(false);
+  const [paymentMethods, setPaymentMethods] =
+    useState<TransactionPaymentMethod[]>(transactionPaymentMethods);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const token = getAccessToken();
+      const [configRes, customersRes, methodsRes] = await Promise.all([
+        fetchPosConfig(token),
+        fetchPosCustomers(undefined, token),
+        fetchPaymentMethods({ active: true }, token),
+      ]);
+
+      if (cancelled) return;
+
+      if (configRes.ok && configRes.body.data) {
+        const cfg = configRes.body.data;
+        const rate = parseFloat(cfg.tax_rate);
+        setTaxRate(isNaN(rate) ? DEFAULT_TAX_RATE : rate);
+        setTaxEnabled(cfg.tax_enabled ?? true);
+      }
+
+      if (customersRes.ok && customersRes.body.data) {
+        const raw = customersRes.body.data;
+        const list: PosCustomer[] = Array.isArray(raw)
+          ? raw
+          : (raw as { items?: PosCustomer[] }).items ?? [];
+        const mapped = list.map(posCustomerToTransaction);
+        setCustomers([defaultTransactionCustomer, ...mapped]);
+      }
+
+      if (methodsRes.ok && methodsRes.body.data) {
+        const raw = methodsRes.body.data;
+        const list: PaymentMethod[] = Array.isArray(raw)
+          ? raw
+          : (raw as { items?: PaymentMethod[] }).items ?? [];
+        if (list.length > 0) {
+          setPaymentMethods(list.map(paymentMethodToTransaction));
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const invoiceId = `#INV-${invoiceSeq}`;
 
@@ -153,12 +251,14 @@ export function usePosCart() {
     [selectedCustomer.id, selectedCustomer.points, subtotal, loyaltyMode],
   );
 
+  const effectiveTaxRate = taxEnabled ? taxRate : 0;
+
   const summary = useMemo((): PosCartSummary => {
     const shipping = 0;
     const totals = calculateOrderTotals(
       subtotal,
       loyaltyResolution.effectiveDiscountPercent,
-      TAX_RATE,
+      effectiveTaxRate,
       shipping,
     );
 
@@ -168,14 +268,14 @@ export function usePosCart() {
       discount: totals.loyaltyDiscount,
       shipping: totals.shipping,
       totalPayable: totals.totalPayable,
-      taxRate: TAX_RATE,
+      taxRate: effectiveTaxRate,
       discountRate: totals.discountRate,
       discountPercent: totals.discountPercent,
       loyaltyMode,
       pointsRedeemed: loyaltyResolution.pointsToRedeem,
       pointsToEarn: loyaltyResolution.pointsToEarn,
     };
-  }, [loyaltyMode, loyaltyResolution, subtotal]);
+  }, [effectiveTaxRate, loyaltyMode, loyaltyResolution, subtotal]);
 
   const summaryLines = useMemo(
     () => buildSummaryLines(summary),
@@ -183,7 +283,7 @@ export function usePosCart() {
   );
 
   const cartProductIds = useMemo(
-    () => new Set(items.map((item) => item.id)),
+    () => new Set(items.map((item) => item.productId)),
     [items],
   );
 
@@ -202,7 +302,12 @@ export function usePosCart() {
       let added = false;
 
       setItems((current) => {
-        const existing = current.find((item) => item.id === product.id);
+        const lineKey = buildCartLineKey({
+          productId: product.productId ?? product.id,
+          variantId: product.variantId,
+          packageId: product.packageId,
+        });
+        const existing = current.find((item) => item.id === lineKey);
         if (existing) {
           const nextQty = existing.quantity + 1;
           const maxStock = getOrderItemStockMax(existing);
@@ -213,7 +318,7 @@ export function usePosCart() {
 
           added = true;
           return current.map((item) =>
-            item.id === product.id
+            item.id === lineKey
               ? { ...item, quantity: nextQty }
               : item,
           );
@@ -384,16 +489,79 @@ export function usePosCart() {
     setLoyaltyMode("accumulate");
   }, []);
 
-  const completeOrder = useCallback(() => {
+  const completeOrder = useCallback(async (branchId?: string | null) => {
     if (items.length === 0 || selectedPaymentId === null) {
       return;
     }
 
-    const paymentLabel =
-      transactionPaymentMethods.find(
-        (method) => method.id === selectedPaymentId,
-      )?.label ?? "Payment";
+    const selectedMethod = paymentMethods.find(
+      (method) => method.id === selectedPaymentId,
+    );
+    const paymentLabel = selectedMethod?.label ?? "Payment";
+    const paymentCode = selectedMethod?.code ?? selectedPaymentId;
 
+    if (branchId) {
+      const { posCheckout } = await import("@/lib/pos");
+      const { getAccessToken } = await import("@/lib/auth-session");
+
+      const isWalkIn = selectedCustomer.id === WALK_IN_CUSTOMER_ID;
+      const payload = {
+        branch: branchId,
+        customer: isWalkIn ? undefined : selectedCustomer.id,
+        lines: items.map((item) => ({
+          product: item.productId,
+          quantity: item.quantity,
+          variant: item.variantId,
+          package: item.packageId,
+        })),
+        payments: [{ method: paymentCode, amount: summary.totalPayable.toFixed(2) }],
+        idempotency_key: typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        promotions: [],
+        coupons: [],
+        vouchers: [],
+      } as Parameters<typeof posCheckout>[0];
+
+      const token = getAccessToken();
+      const result = await posCheckout(payload, token);
+
+      if (result.ok && result.body.data) {
+        const sale = result.body.data;
+        const snapshot = {
+          totalPayable: summary.totalPayable,
+          paymentLabel,
+          invoiceId: sale.ref_number || invoiceId,
+          saleId: sale.id,
+          receipt: sale.receipt,
+          receiptRender: (() => {
+            const render = sale.receipt_render;
+            if (typeof render !== "object" || render === null) {
+              return typeof render === "string" ? render : undefined;
+            }
+            if (render.formatter === "json") return undefined;
+            return render.body ?? undefined;
+          })(),
+        };
+        setReceiptSnapshot(snapshot);
+        const { saveLastPosReceipt } = await import(
+          "@/components/pos-module/pos/posLastReceiptStorage"
+        );
+        saveLastPosReceipt(branchId, snapshot);
+        showStatus("Payment completed");
+        setItems([]);
+        setSelectedPaymentId(null);
+        setLoyaltyMode("accumulate");
+        setInvoiceSeq((current) => current + 1);
+        return;
+      } else {
+        const errorMsg = result.body.message ?? "Checkout failed";
+        showStatus(errorMsg);
+        throw new Error(errorMsg);
+      }
+    }
+
+    // Fallback local-only checkout (no branchId)
     const completedCustomerId = selectedCustomer.id;
     const settlement = loyaltyResolution;
 
@@ -427,6 +595,7 @@ export function usePosCart() {
     invoiceId,
     items.length,
     loyaltyResolution,
+    paymentMethods,
     selectedCustomer.id,
     selectedPaymentId,
     showStatus,
@@ -438,18 +607,31 @@ export function usePosCart() {
   }, []);
 
   const createCustomer = useCallback(
-    (input: CreateCustomerInput) => {
-      const newCustomer: TransactionCustomer = {
-        id: `customer-${Date.now()}`,
-        name: input.name,
-        phone: input.phone,
-        points: 0,
-      };
+    async (input: CreateCustomerInput) => {
+      const token = getAccessToken();
+      const res = await createPosCustomer(
+        { name: input.name, phone: input.phone, email: input.email || undefined },
+        token,
+      );
 
-      setCustomers((current) => [...current, newCustomer]);
-      setSelectedCustomer(newCustomer);
-      setLoyaltyMode("accumulate");
-      showStatus(`${newCustomer.name} added`);
+      if (res.ok && res.body.data) {
+        const created = posCustomerToTransaction(res.body.data);
+        setCustomers((current) => [...current, created]);
+        setSelectedCustomer(created);
+        setLoyaltyMode("accumulate");
+        showStatus(`${created.name} added`);
+      } else {
+        const fallback: TransactionCustomer = {
+          id: `local-${Date.now()}`,
+          name: input.name,
+          phone: input.phone,
+          points: 0,
+        };
+        setCustomers((current) => [...current, fallback]);
+        setSelectedCustomer(fallback);
+        setLoyaltyMode("accumulate");
+        showStatus(res.body.message ?? `${fallback.name} added (offline)`);
+      }
     },
     [showStatus],
   );
@@ -463,6 +645,7 @@ export function usePosCart() {
     selectedPaymentId,
     setSelectedPaymentId,
     statusMessage,
+    showStatus,
     canCheckout,
     addProduct,
     increaseQuantity,
@@ -482,5 +665,6 @@ export function usePosCart() {
     setLoyaltyMode,
     subtotal,
     createCustomer,
+    paymentMethods,
   };
 }
