@@ -1,5 +1,6 @@
 "use client";
 
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { useCallback, useState } from "react";
 import CommonFooter from "@/core/common/footer/commonFooter";
 import SubscriptionSummaryCard from "@/components/tenant-billing/SubscriptionSummaryCard";
@@ -22,7 +23,7 @@ export default function TenantBillingPage() {
   }, []);
 
   return (
-    <>
+    <PermissionGuard featureKey="billing">
       <div className="page-wrapper">
         <div className="content">
           <div className="page-header settings-pg-header">
@@ -104,6 +105,6 @@ export default function TenantBillingPage() {
       </div>
 
       <ChangePlanModal onChanged={triggerRefresh} />
-    </>
+    </PermissionGuard>
   );
 }
