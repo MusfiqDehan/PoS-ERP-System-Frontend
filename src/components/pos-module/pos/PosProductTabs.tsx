@@ -1,13 +1,14 @@
 "use client";
 
 import PosProductCard from "./PosProductCard";
-import { getFilteredPosProducts, type PosProduct } from "./posProductsData";
+import type { PosProduct } from "./posProductsData";
 
 type PosProductTabsProps = {
   activeTab: string;
   searchQuery: string;
   onProductSelect: (product: PosProduct) => void;
   cartProductIds: Set<string>;
+  apiProducts?: PosProduct[];
 };
 
 export default function PosProductTabs({
@@ -15,8 +16,9 @@ export default function PosProductTabs({
   searchQuery,
   onProductSelect,
   cartProductIds,
+  apiProducts,
 }: PosProductTabsProps) {
-  const products = getFilteredPosProducts(activeTab, searchQuery);
+  const products = apiProducts ?? [];
 
   if (products.length === 0) {
     return (
