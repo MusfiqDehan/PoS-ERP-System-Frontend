@@ -12,14 +12,14 @@ function labelMatches(label: string | undefined, query: string): boolean {
   return label.toLowerCase().includes(query);
 }
 
-function filterMenuItem<T extends SidebarSearchNode>(
-  item: T,
+function filterMenuItem(
+  item: SidebarSearchNode,
   query: string,
-): T | null {
+): SidebarSearchNode | null {
   const children = item.submenuItems ?? [];
   const filteredChildren = children
     .map((child) => filterMenuItem(child, query))
-    .filter((child): child is SidebarSearchNode => child !== null) as T[];
+    .filter((child): child is SidebarSearchNode => child !== null);
 
   if (labelMatches(item.label, query)) {
     if (children.length === 0) {
@@ -46,14 +46,14 @@ export function filterSidebarBySearch<T extends SidebarSearchNode>(
   const normalized = normalizeQuery(query);
   if (!normalized) return sections;
 
-  return sections
-    .map((section) => {
-      const filteredItems = (section.submenuItems ?? [])
-        .map((item) => filterMenuItem(item, normalized))
-        .filter((item): item is SidebarSearchNode => item !== null) as T[];
+  return sections.reduce<T[]>((acc, section) => {
+    const filteredItems = (section.submenuItems ?? [])
+      .map((item) => filterMenuItem(item, normalized))
+      .filter((item): item is SidebarSearchNode => item !== null);
 
-      if (filteredItems.length === 0) return null;
-      return { ...section, submenuItems: filteredItems };
-    })
-    .filter((section): section is T => section !== null);
+    if (filteredItems.length > 0) {
+      acc.push({ ...section, submenuItems: filteredItems } as T);
+    }
+    return acc;
+  }, []);
 }

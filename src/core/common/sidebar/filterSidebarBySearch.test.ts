@@ -41,9 +41,12 @@ describe("filterSidebarBySearch", () => {
     expect(result[0].label).toBe("Main");
     expect(result[0].submenuItems).toHaveLength(1);
     expect(result[0].submenuItems?.[0].label).toBe("Dashboard");
-    expect(result[0].submenuItems?.[0].submenuItems).toEqual([
-      { label: "Sales Dashboard", link: "/sales-dashboard" },
-    ]);
+    const dashboardItem = result[0].submenuItems?.[0];
+    expect(
+      dashboardItem && "submenuItems" in dashboardItem
+        ? dashboardItem.submenuItems
+        : undefined,
+    ).toEqual([{ label: "Sales Dashboard", link: "/sales-dashboard" }]);
   });
 
   it("matches parent labels and keeps their children", () => {
@@ -51,7 +54,12 @@ describe("filterSidebarBySearch", () => {
 
     expect(result).toHaveLength(1);
     expect(result[0].submenuItems?.[0].label).toBe("Inventory");
-    expect(result[0].submenuItems?.[0].submenuItems).toHaveLength(2);
+    const inventoryItem = result[0].submenuItems?.[0];
+    expect(
+      inventoryItem && "submenuItems" in inventoryItem
+        ? inventoryItem.submenuItems
+        : undefined,
+    ).toHaveLength(2);
   });
 
   it("returns an empty list when nothing matches", () => {
