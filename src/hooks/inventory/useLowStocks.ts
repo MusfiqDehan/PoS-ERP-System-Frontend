@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getAccessToken } from "@/lib/auth-session";
+import { extractListItems } from "@/lib/api";
 import { fetchLowStocks, type LowStockRow } from "@/lib/inventory";
 
 export function useLowStocks() {
@@ -14,7 +15,7 @@ export function useLowStocks() {
     setError(null);
     const result = await fetchLowStocks(getAccessToken());
     if (result.ok && result.body.data) {
-      setDataSource(Array.isArray(result.body.data) ? result.body.data : []);
+      setDataSource(extractListItems<LowStockRow>(result.body.data));
     } else {
       setError(result.body.message ?? "Failed to load low-stock items.");
     }
