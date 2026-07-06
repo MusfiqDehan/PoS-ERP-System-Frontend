@@ -9,15 +9,28 @@ import StockTransferTable from "@/components/stock/stock-transfer/StockTransferT
 import type { StockTransferRecord } from "@/components/stock/stock-transfer/types";
 import CommonFooter from "@/core/common/footer/commonFooter";
 import { useStockTransfers } from "@/hooks/stock/useStockTransfers";
+import { openBootstrapModal } from "@/lib/bootstrapModal";
 
 export default function StockTransfer() {
   const stock = useStockTransfers();
+  const { loadTransferDetail } = stock;
   const [viewTarget, setViewTarget] = useState<StockTransferRecord | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
 
-  const handleView = useCallback((record: StockTransferRecord) => {
-    setViewTarget(record);
-    openBsModal("edit-units");
-  }, []);
+  const handleView = useCallback(
+    async (record: StockTransferRecord) => {
+      setViewTarget(record);
+      setDetailLoading(true);
+      openBootstrapModal("edit-units");
+
+      const detail = await loadTransferDetail(record.id);
+      if (detail) {
+        setViewTarget(detail);
+      }
+      setDetailLoading(false);
+    },
+    [loadTransferDetail],
+  );
 
   return (
     <PermissionGuard featureKey="stock_transfer">
@@ -38,12 +51,14 @@ export default function StockTransfer() {
       </div>
       <AddTransferModal
         branches={stock.branches}
+        warehouses={stock.warehouses}
         products={stock.products}
         saving={stock.saving}
         onSubmit={stock.createTransfer}
       />
       <EditTransferModal
         transfer={viewTarget}
+        detailLoading={detailLoading}
         saving={stock.saving}
         onApprove={stock.approveTransfer}
         onReject={stock.rejectTransfer}
@@ -53,14 +68,4 @@ export default function StockTransfer() {
       />
     </PermissionGuard>
   );
-}
-
-function openBsModal(id: string) {
-  if (typeof window === "undefined") return;
-  const el = document.getElementById(id);
-  if (!el) return;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Bootstrap = (window as any).bootstrap;
-  if (!Bootstrap?.Modal) return;
-  Bootstrap.Modal.getOrCreateInstance(el).show();
 }
