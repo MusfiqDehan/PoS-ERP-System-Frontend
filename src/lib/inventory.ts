@@ -424,10 +424,21 @@ export type LowStockRow = {
   warehouse_id: string | null;
 };
 
+export type LowStockParams = {
+  branch?: string;
+};
+
 export async function fetchLowStocks(
   accessToken?: string,
+  params?: LowStockParams,
 ): Promise<ApiResult<LowStockRow[]>> {
-  return apiGet<LowStockRow[]>("inventory/products/low-stock/", accessToken);
+  const search = new URLSearchParams();
+  if (params?.branch) search.set("branch", params.branch);
+  const query = search.toString();
+  const path = query
+    ? `inventory/products/low-stock/?${query}`
+    : "inventory/products/low-stock/";
+  return apiGet<LowStockRow[]>(path, accessToken);
 }
 
 export async function fetchExpiredProducts(
