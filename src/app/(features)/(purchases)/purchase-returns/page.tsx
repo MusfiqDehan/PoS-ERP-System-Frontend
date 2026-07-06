@@ -1,3 +1,6 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import PageHeader from "@/components/purchase/purchase-returns/PageHeader";
 import PurchaseReturnTable from "@/components/purchase/purchase-returns/PurchaseReturnTable";
 import AddPurchaseReturn from "@/core/modals/purchases/addpurchasereturn";
@@ -7,7 +10,7 @@ import CommonFooter from "@/core/common/footer/commonFooter";
 
 export default function PurchaseReturn() {
   return (
-    <div>
+    <PermissionGuard featureKey="purchase_returns">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -18,6 +21,6 @@ export default function PurchaseReturn() {
       <AddPurchaseReturn />
       <EditPurchaseReturns />
       <CommonDeleteModal />
-    </div>
+    </PermissionGuard>
   );
 }
