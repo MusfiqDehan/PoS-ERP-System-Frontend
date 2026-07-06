@@ -13,8 +13,6 @@ export default function ToolbarScan({ onBarcodeScan }: Props) {
   const [showInput, setShowInput] = useState(false);
   const [barcodeValue, setBarcodeValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const bufferRef = useRef("");
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleSubmit = useCallback(() => {
     const code = barcodeValue.trim();
@@ -24,35 +22,6 @@ export default function ToolbarScan({ onBarcodeScan }: Props) {
       setShowInput(false);
     }
   }, [barcodeValue, onBarcodeScan]);
-
-  // Keyboard wedge scanner detection: rapid keypresses ending with Enter
-  useEffect(() => {
-    if (!onBarcodeScan) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (showInput) return; // manual mode active, don't intercept
-
-      const target = e.target as HTMLElement;
-      const isInputFocused = target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
-      if (isInputFocused) return;
-
-      if (e.key === "Enter" && bufferRef.current.length >= 3) {
-        e.preventDefault();
-        onBarcodeScan(bufferRef.current);
-        bufferRef.current = "";
-        return;
-      }
-
-      if (e.key.length === 1) {
-        bufferRef.current += e.key;
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => { bufferRef.current = ""; }, 100);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onBarcodeScan, showInput]);
 
   useEffect(() => {
     if (showInput && inputRef.current) {
