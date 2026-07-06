@@ -4,6 +4,9 @@ export type OrderStockStatus = "in-stock" | "low-stock" | "out-of-stock";
 
 export type OrderDetailItem = {
   id: string;
+  productId: string;
+  variantId: string | null;
+  packageId: string | null;
   name: string;
   sku: string;
   price: number;
@@ -55,6 +58,9 @@ export const orderDetailsAssets = {
 export const initialOrderDetailItems: OrderDetailItem[] = [
   {
     id: "od-1",
+    productId: "od-1",
+    variantId: null,
+    packageId: null,
     name: "Cold-Pressed Olive Oil",
     sku: "98765478",
     price: 42.33,
@@ -65,6 +71,9 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
   },
   {
     id: "od-2",
+    productId: "od-2",
+    variantId: null,
+    packageId: null,
     name: "Cold-Pressed Olive Oil",
     sku: "98765478",
     price: 42.33,
@@ -75,6 +84,9 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
   },
   {
     id: "od-3",
+    productId: "od-3",
+    variantId: null,
+    packageId: null,
     name: "Cold-Pressed Olive Oil",
     sku: "98765478",
     price: 42.33,
@@ -85,6 +97,9 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
   },
   {
     id: "od-4",
+    productId: "od-4",
+    variantId: null,
+    packageId: null,
     name: "Cold-Pressed Olive Oil",
     sku: "98765478",
     price: 42.33,
@@ -95,6 +110,9 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
   },
   {
     id: "od-5",
+    productId: "od-5",
+    variantId: null,
+    packageId: null,
     name: "Cold-Pressed Olive Oil",
     sku: "98765478",
     price: 42.33,
@@ -105,6 +123,9 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
   },
   {
     id: "od-6",
+    productId: "od-6",
+    variantId: null,
+    packageId: null,
     name: "Cold-Pressed Olive Oil",
     sku: "98765478",
     price: 42.33,
@@ -115,6 +136,9 @@ export const initialOrderDetailItems: OrderDetailItem[] = [
   },
   {
     id: "od-7",
+    productId: "od-7",
+    variantId: null,
+    packageId: null,
     name: "Cold-Pressed Olive Oil",
     sku: "98765478",
     price: 42.33,
