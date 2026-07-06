@@ -115,7 +115,11 @@ function DetailsContent() {
                     Mfg: {product.manufactured_at?.slice(0, 10) ?? "—"} · Exp: {product.expires_at?.slice(0, 10) ?? "—"}
                   </p>
                 </div>
-                <ProductBarcodePreview productId={product.id} barcode={product.barcode} />
+                <ProductBarcodePreview
+                  productId={product.id}
+                  barcode={product.barcode}
+                  symbology={product.barcode_symbology}
+                />
               </div>
               <ul className="divide-y divide-[#f1f1f1]">
                 {[
