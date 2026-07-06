@@ -5,15 +5,20 @@ import Select from "react-select";
 import {
   fetchPlatformPackage,
   updatePlatformPackage,
+  fetchPlatformFeatures,
   type Package,
   type PackageUpdatePayload,
+  type PlatformFeature,
 } from "@/lib/billing";
 import { getAccessToken } from "@/lib/auth-session";
-import { status } from "@/components/SuperAdmin/packages/planSelectOptions";
+import { status as statusOptions } from "@/components/SuperAdmin/packages/planSelectOptions";
 
 const inputCls =
   "w-full border border-[#e7e7e7] rounded-md px-3 py-2 text-[14px] text-[#212B36] placeholder:text-[#9aa0a6] focus:border-[#0ac79e] focus:outline-none focus:ring-1 focus:ring-[#0ac79e] transition-colors";
 const labelCls = "block text-[13px] font-medium text-[#212B36] mb-1.5";
+const checkboxCls = "w-4 h-4 rounded accent-[#0ac79e]";
+
+type RoleLimitRow = { role_slug: string; max_users: string };
 
 type Props = {
   packageId?: string | null;
@@ -26,6 +31,9 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [pkg, setPkg] = useState<Package | null>(null);
 
+  const [allFeatures, setAllFeatures] = useState<PlatformFeature[]>([]);
+  const [featuresLoading, setFeaturesLoading] = useState(false);
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [priceMonthly, setPriceMonthly] = useState("");
@@ -36,8 +44,11 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
   const [maxCustomRoles, setMaxCustomRoles] = useState("");
   const [maxAdmins, setMaxAdmins] = useState("");
   const [maxStaff, setMaxStaff] = useState("");
+  const [isPublic, setIsPublic] = useState(true);
   const [isTrial, setIsTrial] = useState(false);
   const [isActive, setIsActive] = useState(true);
+  const [selectedFeatureIds, setSelectedFeatureIds] = useState<Set<string>>(new Set());
+  const [roleLimits, setRoleLimits] = useState<RoleLimitRow[]>([]);
 
   useEffect(
     function () {
@@ -51,6 +62,7 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
 
       setFetching(true);
       setError(null);
+      setFeaturesLoading(true);
 
       fetchPlatformPackage(packageId, token).then(function (result) {
         if (result.ok && result.body.success && result.body.data) {
@@ -66,16 +78,81 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
           setMaxCustomRoles(String(data.max_custom_roles ?? ""));
           setMaxAdmins(String(data.max_admins ?? ""));
           setMaxStaff(String(data.max_staff ?? ""));
+          setIsPublic(data.is_public);
           setIsTrial(data.is_trial);
           setIsActive(data.is_active);
+
+          const assignedIds = new Set(
+            (data.package_features || []).map(function (pf) {
+              return pf.feature;
+            }),
+          );
+          setSelectedFeatureIds(assignedIds);
+
+          const existingLimits = (data.role_limits || []).map(function (rl) {
+            return { role_slug: rl.role_slug, max_users: String(rl.max_users) };
+          });
+          setRoleLimits(existingLimits);
         } else {
           setError(result.body.message || "Failed to load package.");
         }
         setFetching(false);
       });
+
+      fetchPlatformFeatures(token).then(function (result) {
+        if (result.ok && result.body.success && result.body.data) {
+          const data = result.body.data;
+          setAllFeatures(Array.isArray(data) ? data : []);
+        }
+        setFeaturesLoading(false);
+      });
     },
     [packageId],
   );
+
+  const tenantFeatures = allFeatures.filter(function (f) {
+    return f.scope === "tenant";
+  });
+
+  function toggleFeature(featureId: string) {
+    setSelectedFeatureIds(function (prev) {
+      const next = new Set(prev);
+      if (next.has(featureId)) {
+        next.delete(featureId);
+      } else {
+        next.add(featureId);
+      }
+      return next;
+    });
+  }
+
+  function toggleAllFeatures() {
+    if (selectedFeatureIds.size === tenantFeatures.length) {
+      setSelectedFeatureIds(new Set());
+    } else {
+      setSelectedFeatureIds(new Set(tenantFeatures.map(function (f) { return f.id; })));
+    }
+  }
+
+  function addRoleLimitRow() {
+    setRoleLimits(function (prev) {
+      return [...prev, { role_slug: "", max_users: "0" }];
+    });
+  }
+
+  function updateRoleLimit(index: number, field: keyof RoleLimitRow, value: string) {
+    setRoleLimits(function (prev) {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
+  }
+
+  function removeRoleLimit(index: number) {
+    setRoleLimits(function (prev) {
+      return prev.filter(function (_, i) { return i !== index; });
+    });
+  }
 
   const handleSave = useCallback(
     async function (e: React.FormEvent) {
@@ -102,9 +179,21 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
         max_custom_roles: maxCustomRoles ? parseInt(maxCustomRoles, 10) : undefined,
         max_admins: maxAdmins ? parseInt(maxAdmins, 10) : undefined,
         max_staff: maxStaff ? parseInt(maxStaff, 10) : undefined,
+        is_public: isPublic,
         is_trial: isTrial,
         is_active: isActive,
+        feature_ids: Array.from(selectedFeatureIds),
       };
+
+      const validRoleLimits = roleLimits.filter(function (rl) {
+        return rl.role_slug.trim() !== "";
+      });
+      payload.role_limits_data = validRoleLimits.map(function (rl) {
+        return {
+          role_slug: rl.role_slug.trim(),
+          max_users: parseInt(rl.max_users, 10) || 0,
+        };
+      });
 
       try {
         const result = await updatePlatformPackage(packageId, payload, token);
@@ -120,20 +209,9 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
       }
     },
     [
-      packageId,
-      name,
-      description,
-      priceMonthly,
-      priceYearly,
-      sortOrder,
-      maxBranches,
-      maxUsers,
-      maxCustomRoles,
-      maxAdmins,
-      maxStaff,
-      isTrial,
-      isActive,
-      onUpdated,
+      packageId, name, description, priceMonthly, priceYearly, sortOrder,
+      maxBranches, maxUsers, maxCustomRoles, maxAdmins, maxStaff,
+      isPublic, isTrial, isActive, selectedFeatureIds, roleLimits, onUpdated,
     ],
   );
 
@@ -142,7 +220,7 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
           <div className="flex items-center justify-between p-4 border-b border-[#f1f1f1]">
-            <h4 className="m-0 text-[18px] font-bold text-[#212B36]">Edit Plan</h4>
+            <h4 className="m-0 text-[18px] font-bold text-[#212B36]">Edit Package</h4>
             <button
               type="button"
               data-bs-dismiss="modal"
@@ -157,22 +235,24 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
             <div className="p-6 text-center text-muted">Loading package...</div>
           ) : pkg ? (
             <form onSubmit={handleSave}>
-              <div className="p-4">
+              <div className="p-4 max-h-[70vh] overflow-y-auto">
+                {/* Package header info */}
                 <div className="flex items-center gap-3 bg-[#f8f9fa] rounded-md p-3 mb-4">
                   <div>
                     <h6 className="mb-1 text-[14px] font-semibold text-[#212B36]">
                       {pkg.name}
                     </h6>
                     <p className="text-[12px] text-[#646B72] m-0">
-                      {pkg.slug}
+                      {pkg.slug} &middot; Product: {pkg.software_product_slug}
                     </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-12 gap-4">
+                  {/* Name & Sort Order */}
                   <div className="col-span-12 min-[768px]:col-span-6">
                     <label className={labelCls}>
-                      Plan Name <span className="text-[#dc3545]">*</span>
+                      Package Name <span className="text-[#dc3545]">*</span>
                     </label>
                     <input
                       type="text"
@@ -191,8 +271,15 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
                       onChange={function (e) { setSortOrder(e.target.value); }}
                     />
                   </div>
+
+                  {/* Pricing */}
                   <div className="col-span-12 min-[768px]:col-span-6">
-                    <label className={labelCls}>Monthly Price</label>
+                    <div className="flex justify-between items-center mb-1.5">
+                      <label className="text-[13px] font-medium text-[#212B36]">Monthly Price</label>
+                      <span className="text-[12px] text-[#0ac79e] inline-flex items-center gap-1">
+                        <i className="fa-solid fa-circle-exclamation" /> Set 0 for free
+                      </span>
+                    </div>
                     <input
                       type="text"
                       className={inputCls}
@@ -211,28 +298,33 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
                       placeholder="0.00"
                     />
                   </div>
-                  <div className="col-span-6 min-[768px]:col-span-3">
+
+                  {/* Limits */}
+                  <div className="col-span-6 min-[768px]:col-span-4">
                     <label className={labelCls}>Max Branches</label>
                     <input
                       type="number"
+                      min="0"
                       className={inputCls}
                       value={maxBranches}
                       onChange={function (e) { setMaxBranches(e.target.value); }}
                     />
                   </div>
-                  <div className="col-span-6 min-[768px]:col-span-3">
+                  <div className="col-span-6 min-[768px]:col-span-4">
                     <label className={labelCls}>Max Users</label>
                     <input
                       type="number"
+                      min="0"
                       className={inputCls}
                       value={maxUsers}
                       onChange={function (e) { setMaxUsers(e.target.value); }}
                     />
                   </div>
-                  <div className="col-span-6 min-[768px]:col-span-3">
+                  <div className="col-span-6 min-[768px]:col-span-4">
                     <label className={labelCls}>Max Custom Roles</label>
                     <input
                       type="number"
+                      min="0"
                       className={inputCls}
                       value={maxCustomRoles}
                       onChange={function (e) { setMaxCustomRoles(e.target.value); }}
@@ -242,6 +334,7 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
                     <label className={labelCls}>Max Admins</label>
                     <input
                       type="number"
+                      min="0"
                       className={inputCls}
                       value={maxAdmins}
                       onChange={function (e) { setMaxAdmins(e.target.value); }}
@@ -251,6 +344,7 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
                     <label className={labelCls}>Max Staff</label>
                     <input
                       type="number"
+                      min="0"
                       className={inputCls}
                       value={maxStaff}
                       onChange={function (e) { setMaxStaff(e.target.value); }}
@@ -260,8 +354,8 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
                     <label className={labelCls}>Status</label>
                     <Select
                       classNamePrefix="react-select"
-                      options={status}
-                      value={status.find(function (s) {
+                      options={statusOptions}
+                      value={statusOptions.find(function (s) {
                         return s.value === (isActive ? "Active" : "Inactive");
                       })}
                       onChange={function (opt) {
@@ -271,11 +365,21 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
                   </div>
                 </div>
 
+                {/* Toggles */}
                 <div className="flex items-center gap-8 mt-4">
                   <label className="flex items-center gap-2 text-[14px] font-medium text-[#212B36] cursor-pointer">
                     <input
                       type="checkbox"
-                      className="w-4 h-4 rounded accent-[#0ac79e]"
+                      className={checkboxCls}
+                      checked={isPublic}
+                      onChange={function (e) { setIsPublic(e.target.checked); }}
+                    />
+                    Public (visible on marketing site)
+                  </label>
+                  <label className="flex items-center gap-2 text-[14px] font-medium text-[#212B36] cursor-pointer">
+                    <input
+                      type="checkbox"
+                      className={checkboxCls}
                       checked={isTrial}
                       onChange={function (e) { setIsTrial(e.target.checked); }}
                     />
@@ -283,7 +387,97 @@ export default function EditPlanModal({ packageId, onUpdated }: Props) {
                   </label>
                 </div>
 
-                <div className="col-span-12 mt-4">
+                {/* Features */}
+                <div className="flex items-center justify-between mt-5 mb-3">
+                  <h6 className="m-0 text-[14px] font-semibold text-[#212B36]">Package Features</h6>
+                  {tenantFeatures.length > 0 && (
+                    <label className="flex items-center gap-2 text-[14px] font-medium text-[#212B36] cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className={checkboxCls}
+                        checked={selectedFeatureIds.size === tenantFeatures.length && tenantFeatures.length > 0}
+                        onChange={toggleAllFeatures}
+                      />
+                      Select All
+                    </label>
+                  )}
+                </div>
+                {featuresLoading ? (
+                  <div className="text-[13px] text-[#9aa0a6] mb-4">Loading features...</div>
+                ) : tenantFeatures.length === 0 ? (
+                  <div className="text-[13px] text-[#9aa0a6] mb-4">No tenant features configured.</div>
+                ) : (
+                  <div className="grid grid-cols-2 min-[992px]:grid-cols-3 gap-3 mb-4">
+                    {tenantFeatures.map(function (feat) {
+                      return (
+                        <label
+                          key={feat.id}
+                          className="flex items-center gap-2 text-[14px] font-medium text-[#212B36] cursor-pointer"
+                          title={feat.description || feat.key}
+                        >
+                          <input
+                            type="checkbox"
+                            className={checkboxCls}
+                            checked={selectedFeatureIds.has(feat.id)}
+                            onChange={function () { toggleFeature(feat.id); }}
+                          />
+                          {feat.name}
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Role Limits */}
+                <div className="flex items-center justify-between mt-2 mb-3">
+                  <h6 className="m-0 text-[14px] font-semibold text-[#212B36]">Role Limits</h6>
+                  <button
+                    type="button"
+                    onClick={addRoleLimitRow}
+                    className="text-[13px] text-[#0ac79e] font-medium hover:underline"
+                  >
+                    + Add Role Limit
+                  </button>
+                </div>
+                {roleLimits.length === 0 ? (
+                  <p className="text-[13px] text-[#9aa0a6] mb-4">
+                    No role limits configured.
+                  </p>
+                ) : (
+                  <div className="space-y-2 mb-4">
+                    {roleLimits.map(function (rl, idx) {
+                      return (
+                        <div key={idx} className="flex items-center gap-3">
+                          <input
+                            type="text"
+                            className={inputCls + " flex-1"}
+                            value={rl.role_slug}
+                            onChange={function (e) { updateRoleLimit(idx, "role_slug", e.target.value); }}
+                            placeholder="Role slug (e.g. cashier)"
+                          />
+                          <input
+                            type="number"
+                            min="0"
+                            className={inputCls + " w-[100px]"}
+                            value={rl.max_users}
+                            onChange={function (e) { updateRoleLimit(idx, "max_users", e.target.value); }}
+                            placeholder="Max users"
+                          />
+                          <button
+                            type="button"
+                            onClick={function () { removeRoleLimit(idx); }}
+                            className="w-8 h-8 inline-flex items-center justify-center rounded text-[#dc3545] hover:bg-[#fff0f0]"
+                          >
+                            <i className="ti ti-trash" />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Description */}
+                <div className="mt-2">
                   <label className={labelCls}>Description</label>
                   <textarea
                     className={`${inputCls} min-h-[90px]`}
