@@ -33,6 +33,7 @@ export type PosSettingsFormState = {
   pointsPerCurrencyUnit: string;
   minSubtotalToEarnPoints: string;
   lowStockThreshold: number;
+  scanSoundEnabled: boolean;
   enabledFields: Record<string, boolean>;
   enabledOutputs: Record<string, boolean>;
   headerText: string;
@@ -54,6 +55,7 @@ function configToForm(config: PosConfig, receipt: PosReceiptConfig): PosSettings
     pointsPerCurrencyUnit: config.points_per_currency_unit,
     minSubtotalToEarnPoints: config.min_subtotal_to_earn_points,
     lowStockThreshold: config.low_stock_threshold,
+    scanSoundEnabled: config.scan_sound_enabled ?? true,
     enabledFields: normalizeEnabledFields(
       receipt.available_fields,
       receipt.enabled_fields,
@@ -213,6 +215,7 @@ export function usePosSettings() {
       points_per_currency_unit: form.pointsPerCurrencyUnit,
       min_subtotal_to_earn_points: form.minSubtotalToEarnPoints,
       low_stock_threshold: form.lowStockThreshold,
+      scan_sound_enabled: form.scanSoundEnabled,
     };
 
     const receiptPayload: PosReceiptConfigPatch = {
