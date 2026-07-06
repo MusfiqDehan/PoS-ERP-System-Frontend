@@ -6,11 +6,15 @@ import { usePosCart } from "@/hooks/pos/usePosCart";
 import { usePosCategories } from "@/hooks/pos/usePosCategories";
 import { usePosPage } from "@/hooks/pos/usePosPage";
 import PosOrderDetails from "@/components/pos-module/pos/PosOrderDetails";
+import { useActiveBranch } from "@/providers/branch-provider";
 
 export default function Pos2() {
+  const { activeBranch } = useActiveBranch();
+  const branchId = activeBranch?.id ?? null;
   const { activeTab, setActiveTab } = usePosPage();
   const cart = usePosCart();
   const categoryState = usePosCategories({
+    branchId,
     activeTab,
     onTabChange: setActiveTab,
   });

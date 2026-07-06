@@ -1,6 +1,8 @@
-
 import PosHeader from "@/components/pos-module/pos/posHeader";
 import ThemeSettings from "@/core/common/sidebar/themeSettings";
+import { SessionGuard } from "@/components/auth/SessionGuard";
+import { AuthProvider } from "@/providers/auth-provider";
+import { BranchProvider } from "@/providers/branch-provider";
 
 export default function PosLayout({
   children,
@@ -8,10 +10,16 @@ export default function PosLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="pos-layout-shell">
-      <PosHeader />
-      <ThemeSettings />
-      {children}
-    </div>
+    <AuthProvider>
+      <SessionGuard>
+        <BranchProvider>
+          <div className="pos-layout-shell">
+            <PosHeader />
+            <ThemeSettings />
+            {children}
+          </div>
+        </BranchProvider>
+      </SessionGuard>
+    </AuthProvider>
   );
 }
