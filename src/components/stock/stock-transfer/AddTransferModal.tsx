@@ -6,11 +6,17 @@ import FormCol from "@/core/common/form/FormCol";
 import type {
   BranchOption,
   ProductOption,
+  WarehouseOption,
 } from "@/hooks/stock/useStockTransfers";
 import type { CreateStockTransferPayload } from "@/lib/stock";
+import {
+  buildCreateTransferPayload,
+  type TransferFormType,
+} from "@/lib/stockTransferForm";
 
 type Props = {
   branches: BranchOption[];
+  warehouses: WarehouseOption[];
   products: ProductOption[];
   saving?: boolean;
   onSubmit: (payload: CreateStockTransferPayload) => Promise<boolean>;
@@ -18,37 +24,53 @@ type Props = {
 
 export default function AddTransferModal({
   branches,
+  warehouses,
   products,
   saving,
   onSubmit,
 }: Props) {
+  const [transferType, setTransferType] =
+    useState<TransferFormType>("branch_branch");
   const [sourceBranch, setSourceBranch] = useState("");
+  const [sourceWarehouse, setSourceWarehouse] = useState("");
   const [targetBranch, setTargetBranch] = useState("");
   const [product, setProduct] = useState("");
   const [quantity, setQuantity] = useState("");
   const [notes, setNotes] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
 
+  const handleTransferTypeChange = (nextType: TransferFormType) => {
+    setTransferType(nextType);
+    setSourceBranch("");
+    setSourceWarehouse("");
+    setTargetBranch("");
+    setFormError(null);
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setFormError(null);
-    if (!sourceBranch || !targetBranch || !product || !quantity) {
-      setFormError("Source, target, product, and quantity are required.");
-      return;
-    }
-    if (sourceBranch === targetBranch) {
-      setFormError("Source and target branch must differ.");
-      return;
-    }
-    const ok = await onSubmit({
-      transfer_type: "branch_branch",
-      source_branch: sourceBranch,
-      target_branch: targetBranch,
+
+    const built = buildCreateTransferPayload({
+      transferType,
+      sourceBranch,
+      targetBranch,
+      sourceWarehouse,
+      product,
+      quantity,
       notes,
-      lines: [{ product, quantity_requested: quantity }],
     });
+
+    if (!built.ok) {
+      setFormError(built.error);
+      return;
+    }
+
+    const ok = await onSubmit(built.payload);
     if (ok) {
+      setTransferType("branch_branch");
       setSourceBranch("");
+      setSourceWarehouse("");
       setTargetBranch("");
       setProduct("");
       setQuantity("");
@@ -58,6 +80,10 @@ export default function AddTransferModal({
   };
 
   const branchOptions = branches.map((b) => ({ value: b.value, label: b.label }));
+  const warehouseOptions = warehouses.map((w) => ({
+    value: w.value,
+    label: w.label,
+  }));
   const productOptions = products.map((p) => ({ value: p.value, label: p.label }));
 
   return (
@@ -83,38 +109,101 @@ export default function AddTransferModal({
                 <div className="alert alert-danger">{formError}</div>
               )}
               <div className="row">
-                <FormCol lg={6}>
+                <FormCol lg={12}>
                   <div className="mb-3">
                     <label className="form-label">
-                      From Branch <span className="text-danger">*</span>
+                      Transfer Type <span className="text-danger">*</span>
                     </label>
-                    <Select
-                      classNamePrefix="react-select"
-                      options={branchOptions}
-                      placeholder="Choose"
-                      value={
-                        branchOptions.find((o) => o.value === sourceBranch) ?? null
+                    <select
+                      className="form-select"
+                      value={transferType}
+                      onChange={(e) =>
+                        handleTransferTypeChange(e.target.value as TransferFormType)
                       }
-                      onChange={(opt) => setSourceBranch(opt?.value ?? "")}
-                    />
+                    >
+                      <option value="branch_branch">Branch to Branch</option>
+                      <option value="warehouse_branch">Warehouse to Branch</option>
+                    </select>
                   </div>
                 </FormCol>
-                <FormCol lg={6}>
-                  <div className="mb-3">
-                    <label className="form-label">
-                      To Branch <span className="text-danger">*</span>
-                    </label>
-                    <Select
-                      classNamePrefix="react-select"
-                      options={branchOptions}
-                      placeholder="Choose"
-                      value={
-                        branchOptions.find((o) => o.value === targetBranch) ?? null
-                      }
-                      onChange={(opt) => setTargetBranch(opt?.value ?? "")}
-                    />
-                  </div>
-                </FormCol>
+
+                {transferType === "branch_branch" ? (
+                  <>
+                    <FormCol lg={6}>
+                      <div className="mb-3">
+                        <label className="form-label">
+                          From Branch <span className="text-danger">*</span>
+                        </label>
+                        <Select
+                          classNamePrefix="react-select"
+                          options={branchOptions}
+                          placeholder="Choose"
+                          value={
+                            branchOptions.find((o) => o.value === sourceBranch) ??
+                            null
+                          }
+                          onChange={(opt) => setSourceBranch(opt?.value ?? "")}
+                        />
+                      </div>
+                    </FormCol>
+                    <FormCol lg={6}>
+                      <div className="mb-3">
+                        <label className="form-label">
+                          To Branch <span className="text-danger">*</span>
+                        </label>
+                        <Select
+                          classNamePrefix="react-select"
+                          options={branchOptions}
+                          placeholder="Choose"
+                          value={
+                            branchOptions.find((o) => o.value === targetBranch) ??
+                            null
+                          }
+                          onChange={(opt) => setTargetBranch(opt?.value ?? "")}
+                        />
+                      </div>
+                    </FormCol>
+                  </>
+                ) : (
+                  <>
+                    <FormCol lg={6}>
+                      <div className="mb-3">
+                        <label className="form-label">
+                          From Warehouse <span className="text-danger">*</span>
+                        </label>
+                        <Select
+                          classNamePrefix="react-select"
+                          options={warehouseOptions}
+                          placeholder="Choose warehouse"
+                          value={
+                            warehouseOptions.find(
+                              (o) => o.value === sourceWarehouse,
+                            ) ?? null
+                          }
+                          onChange={(opt) => setSourceWarehouse(opt?.value ?? "")}
+                        />
+                      </div>
+                    </FormCol>
+                    <FormCol lg={6}>
+                      <div className="mb-3">
+                        <label className="form-label">
+                          To Branch <span className="text-danger">*</span>
+                        </label>
+                        <Select
+                          classNamePrefix="react-select"
+                          options={branchOptions}
+                          placeholder="Choose branch"
+                          value={
+                            branchOptions.find((o) => o.value === targetBranch) ??
+                            null
+                          }
+                          onChange={(opt) => setTargetBranch(opt?.value ?? "")}
+                        />
+                      </div>
+                    </FormCol>
+                  </>
+                )}
+
                 <FormCol lg={12}>
                   <div className="mb-3">
                     <label className="form-label">
