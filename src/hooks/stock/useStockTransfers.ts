@@ -5,6 +5,7 @@ import { getAccessToken } from "@/lib/auth-session";
 import { extractListItems } from "@/lib/api";
 import {
   fetchStockTransfers,
+  fetchStockTransfer,
   createStockTransfer,
   runTransferAction,
   type StockTransfer,
@@ -108,6 +109,15 @@ export function useStockTransfers() {
     [filterBranch, loadTransfers],
   );
 
+  const loadTransferDetail = useCallback(async (id: string) => {
+    const result = await fetchStockTransfer(id, getAccessToken());
+    if (result.ok && result.body.data) {
+      return result.body.data as StockTransfer;
+    }
+    setError(result.body.message ?? "Failed to load transfer details.");
+    return null;
+  }, []);
+
   return {
     dataSource,
     loading,
@@ -119,6 +129,7 @@ export function useStockTransfers() {
     filterBranch,
     setFilterBranch,
     reload: () => loadTransfers(filterBranch || undefined),
+    loadTransferDetail,
     createTransfer,
     approveTransfer: (id: string) => runAction(id, "approve"),
     rejectTransfer: (id: string) => runAction(id, "reject"),
