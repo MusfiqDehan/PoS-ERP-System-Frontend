@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { getAccessToken } from "@/lib/auth-session";
+import { extractListItems } from "@/lib/api";
 import {
   fetchCategories,
   fetchSubCategories,
@@ -13,10 +14,6 @@ import {
   type CreateCategoryPayload,
   type UpdateCategoryPayload,
 } from "@/lib/inventory";
-
-function ensure<T>(data: unknown): T[] {
-  return Array.isArray(data) ? (data as T[]) : [];
-}
 
 export function useSubCategories() {
   const [rawData, setRawData] = useState<Category[]>([]);
@@ -33,12 +30,12 @@ export function useSubCategories() {
       fetchCategories(token),
     ]);
     if (subResult.ok && subResult.body.data) {
-      setRawData(ensure<Category>(subResult.body.data));
+      setRawData(extractListItems<Category>(subResult.body.data));
     } else {
       setError(subResult.body.message ?? "Failed to load sub-categories.");
     }
     if (catResult.ok && catResult.body.data) {
-      setParents(ensure<Category>(catResult.body.data));
+      setParents(extractListItems<Category>(catResult.body.data));
     }
     setLoading(false);
   }, []);
