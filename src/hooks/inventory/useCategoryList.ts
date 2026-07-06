@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getAccessToken } from "@/lib/auth-session";
+import { extractListItems } from "@/lib/api";
 import {
   fetchCategories,
   createCategory,
@@ -22,7 +23,7 @@ export function useCategoryList() {
     setError(null);
     const result = await fetchCategories(getAccessToken());
     if (result.ok && result.body.data) {
-      setDataSource(Array.isArray(result.body.data) ? result.body.data : []);
+      setDataSource(extractListItems<Category>(result.body.data));
     } else {
       setError(result.body.message ?? "Failed to load categories.");
     }
