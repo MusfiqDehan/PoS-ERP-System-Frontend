@@ -1,160 +1,207 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import React from 'react'
-import SettingsSideBar from '../settingssidebar';
-import Select from 'react-select';
-import RefreshIcon from '@/core/common/tooltip-content/refresh';
-import CommonFooter from '@/core/common/footer/commonFooter';
-import CollapesIcon from '@/core/common/tooltip-content/collapes';
+import React from "react";
+import Select from "react-select";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+import SettingsSideBar from "../settingssidebar";
+import CommonFooter from "@/core/common/footer/commonFooter";
+import CollapesIcon from "@/core/common/tooltip-content/collapes";
+import { usePosSettings, type PosSettingsScope } from "@/hooks/settings/usePosSettings";
+import { usePermission } from "@/hooks/usePermission";
+import PosSettingsTaxSection from "./pos-settings/PosSettingsTaxSection";
+import PosSettingsLoyaltySection from "./pos-settings/PosSettingsLoyaltySection";
+import PosSettingsReceiptFieldsSection from "./pos-settings/PosSettingsReceiptFieldsSection";
+import PosSettingsReceiptOutputSection from "./pos-settings/PosSettingsReceiptOutputSection";
+import PosSettingsPaymentMethodsSection from "./pos-settings/PosSettingsPaymentMethodsSection";
 
-export default function PosSettingsComponent () {
+const scopeOptions: { value: PosSettingsScope; label: string }[] = [
+  { value: "tenant", label: "Tenant default" },
+  { value: "branch", label: "Branch override" },
+];
 
-    const posprinter = [
-        { value: 'A4', label: 'A4' },
-        { value: 'A3', label: 'A3' },
-    ];
+export default function PosSettingsComponent() {
+  const canEditPos = usePermission("pos", "edit");
+  const {
+    scope,
+    setScope,
+    isTenantAdmin,
+    canSwitchBranch,
+    canSave,
+    activeBranch,
+    loading,
+    saving,
+    form,
+    receiptConfig,
+    paymentMethods,
+    feedback,
+    setFeedback,
+    updateForm,
+    toggleReceiptField,
+    toggleReceiptOutput,
+    save,
+    reset,
+    reload,
+  } = usePosSettings();
 
-    return (
-        <div>
-            <div className="page-wrapper">
-                <div className="content settings-content">
-                    <div className="page-header settings-pg-header">
-                        <div className="add-item d-flex">
-                            <div className="page-title">
-                                <h4>Settings</h4>
-                                <h6>Manage your settings on portal</h6>
-                            </div>
-                        </div>
-                        <ul className="table-top-head">
-                            <RefreshIcon />
-                            <CollapesIcon />
-                        </ul>
-                    </div>
-                    <div className="row">
-                        <div className="col-xl-12">
-                            <div className="settings-wrapper d-flex">
-                                <SettingsSideBar />
-                                <div className="card flex-fill mb-0">
-                                    <form>
-                                        <div className="card-header">
-                                            <h4>POS Settings</h4>
-                                        </div>
-                                        <div className="card-body">
-                                            <div className="localization-info">
-                                                <div className="row align-items-center">
-                                                    <div className="col-sm-4">
-                                                        <div className="setting-info">
-                                                            <h6>POS Printer</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <div className="localization-select">
-                                                            <Select
-                                                                classNamePrefix="react-select"
-                                                                options={posprinter}
-                                                                placeholder="Choose"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="row align-items-center">
-                                                    <div className="col-sm-4">
-                                                        <div className="setting-info">
-                                                            <h6>Payment Method</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-8">
-                                                        <div className="localization-select pos-payment-method d-flex align-items-center mb-0 w-100">
-                                                            <div className="custom-control custom-checkbox">
-                                                                <label className="checkboxs mb-0 pb-0 line-height-1">
-                                                                    <input type="checkbox" />
-                                                                    <span className="checkmarks" />
-                                                                    COD
-                                                                </label>
-                                                            </div>
-                                                            <div className="custom-control custom-checkbox">
-                                                                <label className="checkboxs mb-0 pb-0 line-height-1">
-                                                                    <input type="checkbox" />
-                                                                    <span className="checkmarks" />
-                                                                    Cheque
-                                                                </label>
-                                                            </div>
-                                                            <div className="custom-control custom-checkbox">
-                                                                <label className="checkboxs mb-0 pb-0 line-height-1">
-                                                                    <input type="checkbox" />
-                                                                    <span className="checkmarks" />
-                                                                    Card
-                                                                </label>
-                                                            </div>
-                                                            <div className="custom-control custom-checkbox">
-                                                                <label className="checkboxs mb-0 pb-0 line-height-1">
-                                                                    <input type="checkbox" />
-                                                                    <span className="checkmarks" />
-                                                                    Paypal
-                                                                </label>
-                                                            </div>
-                                                            <div className="custom-control custom-checkbox">
-                                                                <label className="checkboxs mb-0 pb-0 line-height-1">
-                                                                    <input type="checkbox" />
-                                                                    <span className="checkmarks" />
-                                                                    Bank Transfer
-                                                                </label>
-                                                            </div>
-                                                            <div className="custom-control custom-checkbox">
-                                                                <label className="checkboxs mb-0 pb-0 line-height-1">
-                                                                    <input type="checkbox" />
-                                                                    <span className="checkmarks" />
-                                                                    Cash
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="row align-items-center">
-                                                    <div className="col-sm-4">
-                                                        <div className="setting-info">
-                                                            <h6>Enable Sound Effect </h6>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-4">
-                                                        <div className="localization-select d-flex align-items-center">
-                                                            <div className="status-toggle modal-status d-flex justify-content-between align-items-center me-3">
-                                                                <input
-                                                                    type="checkbox"
-                                                                    id="user4"
-                                                                    className="check"
-                                                                    defaultChecked
-                                                                />
-                                                                <label htmlFor="user4" className="checktoggle" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="d-flex align-items-center justify-content-end">
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-cancel me-2"
-                                                    data-bs-dismiss="modal"
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button type="button" className="btn btn-submit" data-bs-dismiss="modal">
-                                                    Save Changes
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <CommonFooter />
+  const formDisabled = !canEditPos || !canSave || saving;
+
+  return (
+    <PermissionGuard featureKey="pos" requiredLevel="view">
+    <div>
+      <div className="page-wrapper">
+        <div className="content settings-content">
+          <div className="page-header settings-pg-header">
+            <div className="add-item d-flex">
+              <div className="page-title">
+                <h4>Settings</h4>
+                <h6>Configure POS tax, loyalty, and receipt options</h6>
+              </div>
             </div>
+            <ul className="table-top-head">
+              <li>
+                <button
+                  type="button"
+                  className="btn btn-link p-0 border-0 text-dark"
+                  onClick={() => void reload()}
+                  title="Refresh"
+                  aria-label="Refresh POS settings"
+                >
+                  <i className="ti ti-refresh" />
+                </button>
+              </li>
+              <CollapesIcon />
+            </ul>
+          </div>
+
+          <div className="row">
+            <div className="col-xl-12">
+              <div className="settings-wrapper d-flex">
+                <SettingsSideBar />
+                <div className="card flex-fill mb-0">
+                  <div className="card-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+                    <h4 className="mb-0">POS Settings</h4>
+                    {isTenantAdmin && canSwitchBranch && (
+                      <div style={{ minWidth: 220 }}>
+                        <Select
+                          classNamePrefix="react-select"
+                          options={scopeOptions}
+                          value={scopeOptions.find((o) => o.value === scope)}
+                          onChange={(opt) => setScope(opt?.value ?? "tenant")}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="card-body">
+                    {scope === "branch" && activeBranch && (
+                      <div className="alert alert-light border py-2 mb-4">
+                        Editing branch override for{" "}
+                        <strong>{activeBranch.name}</strong>. Unset fields inherit
+                        tenant defaults.
+                      </div>
+                    )}
+
+                    {scope === "tenant" && isTenantAdmin && (
+                      <div className="alert alert-light border py-2 mb-4">
+                        Editing tenant-wide defaults. Branch overrides take precedence
+                        where configured.
+                      </div>
+                    )}
+
+                    {!canEditPos && (
+                      <div className="alert alert-warning py-2 mb-4">
+                        You have view-only access. POS edit permission is required to
+                        save changes.
+                      </div>
+                    )}
+
+                    {feedback && (
+                      <div
+                        className={`alert ${
+                          feedback.type === "success"
+                            ? "alert-success"
+                            : "alert-danger"
+                        } alert-dismissible fade show py-2`}
+                        role="alert"
+                      >
+                        {feedback.message}
+                        <button
+                          type="button"
+                          className="btn-close"
+                          aria-label="Close"
+                          onClick={() => setFeedback(null)}
+                        />
+                      </div>
+                    )}
+
+                    {loading || !form || !receiptConfig ? (
+                      <div className="text-center py-5 text-muted">
+                        <div className="spinner-border text-primary mb-2" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <p className="mb-0">Loading POS settings…</p>
+                      </div>
+                    ) : (
+                      <>
+                        <PosSettingsTaxSection
+                          form={form}
+                          onChange={updateForm}
+                          disabled={formDisabled}
+                        />
+
+                        <PosSettingsLoyaltySection
+                          form={form}
+                          onChange={updateForm}
+                          disabled={formDisabled}
+                        />
+
+                        <PosSettingsReceiptFieldsSection
+                          receiptConfig={receiptConfig}
+                          enabledFields={form.enabledFields}
+                          onToggle={toggleReceiptField}
+                          disabled={formDisabled}
+                        />
+
+                        <PosSettingsReceiptOutputSection
+                          form={form}
+                          receiptConfig={receiptConfig}
+                          onChange={updateForm}
+                          onToggleOutput={toggleReceiptOutput}
+                          disabled={formDisabled}
+                        />
+
+                        <PosSettingsPaymentMethodsSection methods={paymentMethods} />
+
+                        <div className="d-flex align-items-center justify-content-end pt-4">
+                          <button
+                            type="button"
+                            className="btn btn-cancel me-2"
+                            disabled={saving}
+                            onClick={reset}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-submit"
+                            disabled={formDisabled || saving}
+                            onClick={() => void save()}
+                          >
+                            {saving ? "Saving…" : "Save Changes"}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    )
+        <CommonFooter />
+      </div>
+    </div>
+    </PermissionGuard>
+  );
 }
-
-
