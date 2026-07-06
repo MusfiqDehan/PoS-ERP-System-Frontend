@@ -67,6 +67,7 @@ export default function PosManageCategoriesModal({
     setDeleteConfirmId(null);
     setDeleteError(undefined);
     setListQuery("");
+    closePosModal(POS_MANAGE_CATEGORIES_MODAL_ID);
   };
 
   const handleSubmit = () => {
@@ -133,7 +134,6 @@ export default function PosManageCategoriesModal({
             <button
               type="button"
               className="pos-sale-modal__close"
-              data-bs-dismiss="modal"
               aria-label="Close"
               onClick={handleClose}
             >
@@ -253,11 +253,7 @@ export default function PosManageCategoriesModal({
             <button
               type="button"
               className="pos-sale-modal__btn pos-sale-modal__btn--ghost"
-              data-bs-dismiss="modal"
-              onClick={() => {
-                handleClose();
-                closePosModal(POS_MANAGE_CATEGORIES_MODAL_ID);
-              }}
+              onClick={handleClose}
             >
               Done
             </button>
