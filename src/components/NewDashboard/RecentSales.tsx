@@ -1,17 +1,55 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import ImageWithBasePath from "@/core/common/image-with-base-path";
 import Link from "next/link";
 import { useState } from "react";
+import { useSalesDashboardData } from "@/hooks/dashboard/useSalesDashboard";
+import { formatCurrency, parseCurrency } from "@/lib/currency";
+import { DEFAULT_POS_PRODUCT_IMAGE, resolveProductImageUrl } from "@/lib/media";
 import {
   recentSalesAssets,
   recentSalesData,
   recentSalesFilterOptions,
   recentSaleStatusStyles,
+  type RecentSaleStatus,
 } from "./recentSalesData";
 
+function formatSaleDate(iso: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return iso;
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 export default function RecentSales() {
+  const { sales, loading } = useSalesDashboardData();
   const [activeFilter, setActiveFilter] = useState(recentSalesFilterOptions[0]);
+
+  const recentSales = sales?.recent_sales ?? [];
+  const items = recentSales.length
+    ? recentSales.map((sale) => ({
+        id: sale.id,
+        name: sale.product_name,
+        price: formatCurrency(parseCurrency(sale.total)),
+        category: sale.category_name || sale.customer_name,
+        date: formatSaleDate(sale.created_at),
+        status: sale.status as RecentSaleStatus,
+        statusLabel:
+          sale.status === "completed"
+            ? "Completed"
+            : sale.status.charAt(0).toUpperCase() + sale.status.slice(1),
+        imageSrc: resolveProductImageUrl(
+          sale.product_image,
+          DEFAULT_POS_PRODUCT_IMAGE,
+        ),
+      }))
+    : loading
+      ? []
+      : recentSalesData;
 
   return (
     <div className="col-xxl-4 col-md-12 d-flex">
@@ -62,53 +100,61 @@ export default function RecentSales() {
         </div>
 
         <div className="recent-sales__body">
-          <ul className="recent-sales__list">
-            {recentSalesData.map((sale, index) => {
-              const statusStyle = recentSaleStatusStyles[sale.status];
+          {items.length === 0 ? (
+            <p className="px-3 py-4 text-[#646B72]">
+              {loading ? "Loading…" : "No completed POS sales yet."}
+            </p>
+          ) : (
+            <ul className="recent-sales__list">
+              {items.map((sale, index) => {
+                const statusStyle =
+                  recentSaleStatusStyles[sale.status] ??
+                  recentSaleStatusStyles.completed;
 
-              return (
-                <li
-                  key={sale.id}
-                  className={`recent-sales__item${
-                    index < recentSalesData.length - 1
-                      ? " recent-sales__item--divider"
-                      : ""
-                  }`}
-                >
-                  <div className="recent-sales__sale">
-                    <ImageWithBasePath
-                      src={sale.imageSrc}
-                      alt=""
-                      width={48}
-                      height={48}
-                      className="recent-sales__thumb"
-                    />
-                    <div className="recent-sales__info">
-                      <p className="recent-sales__name">{sale.name}</p>
-                      <div className="recent-sales__meta">
-                        <span className="recent-sales__price">{sale.price}</span>
-                        <span className="recent-sales__category">
-                          {sale.category}
+                return (
+                  <li
+                    key={sale.id}
+                    className={`recent-sales__item${
+                      index < items.length - 1
+                        ? " recent-sales__item--divider"
+                        : ""
+                    }`}
+                  >
+                    <div className="recent-sales__sale">
+                      <img
+                        src={sale.imageSrc}
+                        alt=""
+                        width={48}
+                        height={48}
+                        className="recent-sales__thumb"
+                      />
+                      <div className="recent-sales__info">
+                        <p className="recent-sales__name">{sale.name}</p>
+                        <div className="recent-sales__meta">
+                          <span className="recent-sales__price">{sale.price}</span>
+                          <span className="recent-sales__category">
+                            {sale.category}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="recent-sales__status">
+                        <span className="recent-sales__date">{sale.date}</span>
+                        <span
+                          className="recent-sales__badge"
+                          style={{
+                            backgroundColor: statusStyle.background,
+                            color: statusStyle.color,
+                          }}
+                        >
+                          {sale.statusLabel}
                         </span>
                       </div>
                     </div>
-                    <div className="recent-sales__status">
-                      <span className="recent-sales__date">{sale.date}</span>
-                      <span
-                        className="recent-sales__badge"
-                        style={{
-                          backgroundColor: statusStyle.background,
-                          color: statusStyle.color,
-                        }}
-                      >
-                        {sale.statusLabel}
-                      </span>
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
       </div>
     </div>
