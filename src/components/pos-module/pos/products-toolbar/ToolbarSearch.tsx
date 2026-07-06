@@ -16,6 +16,7 @@ export default function ToolbarSearch({
         className="pos-products-panel__search-icon"
       />
       <input
+        id="pos-product-search"
         type="text"
         className="pos-products-panel__search-input"
         placeholder="Search Product"
@@ -23,7 +24,7 @@ export default function ToolbarSearch({
         onChange={(event) => onSearchChange(event.target.value)}
       />
       <span className="pos-products-panel__search-shortcut" aria-hidden="true">
-        ⌘K
+        F2
       </span>
     </div>
   );
