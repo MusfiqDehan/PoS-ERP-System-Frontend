@@ -1,87 +1,165 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { getAccessToken } from "@/lib/auth-session";
+import { createProduct } from "@/lib/inventory";
+import { assignProductBarcodes } from "@/lib/labels";
+import { generateSkuCandidate, slugifyName, type BarcodeSymbology } from "@/lib/productFormUtils";
+import { useProductImageDrafts } from "@/hooks/inventory/useProductImageDrafts";
+import { useProductFormOptions } from "@/hooks/inventory/useProductFormOptions";
+import { useProductBarcode } from "@/hooks/inventory/useProductBarcode";
+import { buildProductPayload } from "@/hooks/inventory/buildProductPayload";
 import {
-  fetchCategories,
-  fetchBrands,
-  fetchUnits,
-  createProduct,
-  type Category,
-  type Brand,
-  type Unit,
-  type CreateProductPayload,
-} from "@/lib/inventory";
+  defaultProductFormValues,
+  type ProductFormValues,
+  type ProductVariantFormRow,
+} from "@/hooks/inventory/productFormTypes";
 
 export function useAddProduct(onSuccess: () => void) {
-  const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
-  const [sku, setSku] = useState("");
-  const [categoryId, setCategoryId] = useState("");
-  const [brandId, setBrandId] = useState("");
-  const [unitId, setUnitId] = useState("");
-  const [price, setPrice] = useState("");
-  const [cost, setCost] = useState("");
-  const [minQtyAlert, setMinQtyAlert] = useState("10");
-  const [sellingType, setSellingType] = useState("");
-  const [taxType, setTaxType] = useState("exclusive");
-  const [productType, setProductType] = useState("single");
+  const [values, setValues] = useState<ProductFormValues>(defaultProductFormValues);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [units, setUnits] = useState<Unit[]>([]);
-  const [loadingOptions, setLoadingOptions] = useState(true);
+  const options = useProductFormOptions();
+  const barcode = useProductBarcode();
+  const { images, addImageFiles, removeImage, uploadAll } = useProductImageDrafts();
 
-  useEffect(() => {
-    const token = getAccessToken();
-    Promise.all([
-      fetchCategories(token),
-      fetchBrands(token),
-      fetchUnits(token),
-    ]).then(([c, b, u]) => {
-      if (c.ok && c.body.data) setCategories(Array.isArray(c.body.data) ? c.body.data : []);
-      if (b.ok && b.body.data) setBrands(Array.isArray(b.body.data) ? b.body.data : []);
-      if (u.ok && u.body.data) setUnits(Array.isArray(u.body.data) ? u.body.data : []);
-      setLoadingOptions(false);
-    });
+  const setField = useCallback(<K extends keyof ProductFormValues>(key: K, value: ProductFormValues[K]) => {
+    setValues((prev) => ({ ...prev, [key]: value }));
+  }, []);
+
+  const setName = useCallback((name: string) => {
+    setValues((prev) => ({
+      ...prev,
+      name,
+      slug: prev.slug || slugifyName(name),
+    }));
+  }, []);
+
+  const generateSku = useCallback(() => {
+    setField("sku", generateSkuCandidate());
+  }, [setField]);
+
+  const handleBarcodeChange = useCallback(
+    (value: string) => {
+      setField("barcode", value);
+      barcode.scheduleRenderPreview(value, values.barcodeSymbology as BarcodeSymbology);
+    },
+    [barcode, setField, values.barcodeSymbology],
+  );
+
+  const handleBarcodeSymbologyChange = useCallback(
+    (symbology: string) => {
+      setField("barcodeSymbology", symbology as ProductFormValues["barcodeSymbology"]);
+      if (values.barcode.trim()) {
+        barcode.scheduleRenderPreview(values.barcode, symbology as BarcodeSymbology);
+      }
+    },
+    [barcode, setField, values.barcode],
+  );
+
+  const generateBarcode = useCallback(async () => {
+    const code = await barcode.generateBarcode(values.barcodeSymbology as BarcodeSymbology);
+    if (code) setField("barcode", code);
+  }, [barcode, setField, values.barcodeSymbology]);
+
+  const downloadBarcodeImage = useCallback(() => {
+    const filename = values.barcode.trim() || values.sku.trim() || "product-barcode";
+    barcode.downloadBarcodeImage(filename);
+  }, [barcode, values.barcode, values.sku]);
+
+  const addVariantRow = useCallback((attributeName: string, attributeValue: string) => {
+    setValues((prev) => ({
+      ...prev,
+      variants: [
+        ...prev.variants,
+        {
+          sku: generateSkuCandidate("VAR"),
+          barcode: "",
+          barcode_symbology: prev.barcodeSymbology,
+          price: prev.price || "0",
+          cost: prev.cost || "",
+          attributes: { [attributeName]: attributeValue },
+        },
+      ],
+    }));
+  }, []);
+
+  const updateVariantRow = useCallback((index: number, patch: Partial<ProductVariantFormRow>) => {
+    setValues((prev) => ({
+      ...prev,
+      variants: prev.variants.map((row, i) => (i === index ? { ...row, ...patch } : row)),
+    }));
+  }, []);
+
+  const removeVariantRow = useCallback((index: number) => {
+    setValues((prev) => ({
+      ...prev,
+      variants: prev.variants.filter((_, i) => i !== index),
+    }));
   }, []);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !slug.trim() || !sku.trim() || !categoryId || !brandId || !unitId) return;
+    const categoryId = values.subCategoryId || values.categoryId;
+    if (
+      !values.name.trim() ||
+      !values.slug.trim() ||
+      !values.sku.trim() ||
+      !categoryId ||
+      !values.unitId
+    ) {
+      return;
+    }
     setSubmitting(true);
     setSubmitError(null);
-    const payload: CreateProductPayload = {
-      name: name.trim(),
-      slug: slug.trim(),
-      sku: sku.trim(),
-      category: categoryId,
-      brand: brandId,
-      unit: unitId,
-      price: price || undefined,
-      cost: cost || undefined,
-      min_qty_alert: minQtyAlert ? Number(minQtyAlert) : undefined,
-      product_type: productType,
-      selling_type: sellingType || undefined,
-      tax_type: taxType || undefined,
-    };
-    const result = await createProduct(payload, getAccessToken());
-    setSubmitting(false);
-    if (result.ok) {
+
+    try {
+      const imageUrls = images.length > 0 ? await uploadAll() : [];
+      const payload = buildProductPayload(values);
+      payload.images = imageUrls.length > 0 ? imageUrls : undefined;
+
+      const result = await createProduct(payload, getAccessToken());
+      if (!result.ok) {
+        setSubmitError(result.body.message ?? "Failed to create product.");
+        setSubmitting(false);
+        return;
+      }
+
+      const productId = result.body.data?.id;
+      if (productId && !values.barcode.trim()) {
+        await assignProductBarcodes([productId], getAccessToken());
+      }
+
+      setSubmitting(false);
       onSuccess();
-    } else {
-      setSubmitError(result.body.message ?? "Failed to create product.");
+    } catch (err) {
+      setSubmitting(false);
+      setSubmitError(err instanceof Error ? err.message : "Failed to upload images.");
     }
-  }, [name, slug, sku, categoryId, brandId, unitId, price, cost, minQtyAlert, productType, sellingType, taxType, onSuccess]);
+  }, [values, images, uploadAll, onSuccess]);
 
   return {
-    name, setName, slug, setSlug, sku, setSku,
-    categoryId, setCategoryId, brandId, setBrandId, unitId, setUnitId,
-    price, setPrice, cost, setCost, minQtyAlert, setMinQtyAlert,
-    sellingType, setSellingType, taxType, setTaxType, productType, setProductType,
-    submitting, submitError, handleSubmit,
-    categories, brands, units, loadingOptions,
+    values,
+    setField,
+    setName,
+    generateSku,
+    generateBarcode,
+    handleBarcodeChange,
+    handleBarcodeSymbologyChange,
+    downloadBarcodeImage,
+    barcodePreview: barcode,
+    addVariantRow,
+    updateVariantRow,
+    removeVariantRow,
+    images,
+    addImageFiles,
+    removeImage,
+    submitting,
+    submitError,
+    handleSubmit,
+    ...options,
   };
 }
+
+export type UseAddProductReturn = ReturnType<typeof useAddProduct>;
