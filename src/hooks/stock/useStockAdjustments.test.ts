@@ -38,6 +38,7 @@ describe("useStockAdjustments", () => {
   beforeEach(() => {
     vi.mocked(fetchStockAdjustments).mockResolvedValue({
       ok: true,
+      status: 200,
       body: {
         success: true,
         data: [
@@ -61,6 +62,7 @@ describe("useStockAdjustments", () => {
     });
     vi.mocked(createStockAdjustment).mockResolvedValue({
       ok: true,
+      status: 201,
       body: {
         success: true,
         data: {
