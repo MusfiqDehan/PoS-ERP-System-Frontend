@@ -1,5 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import AddWarrantyModal from "@/components/Inventory/warranty/AddWarrantyModal";
 import EditWarrantyModal from "@/components/Inventory/warranty/EditWarrantyModal";
 import DeleteWarrantyModal from "@/components/Inventory/warranty/DeleteWarrantyModal";
@@ -14,11 +15,11 @@ export default function Warranty() {
   const [e, setE] = useState<Warranty | null>(null);
   const [d, setD] = useState<Warranty | null>(null);
   return (
-    <div>
+    <PermissionGuard featureKey="warranties">
       <div className="page-wrapper"><div className="content"><PageHeader /><WarrantyTable dataSource={dataSource} loading={loading} error={error} onSelectForEdit={useCallback(r => setE(r), [])} onSelectForDelete={useCallback(r => setD(r), [])} /></div><CommonFooter /></div>
       <AddWarrantyModal onAddWarranty={addWarranty} />
       <EditWarrantyModal warranty={e} onEditWarranty={editWarranty} />
       <DeleteWarrantyModal warranty={d} onDeleteWarranty={removeWarranty} />
-    </div>
+    </PermissionGuard>
   );
 }

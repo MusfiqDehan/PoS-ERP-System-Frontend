@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import AddCategoryModal from "@/components/Inventory/category-list/AddCategoryModal";
 import CategoryListTable from "@/components/Inventory/category-list/CategoryListTable";
 import PageHeader from "@/components/Inventory/category-list/PageHeader";
@@ -26,7 +27,7 @@ export default function CategoryList() {
   }, []);
 
   return (
-    <div>
+    <PermissionGuard featureKey="categories">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -49,6 +50,6 @@ export default function CategoryList() {
         category={selectedForDelete}
         onDeleteCategory={removeCategory}
       />
-    </div>
+    </PermissionGuard>
   );
 }

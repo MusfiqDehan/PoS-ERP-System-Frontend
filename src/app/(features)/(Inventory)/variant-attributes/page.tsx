@@ -1,5 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import AddVariantAttributeModal from "@/components/Inventory/variant-attributes/AddVariantAttributeModal";
 import EditVariantAttributeModal from "@/components/Inventory/variant-attributes/EditVariantAttributeModal";
 import DeleteVariantAttributeModal from "@/components/Inventory/variant-attributes/DeleteVariantAttributeModal";
@@ -14,11 +15,11 @@ export default function VariantAttributes() {
   const [e, setE] = useState<VariantAttribute | null>(null);
   const [d, setD] = useState<VariantAttribute | null>(null);
   return (
-    <div>
+    <PermissionGuard featureKey="variant_attributes">
       <div className="page-wrapper"><div className="content"><PageHeader /><VariantAttributeTable dataSource={dataSource} loading={loading} error={error} onSelectForEdit={useCallback(r => setE(r), [])} onSelectForDelete={useCallback(r => setD(r), [])} /></div><CommonFooter /></div>
       <AddVariantAttributeModal onAdd={addVariantAttribute} />
       <EditVariantAttributeModal attr={e} onEdit={editVariantAttribute} />
       <DeleteVariantAttributeModal attr={d} onDelete={removeVariantAttribute} />
-    </div>
+    </PermissionGuard>
   );
 }

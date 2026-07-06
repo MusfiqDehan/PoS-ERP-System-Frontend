@@ -2,9 +2,10 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { Suspense, useEffect, useState } from "react";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { useSearchParams } from "next/navigation";
 import { getAccessToken } from "@/lib/auth-session";
-import { apiGet, type ApiResult } from "@/lib/api";
+import { apiGet, extractListItems, type ApiResult } from "@/lib/api";
 import {
   fetchCategories,
   fetchBrands,
@@ -14,15 +15,20 @@ import {
   type Brand,
   type Unit,
 } from "@/lib/inventory";
+import { fetchBranches, type Branch } from "@/lib/branches";
+import { fetchWarehouses, type Warehouse } from "@/lib/warehouses";
 import { all_routes } from "@/data/all_routes";
 import Link from "next/link";
 import CommonFooter from "@/core/common/footer/commonFooter";
+import { resolveProductImageUrl } from "@/lib/media";
+import ProductBarcodePreview from "@/components/Inventory/productList/ProductBarcodePreview";
 
 async function fetchProduct(id: string, token?: string): Promise<ApiResult<Product>> {
   return apiGet<Product>(`inventory/products/${id}/`, token);
 }
 
-function resolveName(id: string, map: Map<string, string>): string {
+function resolveName(id: string | null | undefined, map: Map<string, string>): string {
+  if (!id) return "—";
   return map.get(id) ?? id.slice(0, 8);
 }
 
@@ -33,6 +39,8 @@ function DetailsContent() {
   const [catMap, setCatMap] = useState<Map<string, string>>(new Map());
   const [brandMap, setBrandMap] = useState<Map<string, string>>(new Map());
   const [unitMap, setUnitMap] = useState<Map<string, string>>(new Map());
+  const [branchMap, setBranchMap] = useState<Map<string, string>>(new Map());
+  const [warehouseMap, setWarehouseMap] = useState<Map<string, string>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,12 +52,27 @@ function DetailsContent() {
       fetchCategories(token),
       fetchBrands(token),
       fetchUnits(token),
-    ]).then(([p, c, b, u]) => {
+      fetchBranches(token),
+      fetchWarehouses(token),
+    ]).then(([p, c, b, u, br, w]) => {
       if (p.ok && p.body.data) setProduct(p.body.data);
       else setError(p.body.message ?? "Failed to load product.");
-      if (c.ok && c.body.data) setCatMap(new Map(c.body.data.map(x => [x.id, x.name])));
-      if (b.ok && b.body.data) setBrandMap(new Map(b.body.data.map(x => [x.id, x.name])));
-      if (u.ok && u.body.data) setUnitMap(new Map(u.body.data.map(x => [x.id, x.name])));
+      if (c.ok && c.body.data) {
+        setCatMap(new Map(extractListItems<Category>(c.body.data).map((x) => [x.id, x.name])));
+      }
+      if (b.ok && b.body.data) {
+        setBrandMap(new Map(extractListItems<Brand>(b.body.data).map((x) => [x.id, x.name])));
+      }
+      if (u.ok && u.body.data) {
+        setUnitMap(new Map(extractListItems<Unit>(u.body.data).map((x) => [x.id, x.name])));
+      }
+      if (br.ok && br.body.data) {
+        const branches = Array.isArray(br.body.data) ? br.body.data : extractListItems<Branch>(br.body.data);
+        setBranchMap(new Map(branches.map((x) => [x.id, x.name])));
+      }
+      if (w.ok && w.body.data) {
+        setWarehouseMap(new Map(extractListItems<Warehouse>(w.body.data).map((x) => [x.id, x.name])));
+      }
       setLoading(false);
     });
   }, [productId]);
@@ -59,6 +82,9 @@ function DetailsContent() {
   if (!product) return <div className="py-10 text-center text-[#646B72]">Product not found.</div>;
 
   const images: string[] = Array.isArray(product.images) ? product.images : [];
+  const discountLabel = product.discount_type
+    ? `${product.discount_value} (${product.discount_type})`
+    : "—";
 
   return (
     <div className="page-wrapper">
@@ -79,25 +105,37 @@ function DetailsContent() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 space-y-4">
             <div className="bg-white border border-[#f1f1f1] rounded-[8px] p-4 sm:p-5">
+              <div className="flex items-center justify-between border-b border-[#f1f1f1] pb-4 mb-4 gap-4">
+                <div>
+                  <p className="m-0 text-[12px] uppercase tracking-wide text-[#94A3B8] font-semibold">Barcode</p>
+                  <p className="m-0 mt-1 text-[18px] font-bold text-[#212B36] font-mono">{product.barcode || "—"}</p>
+                  <p className="m-0 mt-2 text-[13px] text-[#646B72]">
+                    Mfg: {product.manufactured_at?.slice(0, 10) ?? "—"} · Exp: {product.expires_at?.slice(0, 10) ?? "—"}
+                  </p>
+                </div>
+                <ProductBarcodePreview productId={product.id} barcode={product.barcode} />
+              </div>
               <ul className="divide-y divide-[#f1f1f1]">
                 {[
                   ["Product Name", product.name],
                   ["SKU", product.sku],
-                  ["Barcode", product.barcode ?? "—"],
+                  ["Barcode Symbology", product.barcode_symbology ?? "—"],
                   ["Slug", product.slug],
+                  ["Branch", resolveName(product.branch, branchMap)],
+                  ["Warehouse", resolveName(product.warehouse, warehouseMap)],
                   ["Category", resolveName(product.category, catMap)],
                   ["Brand", resolveName(product.brand, brandMap)],
                   ["Unit", resolveName(product.unit, unitMap)],
+                  ["Manufacturer", product.manufacturer || "—"],
                   ["Product Type", product.product_type ?? "—"],
                   ["Selling Type", product.selling_type ?? "—"],
                   ["Tax Type", product.tax_type ?? "—"],
                   ["Price", product.price ?? "—"],
                   ["Cost", product.cost ?? "—"],
+                  ["Discount", discountLabel],
                   ["Min Qty Alert", product.min_qty_alert ? String(product.min_qty_alert) : "—"],
-                  ["Manufactured Date", product.manufactured_at?.slice(0, 10) ?? "—"],
-                  ["Expiry Date", product.expires_at?.slice(0, 10) ?? "—"],
                   ["Status", product.is_active ? "Active" : "Inactive"],
                   ["Description", product.description || "—"],
                 ].map(([label, value]) => (
@@ -119,7 +157,11 @@ function DetailsContent() {
                 <div className="grid grid-cols-2 gap-3">
                   {images.map((src, i) => (
                     <div key={i} className="border border-[#f1f1f1] rounded-md overflow-hidden">
-                      <img src={src} alt={`${product.name} ${i + 1}`} className="w-full h-32 object-cover" />
+                      <img
+                        src={resolveProductImageUrl(src)}
+                        alt={`${product.name} ${i + 1}`}
+                        className="w-full h-32 object-cover"
+                      />
                     </div>
                   ))}
                 </div>
@@ -138,8 +180,10 @@ export default function ProductDetails() {
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
   return (
-    <Suspense fallback={<div className="py-10 text-center text-[#646B72]">Loading...</div>}>
-      <DetailsContent />
-    </Suspense>
+    <PermissionGuard featureKey="products">
+      <Suspense fallback={<div className="py-10 text-center text-[#646B72]">Loading...</div>}>
+        <DetailsContent />
+      </Suspense>
+    </PermissionGuard>
   );
 }
