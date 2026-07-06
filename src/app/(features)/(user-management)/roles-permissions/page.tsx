@@ -1,5 +1,6 @@
 "use client";
 
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import AddRole from "@/core/modals/usermanagement/addrole";
 import AddUsers from "@/core/modals/usermanagement/addusers";
@@ -114,7 +115,7 @@ export default function RolesPermissions() {
   }, [roles, assignments, loading]);
 
   return (
-    <>
+    <PermissionGuard featureKey="permissions">
       <div className="page-wrapper mb-6">
         <div className="content mb-6">
           <PageHeader />
@@ -163,6 +164,6 @@ export default function RolesPermissions() {
       />
       <EditRole />
       <DeleteRoleModal />
-    </>
+    </PermissionGuard>
   );
 }
