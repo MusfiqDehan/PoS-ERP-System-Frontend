@@ -11,6 +11,7 @@ import { usePosSettings, type PosSettingsScope } from "@/hooks/settings/usePosSe
 import { usePermission } from "@/hooks/usePermission";
 import PosSettingsTaxSection from "./pos-settings/PosSettingsTaxSection";
 import PosSettingsLoyaltySection from "./pos-settings/PosSettingsLoyaltySection";
+import PosSettingsScanSection from "./pos-settings/PosSettingsScanSection";
 import PosSettingsReceiptFieldsSection from "./pos-settings/PosSettingsReceiptFieldsSection";
 import PosSettingsReceiptOutputSection from "./pos-settings/PosSettingsReceiptOutputSection";
 import PosSettingsPaymentMethodsSection from "./pos-settings/PosSettingsPaymentMethodsSection";
@@ -55,7 +56,7 @@ export default function PosSettingsComponent() {
             <div className="add-item d-flex">
               <div className="page-title">
                 <h4>Settings</h4>
-                <h6>Configure POS tax, loyalty, and receipt options</h6>
+                <h6>Configure POS tax, loyalty, scanning, and receipt options</h6>
               </div>
             </div>
             <ul className="table-top-head">
@@ -151,6 +152,12 @@ export default function PosSettingsComponent() {
                         />
 
                         <PosSettingsLoyaltySection
+                          form={form}
+                          onChange={updateForm}
+                          disabled={formDisabled}
+                        />
+
+                        <PosSettingsScanSection
                           form={form}
                           onChange={updateForm}
                           disabled={formDisabled}
