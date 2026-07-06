@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import { fetchBranches, type Branch } from "@/lib/branches";
-import { getAccessToken } from "@/lib/auth-session";
+import { getAccessToken, isPlatformSession } from "@/lib/auth-session";
 import { useActiveBranch } from "@/providers/branch-provider";
 
 type FilterKey = "Sales" | "Target" | "Margin" | "Stock";
@@ -68,7 +68,10 @@ export default function BranchPerformance() {
   const [loading, setLoading] = useState(true);
 
   const loadBranches = useCallback(async () => {
-    if (!token) return;
+    if (!token || isPlatformSession()) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     const { ok, body } = await fetchBranches(token);
     if (ok && body.success && body.data) {

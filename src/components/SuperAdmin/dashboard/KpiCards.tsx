@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { fetchBranchSummary, type BranchSummary } from "@/lib/branches";
-import { getAccessToken } from "@/lib/auth-session";
+import { getAccessToken, isPlatformSession } from "@/lib/auth-session";
 
 type Change = { text: string; dir: "up" | "down" };
 
@@ -44,7 +44,7 @@ export default function KpiCards() {
   const [summary, setSummary] = useState<BranchSummary[] | null>(null);
 
   const load = useCallback(async function() {
-    if (!token) return;
+    if (!token || isPlatformSession()) return;
     const { ok, body } = await fetchBranchSummary(token);
     if (ok && body.success && body.data) {
       setSummary(body.data);
