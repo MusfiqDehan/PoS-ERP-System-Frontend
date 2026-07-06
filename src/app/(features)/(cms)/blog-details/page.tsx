@@ -1,7 +1,12 @@
-import BlogDetailsComponent from "@/components/cms/blog/blogDetails";
+"use client";
 
-export default function BLogDetails(){
-    return(
-        <><BlogDetailsComponent/></>
-    )
+import BlogDetailsComponent from "@/components/cms/blog/blogDetails";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
+
+export default function BlogDetails() {
+  return (
+    <PermissionGuard featureKey="platform.blogs">
+      <BlogDetailsComponent />
+    </PermissionGuard>
+  );
 }
