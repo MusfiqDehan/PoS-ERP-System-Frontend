@@ -3,9 +3,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
 import { SidebarData } from "../../json/siderbar_data";
+import { filterSidebarBySearch } from "./filterSidebarBySearch";
 import { all_routes } from "@/data/all_routes";
 import ImageWithBasePath from "@/core/common/image-with-base-path";
 import { brandAssets, PRODUCT_NAME } from "@/lib/branding";
@@ -18,8 +19,24 @@ import { useAuth } from "@/providers/auth-provider";
 export default function Sidebar() {
   const route = all_routes;
   const pathname = usePathname();
-  const { tier } = useAuth();
-  const visibleSidebar = filterSidebarByAccess(SidebarData as any[], tier);
+  const { tier, tenantAccess, platformAccess, sessionKind } = useAuth();
+  const permissions =
+    sessionKind === "platform"
+      ? platformAccess?.permissions ?? null
+      : tenantAccess?.permissions ?? null;
+  const isTenantAdmin = tenantAccess?.is_tenant_admin ?? false;
+  const visibleSidebar = filterSidebarByAccess(
+    SidebarData as any[],
+    tier,
+    permissions,
+    isTenantAdmin,
+  );
+  const [menuSearchQuery, setMenuSearchQuery] = useState("");
+  const isSearching = menuSearchQuery.trim().length > 0;
+  const filteredSidebar = useMemo(
+    () => filterSidebarBySearch(visibleSidebar, menuSearchQuery),
+    [visibleSidebar, menuSearchQuery],
+  );
   const sidebarDateLabel = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     month: "long",
@@ -104,12 +121,38 @@ export default function Sidebar() {
               <ChevronsLeft className="feather-16" />
             </Link>
           </div>
+          <div className="sidebar-search">
+            <label className="sidebar-search__field">
+              <i className="ti ti-search sidebar-search__icon" aria-hidden="true" />
+              <input
+                type="search"
+                value={menuSearchQuery}
+                onChange={(event) => setMenuSearchQuery(event.target.value)}
+                placeholder="Search menus..."
+                aria-label="Search sidebar menus"
+                className="sidebar-search__input"
+              />
+              {menuSearchQuery ? (
+                <button
+                  type="button"
+                  className="sidebar-search__clear"
+                  aria-label="Clear menu search"
+                  onClick={() => setMenuSearchQuery("")}
+                >
+                  <i className="ti ti-x" aria-hidden="true" />
+                </button>
+              ) : null}
+            </label>
+          </div>
         </>
         <PerfectScrollbar>
           <div className="sidebar-inner slimscroll">
             <div id="sidebar-menu" className="sidebar-menu">
               <ul>
-                {visibleSidebar?.map((mainLabel: any, index: any) => (
+                {isSearching && filteredSidebar.length === 0 ? (
+                  <li className="sidebar-search__empty">No menus found</li>
+                ) : null}
+                {filteredSidebar?.map((mainLabel: any, index: any) => (
                   <li className="submenu-open" key={index}>
                     <h6 className="submenu-hdr">{mainLabel?.label}</h6>
                     <ul>
@@ -142,7 +185,7 @@ export default function Sidebar() {
                                     : undefined
                                 }
                                 onClick={() => toggleSidebar(title?.label)}
-                                className={`${subOpen === title?.label ? "subdrop" : ""
+                                className={`${isSearching || subOpen === title?.label ? "subdrop" : ""
                                   } ${title?.links?.includes(pathname)
                                     ? "subdrop active"
                                     : ""
@@ -159,7 +202,9 @@ export default function Sidebar() {
                               <ul
                                 style={{
                                   display:
-                                    subOpen === title?.label ? "block" : "none",
+                                    isSearching || subOpen === title?.label
+                                      ? "block"
+                                      : "none",
                                 }}
                               >
                                 {title?.submenuItems?.map(
@@ -176,7 +221,7 @@ export default function Sidebar() {
                                             item?.link === pathname
                                             ? "active"
                                             : ""
-                                          } ${subsidebar === item?.label
+                                          } ${isSearching || subsidebar === item?.label
                                             ? "subdrop"
                                             : ""
                                           }`}
@@ -203,7 +248,7 @@ export default function Sidebar() {
                                       <ul
                                         style={{
                                           display:
-                                            subsidebar === item?.label
+                                            isSearching || subsidebar === item?.label
                                               ? "block"
                                               : "none",
                                         }}
