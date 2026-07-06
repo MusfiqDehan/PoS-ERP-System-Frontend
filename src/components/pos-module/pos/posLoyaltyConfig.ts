@@ -121,6 +121,10 @@ export function resolveLoyaltyForOrder(
   };
 }
 
+function round2(n: number): number {
+  return Math.round((n + Number.EPSILON) * 100) / 100;
+}
+
 export function calculateOrderTotals(
   subtotal: number,
   discountPercent: number,
@@ -128,10 +132,10 @@ export function calculateOrderTotals(
   shipping = 0,
 ) {
   const discountRate = discountPercent / 100;
-  const loyaltyDiscount = subtotal * discountRate;
-  const taxableSubtotal = Math.max(0, subtotal - loyaltyDiscount);
-  const tax = taxableSubtotal * taxRate;
-  const totalPayable = taxableSubtotal + tax + shipping;
+  const loyaltyDiscount = round2(subtotal * discountRate);
+  const taxableSubtotal = Math.max(0, round2(subtotal - loyaltyDiscount));
+  const tax = round2(taxableSubtotal * taxRate);
+  const totalPayable = round2(taxableSubtotal + tax + shipping);
 
   return {
     subtotal,
