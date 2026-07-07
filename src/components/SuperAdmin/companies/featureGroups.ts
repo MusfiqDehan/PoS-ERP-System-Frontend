@@ -144,8 +144,19 @@ export const TENANT_FEATURE_GROUPS: FeatureGroup[] = [
     group: "Administration",
     children: [{ key: "permissions", name: "Permissions" }],
   },
+  {
+    group: "Others",
+    children: [{ key: "landing_page", name: "Public Landing Page" }],
+  },
 ];
 
 export function allFeatureKeys(): string[] {
   return TENANT_FEATURE_GROUPS.flatMap((g) => g.children.map((c) => c.key));
+}
+
+export const PLATFORM_FLAG_KEYS = ["landing_page"] as const;
+
+export function subscriptionFeatureKeys(): string[] {
+  const platform = new Set<string>(PLATFORM_FLAG_KEYS);
+  return allFeatureKeys().filter((key) => !platform.has(key));
 }
