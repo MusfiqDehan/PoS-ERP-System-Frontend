@@ -12,6 +12,10 @@
  */
 
 import { API_BASE_URL, PUBLIC_API_BASE_URL, type AuthTokens } from "./env";
+import {
+  buildDevTenantRequestHeaders,
+  resolveHostAwareApiBase,
+} from "./dev-tenant-api";
 
 /* ------------------------------------------------------------------ */
 /*  Token helpers (legacy — stored under sortorium_auth key)           */
@@ -110,6 +114,23 @@ export async function apiGet<T = unknown>(
   accessToken?: string,
 ): Promise<ApiResult<T>> {
   return rawGet(API_BASE_URL, path, accessToken);
+}
+
+/**
+ * GET for endpoints resolved from the browser host (e.g. public tenant landing).
+ * In local dev on `*.localhost`, uses same-origin `/api/v1` and sends
+ * `X-Tenant-Subdomain` so Django can resolve the tenant without Host header.
+ */
+export async function hostAwareApiGet<T = unknown>(
+  path: string,
+  accessToken?: string,
+): Promise<ApiResult<T>> {
+  return rawGet(
+    resolveHostAwareApiBase(API_BASE_URL),
+    path,
+    accessToken,
+    buildDevTenantRequestHeaders(),
+  );
 }
 
 /** GET JSON from `path` using the **public** base URL with optional Bearer token. */
@@ -213,10 +234,12 @@ async function rawGet<T>(
   base: string,
   path: string,
   accessToken?: string,
+  extraHeaders?: Record<string, string>,
 ): Promise<ApiResult<T>> {
   const url = joinApiUrl(base, path);
   const headers: Record<string, string> = {
     Accept: "application/json",
+    ...extraHeaders,
   };
   if (accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
