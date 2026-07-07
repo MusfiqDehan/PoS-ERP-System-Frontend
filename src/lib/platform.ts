@@ -45,6 +45,7 @@ export type PlatformTenant = {
   locale: string;
   currency: string;
   custom_domain_enabled: boolean;
+  landing_page_enabled: boolean;
   max_users: number;
   max_branches: number;
   max_roles: number;
@@ -96,7 +97,14 @@ export type CreateTenantInvitationPayload = {
   feature_keys?: string[];
 };
 
+export const PLATFORM_LANDING_KEY = "landing_page";
+
 export type TenantFeatureOverrides = Record<string, boolean>;
+
+export type TenantFeatureOverrideResponse = {
+  features: TenantFeatureOverrides;
+  platform_flags: Record<string, boolean>;
+};
 
 export type TenantCounts = {
   total: number;
@@ -184,14 +192,32 @@ export async function updatePlatformTenant(
   );
 }
 
+export async function fetchTenantFeatureOverrides(
+  accessToken: string,
+  tenantId: string,
+): Promise<ApiResult<TenantFeatureOverrideResponse>> {
+  return publicApiGet<TenantFeatureOverrideResponse>(
+    `platform-owner/tenants/${tenantId}/features`,
+    accessToken,
+  );
+}
+
 export async function patchTenantFeatures(
   accessToken: string,
   tenantId: string,
   overrides: TenantFeatureOverrides,
-): Promise<ApiResult<{ features: TenantFeatureOverrides }>> {
-  return publicApiPatch<{ features: TenantFeatureOverrides }>(
+  platformFlags?: Record<string, boolean>,
+): Promise<ApiResult<TenantFeatureOverrideResponse>> {
+  const payload: {
+    features: TenantFeatureOverrides;
+    platform_flags?: Record<string, boolean>;
+  } = { features: overrides };
+  if (platformFlags) {
+    payload.platform_flags = platformFlags;
+  }
+  return publicApiPatch<TenantFeatureOverrideResponse>(
     `platform-owner/tenants/${tenantId}/features`,
-    { features: overrides },
+    payload,
     accessToken,
   );
 }
