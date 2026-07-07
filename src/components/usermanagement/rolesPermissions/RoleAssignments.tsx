@@ -5,14 +5,15 @@ import {
 } from "./roleAssignmentsData";
 import type { UserRoleAssignment } from "@/lib/roles";
 
-const COLUMNS = ["Email", "Role", "Branch", "Assign At", "Assigned By", "Action"];
+const COLUMNS = ["Email", "Role", "Scope", "Assign At", "Assigned By", "Action"];
 
 function mapToDisplay(a: UserRoleAssignment): RoleAssignment {
+  const scope = a.warehouse_name ?? a.branch_name ?? "\u2014";
   return {
     id: a.id,
     email: a.user_email ?? "",
     role: a.role_name ?? "",
-    branch: a.branch_name ?? "\u2014",
+    branch: scope,
     assignedAt: a.created_at?.slice(0, 10) ?? "\u2014",
     assignedBy: a.assigned_by_email ?? "\u2014",
   };

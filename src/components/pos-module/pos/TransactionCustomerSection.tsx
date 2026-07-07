@@ -1,7 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import CustomerLoyaltyBadges from "./CustomerLoyaltyBadges";
 import CustomerLoyaltyMode from "./CustomerLoyaltyMode";
@@ -12,6 +11,7 @@ import {
   transactionSaleTypes,
   type TransactionCustomer,
 } from "./transactionDetailsData";
+import { openPosScanInput } from "@/lib/posScanEvents";
 
 type TransactionCustomerSectionProps = {
   customers: TransactionCustomer[];
@@ -187,15 +187,14 @@ export default function TransactionCustomerSection({
             />
           </button>
 
-          <Link
-            href="#"
+          <button
+            type="button"
             className="pos-transaction-details__icon-btn"
-            data-bs-toggle="modal"
-            data-bs-target="#barcode"
-            aria-label="Scan customer"
+            onClick={() => openPosScanInput()}
+            aria-label="Scan product barcode"
           >
             <img src={transactionDetailsAssets.scan} alt="" width={18} height={18} />
-          </Link>
+          </button>
         </div>
       </div>
     </div>

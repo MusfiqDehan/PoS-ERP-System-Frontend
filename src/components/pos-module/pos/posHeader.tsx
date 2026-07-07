@@ -8,10 +8,11 @@ import { useEffect, useState } from "react";
 import {
   posHeaderActions,
   posHeaderAssets,
-  posHeaderStores,
   posHeaderUser,
 } from "./posHeaderData";
 import PosHeaderModals from "./PosHeaderModals";
+import { openPosModal } from "./categories-modal/openPosModal";
+import { useActiveBranch } from "@/providers/branch-provider";
 
 const formatHeaderDate = (date: Date) =>
   date.toLocaleDateString("en-US", {
@@ -22,16 +23,18 @@ const formatHeaderDate = (date: Date) =>
   });
 
 export default function PosHeader() {
-  const [activeStoreId, setActiveStoreId] = useState(posHeaderStores[0].id);
+  const {
+    branches,
+    activeBranch,
+    setActiveBranchId,
+    loading: branchesLoading,
+    canSwitchBranch,
+  } = useActiveBranch();
   const [headerDate, setHeaderDate] = useState("");
 
   useEffect(() => {
     setHeaderDate(formatHeaderDate(new Date()));
   }, []);
-
-  const activeStore =
-    posHeaderStores.find((store) => store.id === activeStoreId) ??
-    posHeaderStores[0];
 
   return (
     <header className="pos-page-header">
@@ -66,50 +69,54 @@ export default function PosHeader() {
               className="pos-page-header__location dropdown-toggle"
               data-bs-toggle="dropdown"
               aria-expanded="false"
+              disabled={branchesLoading || !canSwitchBranch}
             >
               <span className="pos-page-header__location-content">
                 <ImageWithBasePath
-                  src={activeStore.imageSrc}
+                  src={posHeaderAssets.store}
                   alt=""
                   width={24}
                   height={24}
                   className="pos-page-header__location-icon"
                 />
                 <span className="pos-page-header__location-name">
-                  {activeStore.name}
+                  {branchesLoading
+                    ? "Loading…"
+                    : (activeBranch?.name ?? "Select Branch")}
                 </span>
               </span>
-              <ImageWithBasePath
-                src={posHeaderAssets.chevronDown}
-                alt=""
-                width={16}
-                height={16}
-                className="pos-page-header__chevron"
-              />
+              {canSwitchBranch && (
+                <ImageWithBasePath
+                  src={posHeaderAssets.chevronDown}
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="pos-page-header__chevron"
+                />
+              )}
             </button>
-            <ul className="dropdown-menu">
-              {posHeaderStores.map((store) => (
-                <li key={store.id}>
-                  <Link
-                    href="#"
-                    className="dropdown-item"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      setActiveStoreId(store.id);
-                    }}
-                  >
-                    <ImageWithBasePath
-                      src={store.imageSrc}
-                      alt=""
-                      width={24}
-                      height={24}
-                      className="me-2"
-                    />
-                    {store.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {canSwitchBranch && (
+              <ul className="dropdown-menu">
+                {branches.map((branch) => (
+                  <li key={branch.id}>
+                    <button
+                      type="button"
+                      className={`dropdown-item${branch.id === activeBranch?.id ? " active" : ""}`}
+                      onClick={() => setActiveBranchId(branch.id)}
+                    >
+                      <ImageWithBasePath
+                        src={posHeaderAssets.store}
+                        alt=""
+                        width={24}
+                        height={24}
+                        className="me-2"
+                      />
+                      {branch.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
 
@@ -127,17 +134,17 @@ export default function PosHeader() {
               );
 
               if (action.modalTarget) {
+                const modalId = action.modalTarget.replace(/^#/, "");
                 return (
-                  <Link
+                  <button
                     key={action.id}
-                    href="#"
+                    type="button"
                     className="pos-page-header__action"
                     aria-label={action.label}
-                    data-bs-toggle="modal"
-                    data-bs-target={action.modalTarget}
+                    onClick={() => openPosModal(modalId)}
                   >
                     {icon}
-                  </Link>
+                  </button>
                 );
               }
 

@@ -2177,7 +2177,7 @@ export const SidebarData1 = [
             tittle: 'Stores',
             hasSubRoute: false,
             showSubRoute: false,
-            route: "/store-list",
+            route: "/branch-list",
             subRoutes: [],
           },
           {

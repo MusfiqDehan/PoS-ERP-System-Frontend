@@ -31,12 +31,12 @@ export default function PageHeader() {
           Add New
         </Link>
       </div>
-      <div className="page-btn import">
+      <div className="page-btn import d-none" title="Import not available yet">
         <Link
           href="#"
-          className="btn btn-secondary color"
-          data-bs-toggle="modal"
-          data-bs-target="#view-notes"
+          className="btn btn-secondary color disabled"
+          aria-disabled
+          tabIndex={-1}
         >
           <Download className="me-2" />
           Import Transfer

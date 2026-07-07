@@ -3,49 +3,57 @@
 import type { ColumnsType } from "antd/es/table";
 import {
   ManageStockActionsCell,
-  ManageStockPersonCell,
   ManageStockProductCell,
 } from "./ManageStockRow";
 import type { ManageStockRecord } from "./types";
 
-export const manageStockColumns: ColumnsType<ManageStockRecord> = [
-  {
-    title: "Warehouse",
-    dataIndex: "Warehouse",
-    sorter: (a, b) => a.Warehouse.length - b.Warehouse.length,
-  },
-  {
-    title: "Shop",
-    dataIndex: "Shop",
-    sorter: (a, b) => a.Shop.length - b.Shop.length,
-  },
-  {
-    title: "Product",
-    dataIndex: "Product",
-    render: (_text, record) => <ManageStockProductCell record={record} />,
-    sorter: (a, b) => a.Product.Name.length - b.Product.Name.length,
-  },
-  {
-    title: "Date",
-    dataIndex: "Date",
-    sorter: (a, b) => a.Date.length - b.Date.length,
-  },
-  {
-    title: "Person",
-    dataIndex: "Person",
-    render: (_text, record) => <ManageStockPersonCell record={record} />,
-    sorter: (a, b) => a.Person.Name.length - b.Person.Name.length,
-  },
-  {
-    title: "Qty",
-    dataIndex: "Quantity",
-    sorter: (a, b) => String(a.Quantity).length - String(b.Quantity).length,
-  },
-  {
-    title: "",
-    dataIndex: "action",
-    render: () => <ManageStockActionsCell />,
-    sorter: (a, b) =>
-      (a.createdby?.length ?? 0) - (b.createdby?.length ?? 0),
-  },
-];
+type ColumnsFactoryOpts = {
+  onEdit: (record: ManageStockRecord) => void;
+  onDelete: (record: ManageStockRecord) => void;
+};
+
+export function buildManageStockColumns({ onEdit, onDelete }: ColumnsFactoryOpts): ColumnsType<ManageStockRecord> {
+  return [
+    {
+      title: "Product",
+      dataIndex: "product_name",
+      render: (_text, record) => <ManageStockProductCell record={record} />,
+      sorter: (a, b) => (a.product_name ?? "").localeCompare(b.product_name ?? ""),
+    },
+    {
+      title: "SKU",
+      dataIndex: "product_sku",
+      sorter: (a, b) => (a.product_sku ?? "").localeCompare(b.product_sku ?? ""),
+    },
+    {
+      title: "Location",
+      dataIndex: "location_type",
+      render: (text) => <span className="text-capitalize">{text}</span>,
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      sorter: (a, b) => Number(a.quantity) - Number(b.quantity),
+    },
+    {
+      title: "Alert Qty",
+      dataIndex: "qty_alert",
+      sorter: (a, b) => Number(a.qty_alert) - Number(b.qty_alert),
+    },
+    {
+      title: "Status",
+      dataIndex: "is_active",
+      render: (val: boolean) => (
+        <span className={`badge d-inline-flex align-items-center badge-xs ${val ? "badge-success" : "badge-danger"}`}>
+          <i className="ti ti-point-filled me-1" />
+          {val ? "Active" : "Inactive"}
+        </span>
+      ),
+    },
+    {
+      title: "",
+      dataIndex: "action",
+      render: (_text, record) => <ManageStockActionsCell record={record} onEdit={onEdit} onDelete={onDelete} />,
+    },
+  ];
+}

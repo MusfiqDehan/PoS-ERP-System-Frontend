@@ -1,7 +1,8 @@
 import SystemSettingsComponent from "@/components/settings/websitesettings/systemsettings";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 
 export default function SystemSettings(){
     return(
-        <><SystemSettingsComponent /></>
+        <PermissionGuard featureKey="website_settings"><SystemSettingsComponent /></PermissionGuard>
     )
 }

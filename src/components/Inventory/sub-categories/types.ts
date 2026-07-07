@@ -1,9 +1,3 @@
-export type SubCategoryRecord = {
-  id: number;
-  img: string;
-  category: string;
-  parentcategory: string;
-  categorycode: string;
-  description: string;
-  status: string;
-};
+import type { SubCategory } from "@/lib/inventory";
+
+export type SubCategoryRecord = SubCategory;

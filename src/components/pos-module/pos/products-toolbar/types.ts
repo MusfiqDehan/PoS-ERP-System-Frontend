@@ -3,4 +3,6 @@ export type ToolbarSearchProps = {
   onSearchChange: (value: string) => void;
 };
 
-export type ProductsToolbarProps = ToolbarSearchProps;
+export type ProductsToolbarProps = ToolbarSearchProps & {
+  onBarcodeScan?: (code: string) => void;
+};

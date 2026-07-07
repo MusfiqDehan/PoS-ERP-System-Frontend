@@ -1,9 +1,12 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import DepartmentListComponent from "@/components/hrm/departmentlist";
 
 export default function DepartmentList(){
     return(
-        <>
-        <DepartmentListComponent />
-        </>
+        <PermissionGuard featureKey="departments">
+            <DepartmentListComponent />
+        </PermissionGuard>
     )
 }

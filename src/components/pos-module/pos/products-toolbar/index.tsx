@@ -8,6 +8,7 @@ import type { ProductsToolbarProps } from "./types";
 export default function PosProductsToolbar({
   searchQuery,
   onSearchChange,
+  onBarcodeScan,
 }: ProductsToolbarProps) {
   return (
     <div className="pos-products-panel__toolbar">
@@ -17,7 +18,7 @@ export default function PosProductsToolbar({
       />
 
       <div className="pos-products-panel__toolbar-actions">
-        <ToolbarScan />
+        <ToolbarScan onBarcodeScan={onBarcodeScan} />
         <ToolbarCategory />
         <ToolbarBrand />
         <ToolbarNotification />

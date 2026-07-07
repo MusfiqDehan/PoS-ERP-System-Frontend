@@ -1,3 +1,6 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import AddExpenseCategoryModal from "@/components/FinanceAccounts/ExpenseCategory/AddExpenseCategoryModal";
 import AddStoreModal from "@/components/FinanceAccounts/ExpenseCategory/AddStoreModal";
 import DeleteExpenseModal from "@/components/FinanceAccounts/ExpenseCategory/DeleteExpenseModal";
@@ -9,7 +12,7 @@ import PageHeader from "@/components/FinanceAccounts/ExpenseCategory/PageHeader"
 
 export default function ExpenseCategory() {
   return (
-    <>
+    <PermissionGuard featureKey="expenses">
       <div>
         <div className="page-wrapper">
           <div className="content">
@@ -24,6 +27,6 @@ export default function ExpenseCategory() {
         <EditExpenseCategoryModal />
         <DeleteExpenseModal />
       </div>
-    </>
+    </PermissionGuard>
   );
 }

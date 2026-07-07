@@ -1,12 +1,15 @@
+"use client";
+
 import CommonDeleteModal from "@/core/common/modal/commonDeleteModal";
 import CommonFooter from "@/core/common/footer/commonFooter";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import EditExpiredProductModal from "@/components/Inventory/expired-products/EditExpiredProductModal";
 import ExpiredProductsTable from "@/components/Inventory/expired-products/ExpiredProductsTable";
 import PageHeader from "@/components/Inventory/expired-products/PageHeader";
 
 export default function ExpiredProducts() {
   return (
-    <div>
+    <PermissionGuard featureKey="expired_products">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -16,6 +19,6 @@ export default function ExpiredProducts() {
       </div>
       <EditExpiredProductModal />
       <CommonDeleteModal />
-    </div>
+    </PermissionGuard>
   );
 }

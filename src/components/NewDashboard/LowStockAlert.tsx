@@ -3,12 +3,23 @@
 import ImageWithBasePath from "@/core/common/image-with-base-path";
 import Link from "next/link";
 import { useState } from "react";
+import { useSalesDashboardData } from "@/hooks/dashboard/useSalesDashboard";
+import { all_routes } from "@/data/all_routes";
 import { lowStockAlertData } from "./lowStockAlertData";
 
 export default function LowStockAlert() {
+  const { lowStock } = useSalesDashboardData();
   const [visible, setVisible] = useState(true);
+  const first = lowStock[0];
 
   if (!visible) {
+    return null;
+  }
+
+  const productName = first?.product_name ?? lowStockAlertData.productName;
+  const threshold = first?.qty_alert ?? lowStockAlertData.threshold;
+
+  if (!first && lowStock.length === 0) {
     return null;
   }
 
@@ -28,12 +39,10 @@ export default function LowStockAlert() {
           />
           <p className="m-0 text-[16px] font-medium leading-[normal] text-[#646B72]">
             Your product{" "}
-            <span className="text-[#089b7c]">
-              {lowStockAlertData.productName} is running Low,
-            </span>{" "}
-            already below {lowStockAlertData.threshold},{" "}
+            <span className="text-[#089b7c]">{productName} is running Low,</span>{" "}
+            already below {threshold},{" "}
             <Link
-              href={lowStockAlertData.addStockHref}
+              href={all_routes.lowstock}
               className="text-[#089b7c] font-medium underline hover:text-[#067a63]"
             >
               Add Stock.
@@ -42,15 +51,15 @@ export default function LowStockAlert() {
         </div>
         <button
           type="button"
-          className="inline-flex items-center justify-center p-0 border-0 bg-transparent cursor-pointer shrink-0 leading-[0]"
-          aria-label="Close"
+          className="shrink-0 border-0 bg-transparent p-0 cursor-pointer"
+          aria-label="Dismiss low stock alert"
           onClick={() => setVisible(false)}
         >
           <ImageWithBasePath
             src={lowStockAlertData.closeIconSrc}
             alt=""
-            width={24}
-            height={24}
+            width={20}
+            height={20}
           />
         </button>
       </div>

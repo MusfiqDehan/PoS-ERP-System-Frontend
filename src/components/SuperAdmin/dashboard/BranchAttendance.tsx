@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { fetchBranches, type Branch } from "@/lib/branches";
-import { getAccessToken } from "@/lib/auth-session";
+import { getAccessToken, isPlatformSession } from "@/lib/auth-session";
 
 /* ------------------------------------------------------------------ */
 /*  No backend attendance API exists yet — attendance columns show 0.    */
@@ -15,7 +15,10 @@ export default function BranchAttendance() {
   const [loading, setLoading] = useState(true);
 
   const loadBranches = useCallback(async () => {
-    if (!token) return;
+    if (!token || isPlatformSession()) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     const { ok, body } = await fetchBranches(token);
     if (ok && body.success && body.data) {

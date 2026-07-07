@@ -1,4 +1,29 @@
-export function closePosModal(modalId: string) {
+type BootstrapModal = {
+  hide: () => void;
+};
+
+type BootstrapWindow = Window & {
+  bootstrap?: {
+    Modal?: {
+      getInstance: (element: Element) => BootstrapModal | null;
+    };
+  };
+};
+
+function hideModalElement(modal: HTMLElement): void {
+  modal.classList.remove("show");
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+  modal.removeAttribute("aria-modal");
+  modal.removeAttribute("role");
+  document.body.classList.remove("modal-open");
+  document.body.style.removeProperty("overflow");
+  document.body.style.removeProperty("padding-right");
+  document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
+  modal.dispatchEvent(new Event("hidden.bs.modal"));
+}
+
+export function closePosModal(modalId: string): void {
   if (typeof window === "undefined") {
     return;
   }
@@ -8,13 +33,11 @@ export function closePosModal(modalId: string) {
     return;
   }
 
-  const bootstrap = (
-    window as Window & {
-      bootstrap?: {
-        Modal?: { getOrCreateInstance: (el: Element) => { hide: () => void } };
-      };
-    }
-  ).bootstrap;
+  const instance = (window as BootstrapWindow).bootstrap?.Modal?.getInstance(modal);
+  if (instance) {
+    instance.hide();
+    return;
+  }
 
-  bootstrap?.Modal?.getOrCreateInstance(modal)?.hide();
+  hideModalElement(modal);
 }

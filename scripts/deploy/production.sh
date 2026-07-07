@@ -119,6 +119,9 @@ wait_container_healthy "$LIVE_CONTAINER"
 log "Phase 8: remove candidate..."
 cleanup_candidate
 
+log "Phase 8.5: let Traefik discover the new container labels..."
+sleep 10
+
 log "Phase 9: final external smoke check..."
 smoke_check_external
 

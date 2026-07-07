@@ -9,12 +9,13 @@ import DomainRejectedModal from "@/components/SuperAdmin/domain/DomainRejectedMo
 import DomainStatsCards from "@/components/SuperAdmin/domain/DomainStatsCards";
 import DomainTable from "@/components/SuperAdmin/domain/DomainTable";
 import PageHeader from "@/components/SuperAdmin/domain/PageHeader";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 
 export default function Domain() {
   const [searchText, setSearchText] = useState("");
 
   return (
-    <>
+    <PermissionGuard featureKey="platform.domain">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader searchText={searchText} onSearchChange={setSearchText} />
@@ -27,6 +28,6 @@ export default function Domain() {
       <DomainPendingModal />
       <DomainRejectedModal />
       <DeleteDomainModal />
-    </>
+    </PermissionGuard>
   );
 }

@@ -1,8 +1,2 @@
-export type ExpiredProductRecord = {
-  id: number;
-  img: string;
-  product: string;
-  sku: string;
-  manufactureddate: string;
-  expireddate: string;
-};
+import type { Product } from "@/lib/inventory";
+export type ExpiredProductRecord = Product;

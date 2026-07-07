@@ -1,6 +1,10 @@
 "use client";
 
-export default function ViewNotesModal() {
+type Props = {
+  reason: string;
+};
+
+export default function ViewNotesModal({ reason }: Props) {
   return (
     <div className="modal fade" id="view-notes">
       <div className="modal-dialog modal-dialog-centered">
@@ -15,20 +19,11 @@ export default function ViewNotesModal() {
               data-bs-dismiss="modal"
               aria-label="Close"
             >
-              <span aria-hidden="true">×</span>
+              <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div className="modal-body">
-            <p>
-              The Jordan brand is owned by Nike (owned by the Knight family),
-              as, at the time, the company was building its strategy to work
-              with athletes to launch shows that could inspire consumers.Although
-              Jordan preferred Converse and Adidas, they simply could not match
-              the offer Nike made. Jordan also signed with Nike because he
-              loved the way they wanted to market him with the banned colored
-              shoes. Nike promised to cover the fine Jordan would receive from
-              the NBA.
-            </p>
+            <p>{reason || "No notes provided."}</p>
           </div>
         </div>
       </div>

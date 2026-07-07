@@ -1,21 +1,20 @@
-import BarcodeContent from "@/components/Inventory/barcode/BarcodeContent";
+"use client";
+
+import LabelPrintWorkspace from "@/components/Inventory/labels/LabelPrintWorkspace";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import PageHeader from "@/components/Inventory/barcode/PageHeader";
-import PrintBarcodeModal from "@/components/Inventory/barcode/PrintBarcodeModal";
-import CommonDeleteModal from "@/core/common/modal/commonDeleteModal";
 import CommonFooter from "@/core/common/footer/commonFooter";
 
 export default function Barcode() {
   return (
-    <div>
+    <PermissionGuard featureKey="barcodes">
       <div className="page-wrapper notes-page-wrapper">
         <div className="content">
           <PageHeader />
-          <BarcodeContent />
+          <LabelPrintWorkspace codeType="barcode" />
         </div>
         <CommonFooter />
       </div>
-      <PrintBarcodeModal />
-      <CommonDeleteModal />
-    </div>
+    </PermissionGuard>
   );
 }

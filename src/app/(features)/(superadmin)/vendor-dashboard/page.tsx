@@ -1,3 +1,5 @@
+"use client";
+
 import CommonFooter from "@/core/common/footer/commonFooter";
 import VendorPageHeader from "@/components/VendorDashboard/VendorPageHeader";
 import VendorStatCards from "@/components/VendorDashboard/VendorStatCards";
@@ -8,9 +10,11 @@ import VendorRecentlyRegistered from "@/components/VendorDashboard/VendorRecentl
 import VendorRecentPlanExpired from "@/components/VendorDashboard/VendorRecentPlanExpired";
 import VendorRecentTransactions from "@/components/VendorDashboard/VendorRecentTransactions";
 import DashboardDateRange from "@/components/NewDashboard/DashboardDateRange";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 
 export default function VendorDashboard() {
   return (
+    <PermissionGuard featureKey="platform.dashboard">
     <div className="page-wrapper">
       <div className="content">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
@@ -52,5 +56,6 @@ export default function VendorDashboard() {
       </div>
       <CommonFooter />
     </div>
+    </PermissionGuard>
   );
 }
