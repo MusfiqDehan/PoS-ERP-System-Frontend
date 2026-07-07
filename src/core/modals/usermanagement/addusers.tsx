@@ -3,6 +3,8 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { inviteEmployee, type InviteEmployeePayload } from "@/lib/roles";
 import { fetchAllTenantBranches, type Branch } from "@/lib/branches";
+import { fetchWarehouses, type Warehouse } from "@/lib/warehouses";
+import { extractListItems } from "@/lib/api";
 import { getAccessToken } from "@/lib/auth-session";
 
 type AddUsersProps = {
@@ -11,8 +13,10 @@ type AddUsersProps = {
   onSuccess?: () => void;
 };
 
-/** Roles that are org-wide and do not need a branch assignment. */
+/** Roles that are org-wide and do not need a branch or warehouse assignment. */
 const ORG_WIDE_ROLES = new Set(["admin"]);
+const BRANCH_SCOPED_ROLES = new Set(["branch_manager", "cashier", "viewer"]);
+const WAREHOUSE_SCOPED_ROLES = new Set(["warehouse_manager"]);
 
 const fieldCls =
   "w-full rounded-[6px] border border-[#e7e7e7] px-[12px] py-[10px] text-[14px] leading-normal text-[#333333] outline-none transition-colors placeholder:text-[#999999] focus:border-[#089b7c]";
@@ -31,8 +35,11 @@ export default function AddUsers({
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [selectedBranchId, setSelectedBranchId] = useState("");
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState("");
   const [branches, setBranches] = useState<Branch[]>([]);
+  const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [branchesLoading, setBranchesLoading] = useState(false);
+  const [warehousesLoading, setWarehousesLoading] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -40,7 +47,8 @@ export default function AddUsers({
   const [success, setSuccess] = useState(false);
 
   const roleSlug = preselectedRole?.slug ?? "";
-  const needsBranch = roleSlug !== "" && !ORG_WIDE_ROLES.has(roleSlug);
+  const needsBranch = BRANCH_SCOPED_ROLES.has(roleSlug);
+  const needsWarehouse = WAREHOUSE_SCOPED_ROLES.has(roleSlug);
 
   /* Load branches when modal is shown for a branch-scoped role */
   useEffect(() => {
@@ -63,6 +71,27 @@ export default function AddUsers({
     return () => { cancelled = true; };
   }, [needsBranch, preselectedRole?.slug]);
 
+  /* Load warehouses when modal is shown for warehouse_manager */
+  useEffect(() => {
+    if (!needsWarehouse) return;
+    let cancelled = false;
+    setWarehousesLoading(true);
+    const token = getAccessToken();
+    if (!token) {
+      setWarehousesLoading(false);
+      return;
+    }
+    (async () => {
+      const res = await fetchWarehouses(token);
+      if (cancelled) return;
+      if (res.ok && res.body.success && res.body.data) {
+        setWarehouses(extractListItems<Warehouse>(res.body.data));
+      }
+      setWarehousesLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, [needsWarehouse, preselectedRole?.slug]);
+
   /* Reset on modal open */
   useEffect(() => {
     const el = document.getElementById(id);
@@ -71,6 +100,7 @@ export default function AddUsers({
       setFullName("");
       setEmail("");
       setSelectedBranchId("");
+      setSelectedWarehouseId("");
       setSubmitting(false);
       setApiError(null);
       setFieldErrors({});
@@ -87,6 +117,9 @@ export default function AddUsers({
       fe.email = "Enter a valid email.";
     if (needsBranch && !selectedBranchId) {
       fe.branch_id = "Branch is required for this role.";
+    }
+    if (needsWarehouse && !selectedWarehouseId) {
+      fe.warehouse_id = "Warehouse is required for this role.";
     }
     setFieldErrors(fe);
     return Object.keys(fe).length === 0;
@@ -108,6 +141,9 @@ export default function AddUsers({
     if (preselectedRole?.slug) payload.role_slug = preselectedRole.slug;
     if (needsBranch && selectedBranchId) {
       payload.branch_id = selectedBranchId;
+    }
+    if (needsWarehouse && selectedWarehouseId) {
+      payload.warehouse_id = selectedWarehouseId;
     }
 
     setSubmitting(true);
@@ -275,6 +311,38 @@ export default function AddUsers({
                         </div>
                       )}
                       {fieldErrors.branch_id && <p className={errCls}>{fieldErrors.branch_id}</p>}
+                    </div>
+                  )}
+
+                  {/* Warehouse selector (warehouse_manager only) */}
+                  {needsWarehouse && (
+                    <div>
+                      <label className={lblCls}>
+                        Warehouse <span className="text-[#dc3545]">*</span>
+                      </label>
+                      {warehousesLoading ? (
+                        <div className={`${fieldCls} flex items-center gap-[8px] text-[#999999]`}>
+                          <span className="h-[14px] w-[14px] animate-spin rounded-full border-2 border-[#e7e7e7] border-t-[#089b7c]" />
+                          Loading warehouses...
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <select
+                            value={selectedWarehouseId}
+                            onChange={(e) => setSelectedWarehouseId(e.target.value)}
+                            className={fieldErrors.warehouse_id ? fieldErrCls : selectCls}
+                          >
+                            <option value="">Select a warehouse</option>
+                            {warehouses.map((w) => (
+                              <option key={w.id} value={w.id}>
+                                {w.name}{w.is_central ? " (Central)" : ""}
+                              </option>
+                            ))}
+                          </select>
+                          <i className="ti ti-chevron-down pointer-events-none absolute right-[12px] top-1/2 -translate-y-1/2 text-[14px] leading-none text-[#666666]" />
+                        </div>
+                      )}
+                      {fieldErrors.warehouse_id && <p className={errCls}>{fieldErrors.warehouse_id}</p>}
                     </div>
                   )}
                 </div>

@@ -1,3 +1,6 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import AddIncomeModal from "@/components/FinanceAccounts/Income/AddIncomeModal";
 import DeleteIncomeModal from "@/components/FinanceAccounts/Income/DeleteIncomeModal";
 import EditIncomeModal from "@/components/FinanceAccounts/Income/EditIncomeModal";
@@ -7,7 +10,7 @@ import PageHeader from "@/components/FinanceAccounts/Income/PageHeader";
 
 export default function Income() {
   return (
-    <>
+    <PermissionGuard featureKey="income">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -18,6 +21,6 @@ export default function Income() {
       <AddIncomeModal />
       <EditIncomeModal />
       <DeleteIncomeModal />
-    </>
+    </PermissionGuard>
   );
 }

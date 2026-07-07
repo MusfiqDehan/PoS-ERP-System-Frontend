@@ -1,9 +1,12 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import CustomersComponent from "@/components/application/ecommerce/customers/customers";
 
 export default function Customer(){
     return(
-        <>
-        <CustomersComponent />
-        </>
+        <PermissionGuard featureKey="customers">
+            <CustomersComponent />
+        </PermissionGuard>
     )
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { AuthPasswordField } from "@/core/common/form/auth";
 import ResetPasswordFormHeader from "./ResetPasswordFormHeader";
@@ -21,8 +21,11 @@ export default function ResetPasswordFormPanel() {
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isPlatform, setIsPlatform] = useState(false);
 
-  const isPlatform = useMemo(() => isPublicMarketingHost(), []);
+  useEffect(() => {
+    setIsPlatform(isPublicMarketingHost());
+  }, []);
 
   const passwordsMatch = password && confirmPassword && password === confirmPassword;
   const canSubmit = password.length >= 8 && passwordsMatch && !submitting && token.length > 0;

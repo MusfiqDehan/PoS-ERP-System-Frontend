@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { AuthEmailField } from "@/core/common/form/auth";
 import ForgotPasswordFormHeader from "./ForgotPasswordFormHeader";
 import ForgotPasswordPrimaryActions from "./ForgotPasswordPrimaryActions";
@@ -15,8 +15,11 @@ export default function ForgotPasswordFormPanel() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [isPlatform, setIsPlatform] = useState(false);
 
-  const isPlatform = useMemo(() => isPublicMarketingHost(), []);
+  useEffect(() => {
+    setIsPlatform(isPublicMarketingHost());
+  }, []);
 
   const canSubmit = email.trim().length > 0 && !submitting;
 

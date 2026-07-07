@@ -10,12 +10,6 @@ export type PosHeaderAction = {
   modalTarget?: string;
 };
 
-export type PosHeaderStore = {
-  id: string;
-  name: string;
-  imageSrc: string;
-};
-
 export const posHeaderAssets = {
   companyLogo: brandAssets.logo,
   keyboard: "assets/img/pos/header/keyboard.svg",
@@ -35,29 +29,6 @@ export const posHeaderUser = {
   avatarSrc: posHeaderAssets.avatar,
   role: "Super Admin",
 };
-
-export const posHeaderStores: PosHeaderStore[] = [
-  {
-    id: "mirpur-12",
-    name: "Mirpur-12",
-    imageSrc: posHeaderAssets.store,
-  },
-  {
-    id: "freshmart",
-    name: "Freshmart",
-    imageSrc: "assets/img/store/store-01.png",
-  },
-  {
-    id: "grocery-apex",
-    name: "Grocery Apex",
-    imageSrc: "assets/img/store/store-02.png",
-  },
-  {
-    id: "grocery-bevy",
-    name: "Grocery Bevy",
-    imageSrc: "assets/img/store/store-03.png",
-  },
-];
 
 export const posHeaderActions: PosHeaderAction[] = [
   {
@@ -121,13 +92,6 @@ export type PosTodayStat = {
   label: string;
   value: string;
 };
-
-export const posTodaySaleStats: PosTodayStat[] = [
-  { label: "Total Sales", value: "$12,480.00" },
-  { label: "Transactions", value: "86" },
-  { label: "Items Sold", value: "342" },
-  { label: "Avg. Order Value", value: "$145.12" },
-];
 
 export const posTodayProfitStats: PosTodayStat[] = [
   { label: "Gross Profit", value: "$3,920.00" },

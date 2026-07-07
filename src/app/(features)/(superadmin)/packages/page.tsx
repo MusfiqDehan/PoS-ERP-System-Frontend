@@ -8,6 +8,7 @@ import EditPlanModal from "@/components/SuperAdmin/packages/EditPlanModal";
 import PackagesTable from "@/components/SuperAdmin/packages/PackagesTable";
 import PageHeader from "@/components/SuperAdmin/packages/PageHeader";
 import StatsCards from "@/components/SuperAdmin/packages/StatsCards";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 
 export default function Package() {
   const [searchText, setSearchText] = useState("");
@@ -36,12 +37,16 @@ export default function Package() {
     setEditingPackageId(id);
   }, []);
 
+  const handleCreated = useCallback(function () {
+    setRefreshKey(function (k) { return k + 1; });
+  }, []);
+
   return (
-    <>
+    <PermissionGuard featureKey="platform.packages">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader searchText={searchText} onSearchChange={setSearchText} />
-          <StatsCards />
+          <StatsCards refreshKey={refreshKey} />
           <PackagesTable
             searchText={searchText}
             onDeletePackage={handleDelete}
@@ -51,7 +56,7 @@ export default function Package() {
         </div>
         <CommonFooter />
       </div>
-      <AddPlanModal />
+      <AddPlanModal onCreated={handleCreated} />
       <EditPlanModal
         packageId={editingPackageId}
         onUpdated={function () {
@@ -71,6 +76,6 @@ export default function Package() {
         packageName={deletingPackage?.name}
         onDeleted={handleDeleted}
       />
-    </>
+    </PermissionGuard>
   );
 }

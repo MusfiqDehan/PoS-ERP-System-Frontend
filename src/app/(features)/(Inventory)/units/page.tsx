@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import AddUnitModal from "@/components/Inventory/units/AddUnitModal";
 import EditUnitModal from "@/components/Inventory/units/EditUnitModal";
 import DeleteUnitModal from "@/components/Inventory/units/DeleteUnitModal";
@@ -20,7 +21,7 @@ export default function Units() {
   const handleSelectForDelete = useCallback((record: Unit) => setSelectedForDelete(record), []);
 
   return (
-    <div>
+    <PermissionGuard featureKey="units">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -37,6 +38,6 @@ export default function Units() {
       <AddUnitModal onAddUnit={addUnit} />
       <EditUnitModal unit={selectedForEdit} onEditUnit={editUnit} />
       <DeleteUnitModal unit={selectedForDelete} onDeleteUnit={removeUnit} />
-    </div>
+    </PermissionGuard>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import type { LoyaltyMode } from "./posLoyaltyConfig";
-import type { TransactionCustomer } from "./transactionDetailsData";
+import type { TransactionCustomer, TransactionPaymentMethod } from "./transactionDetailsData";
 import type { PosSummaryLine } from "@/hooks/pos/usePosCart";
 import TransactionActions from "./TransactionActions";
 import TransactionCustomerSection from "./TransactionCustomerSection";
@@ -20,13 +20,14 @@ type PosOrderSidebarProps = {
   onNew: () => void;
   onClear: () => void;
   onSaveDraft: () => void;
-  onCompleteOrder: () => void;
+  onPayAndPrint: () => void;
   customers: TransactionCustomer[];
   selectedCustomer: TransactionCustomer;
   onSelectCustomer: (customer: TransactionCustomer) => void;
   loyaltyMode: LoyaltyMode;
   onLoyaltyModeChange: (mode: LoyaltyMode) => void;
   cartSubtotal: number;
+  paymentMethods?: TransactionPaymentMethod[];
 };
 
 export default function PosOrderSidebar({
@@ -40,13 +41,14 @@ export default function PosOrderSidebar({
   onNew,
   onClear,
   onSaveDraft,
-  onCompleteOrder,
+  onPayAndPrint,
   customers,
   selectedCustomer,
   onSelectCustomer,
   loyaltyMode,
   onLoyaltyModeChange,
   cartSubtotal,
+  paymentMethods,
 }: Readonly<PosOrderSidebarProps>) {
   return (
     <div className="pos-transaction-details__col">
@@ -72,12 +74,13 @@ export default function PosOrderSidebar({
         <TransactionPaymentMethods
           selectedPaymentId={selectedPaymentId}
           onSelectPayment={onSelectPayment}
+          methods={paymentMethods}
         />
         <TransactionActions
           totalPayable={totalPayable}
           canCheckout={canCheckout}
           onSaveDraft={onSaveDraft}
-          onCompleteOrder={onCompleteOrder}
+          onPayAndPrint={onPayAndPrint}
         />
       </section>
     </div>

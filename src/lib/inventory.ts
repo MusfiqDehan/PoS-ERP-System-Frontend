@@ -1,6 +1,7 @@
 /** Tenant-scoped inventory catalog API client. */
 
-import { apiGet, apiPost, apiPatch, apiDelete, type ApiResult } from "./api";
+import { apiGet, apiPost, apiPatch, apiDelete, apiUploadFile, type ApiResult } from "./api";
+import type { AssetSummary } from "./branding";
 
 const CATEGORIES_PATH = "inventory/categories/";
 const SUB_CATEGORIES_PATH = "inventory/sub-categories/";
@@ -9,6 +10,7 @@ const UNITS_PATH = "inventory/units/";
 const WARRANTIES_PATH = "inventory/warranties/";
 const VARIANT_ATTRIBUTES_PATH = "inventory/variant-attributes/";
 const PRODUCTS_PATH = "inventory/products/";
+const PRODUCT_IMAGE_UPLOAD_PATH = "inventory/products/images/upload/";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -116,17 +118,34 @@ export type UpdateVariantAttributePayload = Partial<CreateVariantAttributePayloa
 
 /* --- Products ---------------------------------------------------------- */
 
+export type ProductVariantPayload = {
+  id?: string;
+  sku: string;
+  barcode?: string | null;
+  barcode_symbology?: string;
+  attributes?: Record<string, unknown>;
+  price?: string;
+  cost?: string;
+  is_active?: boolean;
+};
+
 export type Product = {
   id: string;
   name: string;
   slug: string;
   sku: string;
   barcode: string | null;
+  barcode_symbology: string;
   description: string | null;
-  category: string;          // UUID
-  brand: string;             // UUID
-  unit: string;              // UUID
-  warranty: string | null;   // UUID | null
+  category: string;
+  brand: string | null;
+  unit: string;
+  warranty: string | null;
+  branch: string | null;
+  warehouse: string | null;
+  manufacturer: string;
+  discount_type: string;
+  discount_value: string;
   product_type: string;
   selling_type: string;
   tax_type: string;
@@ -136,7 +155,7 @@ export type Product = {
   manufactured_at: string | null;
   expires_at: string | null;
   images: string[];
-  variants: Record<string, unknown>[];
+  variants: ProductVariantPayload[];
   is_active: boolean;
   created_by: string;
   created_at: string;
@@ -300,10 +319,36 @@ export async function deleteVariantAttribute(
   return apiDelete<VariantAttribute>(`${VARIANT_ATTRIBUTES_PATH}${id}/`, accessToken);
 }
 
+export type ProductListParams = {
+  search?: string;
+  category?: string;
+  brand?: string;
+  is_active?: boolean;
+  product_type?: string;
+  ordering?: string;
+  cursor?: string;
+  page_size?: number;
+};
+
 export async function fetchProducts(
   accessToken?: string,
+  params?: ProductListParams,
 ): Promise<ApiResult<Product[]>> {
-  return apiGet<Product[]>(PRODUCTS_PATH, accessToken);
+  let path = PRODUCTS_PATH;
+  if (params) {
+    const qs = new URLSearchParams();
+    if (params.search) qs.set("search", params.search);
+    if (params.category) qs.set("category", params.category);
+    if (params.brand) qs.set("brand", params.brand);
+    if (params.is_active !== undefined) qs.set("is_active", String(params.is_active));
+    if (params.product_type) qs.set("product_type", params.product_type);
+    if (params.ordering) qs.set("ordering", params.ordering);
+    if (params.cursor) qs.set("cursor", params.cursor);
+    if (params.page_size) qs.set("page_size", String(params.page_size));
+    const queryString = qs.toString();
+    if (queryString) path = `${PRODUCTS_PATH}?${queryString}`;
+  }
+  return apiGet<Product[]>(path, accessToken);
 }
 
 export async function deleteProduct(
@@ -318,11 +363,17 @@ export type CreateProductPayload = {
   slug: string;
   sku: string;
   barcode?: string | null;
+  barcode_symbology?: string;
   description?: string | null;
   category: string;
-  brand: string;
+  brand?: string | null;
   unit: string;
   warranty?: string | null;
+  branch?: string | null;
+  warehouse?: string | null;
+  manufacturer?: string;
+  discount_type?: string;
+  discount_value?: string;
   product_type?: string;
   selling_type?: string;
   tax_type?: string;
@@ -331,6 +382,9 @@ export type CreateProductPayload = {
   min_qty_alert?: number;
   manufactured_at?: string | null;
   expires_at?: string | null;
+  images?: string[];
+  variants?: ProductVariantPayload[];
+  is_active?: boolean;
 };
 
 export async function createProduct(
@@ -338,6 +392,18 @@ export async function createProduct(
   accessToken?: string,
 ): Promise<ApiResult<Product>> {
   return apiPost<Product>(PRODUCTS_PATH, payload, accessToken);
+}
+
+export async function uploadProductImage(
+  file: File,
+  accessToken?: string,
+): Promise<ApiResult<AssetSummary>> {
+  return apiUploadFile<AssetSummary>(
+    PRODUCT_IMAGE_UPLOAD_PATH,
+    file,
+    "POST",
+    accessToken,
+  );
 }
 
 export async function updateProduct(
@@ -358,10 +424,21 @@ export type LowStockRow = {
   warehouse_id: string | null;
 };
 
+export type LowStockParams = {
+  branch?: string;
+};
+
 export async function fetchLowStocks(
   accessToken?: string,
+  params?: LowStockParams,
 ): Promise<ApiResult<LowStockRow[]>> {
-  return apiGet<LowStockRow[]>("inventory/products/low-stock/", accessToken);
+  const search = new URLSearchParams();
+  if (params?.branch) search.set("branch", params.branch);
+  const query = search.toString();
+  const path = query
+    ? `inventory/products/low-stock/?${query}`
+    : "inventory/products/low-stock/";
+  return apiGet<LowStockRow[]>(path, accessToken);
 }
 
 export async function fetchExpiredProducts(

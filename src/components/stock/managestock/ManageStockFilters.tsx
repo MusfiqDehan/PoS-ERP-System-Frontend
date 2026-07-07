@@ -1,11 +1,23 @@
 "use client";
 
 import Link from "next/link";
+import type { BranchOption, WarehouseOption } from "@/hooks/stock/useManageStocks";
 
-export default function ManageStockFilters() {
+type Props = {
+  branches: BranchOption[];
+  warehouses: WarehouseOption[];
+  filterBranch: string;
+  setFilterBranch: (v: string) => void;
+  filterWarehouse: string;
+  setFilterWarehouse: (v: string) => void;
+};
+
+export default function ManageStockFilters({
+  branches, warehouses, filterBranch, setFilterBranch, filterWarehouse, setFilterWarehouse,
+}: Props) {
   return (
     <div className="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-      <div className="search-set"></div>
+      <div className="search-set" />
       <div className="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
         <div className="dropdown me-2">
           <Link
@@ -13,29 +25,19 @@ export default function ManageStockFilters() {
             className="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center"
             data-bs-toggle="dropdown"
           >
-            Warehouse
+            {filterBranch ? branches.find((b) => b.value === filterBranch)?.label ?? "Branch" : "Branch"}
           </Link>
-          <ul className="dropdown-menu  dropdown-menu-end p-3">
+          <ul className="dropdown-menu dropdown-menu-end p-3">
             <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Lavish Warehouse
-              </Link>
+              <button className="dropdown-item rounded-1" onClick={() => setFilterBranch("")}>All Branches</button>
             </li>
-            <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Quaint Warehouse{" "}
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Traditional Warehouse
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Cool Warehouse
-              </Link>
-            </li>
+            {branches.map((b) => (
+              <li key={b.value}>
+                <button className={`dropdown-item rounded-1 ${filterBranch === b.value ? "active" : ""}`} onClick={() => setFilterBranch(b.value)}>
+                  {b.label}
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="dropdown me-2">
@@ -44,60 +46,19 @@ export default function ManageStockFilters() {
             className="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center"
             data-bs-toggle="dropdown"
           >
-            Store
+            {filterWarehouse ? warehouses.find((w) => w.value === filterWarehouse)?.label ?? "Warehouse" : "Warehouse"}
           </Link>
-          <ul className="dropdown-menu  dropdown-menu-end p-3">
+          <ul className="dropdown-menu dropdown-menu-end p-3">
             <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Electro Mart
-              </Link>
+              <button className="dropdown-item rounded-1" onClick={() => setFilterWarehouse("")}>All Warehouses</button>
             </li>
-            <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Quantum Gadgets
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Prime Bazaar
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Gadget World
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="dropdown">
-          <Link
-            href="#"
-            className="dropdown-toggle btn btn-white btn-md d-inline-flex align-items-center"
-            data-bs-toggle="dropdown"
-          >
-            Product
-          </Link>
-          <ul className="dropdown-menu  dropdown-menu-end p-3">
-            <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Lenovo IdeaPad 3
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Beats Pro{" "}
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Nike Jordan
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="dropdown-item rounded-1">
-                Apple Series 5 Watch
-              </Link>
-            </li>
+            {warehouses.map((w) => (
+              <li key={w.value}>
+                <button className={`dropdown-item rounded-1 ${filterWarehouse === w.value ? "active" : ""}`} onClick={() => setFilterWarehouse(w.value)}>
+                  {w.label}
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

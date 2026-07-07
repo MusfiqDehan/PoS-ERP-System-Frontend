@@ -1,12 +1,13 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import PageHeader from "@/components/sales/pos-orders/PageHeader";
 import PosOrderTable from "@/components/sales/pos-orders/PosOrderTable";
-import CommonDeleteModal from "@/core/common/modal/commonDeleteModal";
 import CommonFooter from "@/core/common/footer/commonFooter";
-import OnlineorderModal from "@/components/sales/online-orders/onlineorderModal";
 
 export default function PosOrders() {
   return (
-    <div>
+    <PermissionGuard featureKey="pos_orders">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -14,8 +15,6 @@ export default function PosOrders() {
         </div>
         <CommonFooter />
       </div>
-      <OnlineorderModal />
-      <CommonDeleteModal />
-    </div>
+    </PermissionGuard>
   );
 }

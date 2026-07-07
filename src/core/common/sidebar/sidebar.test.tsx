@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import Sidebar from "./sidebar";
@@ -47,7 +48,12 @@ describe("Sidebar", () => {
       loading: false,
       sessionKind: "platform",
       tier: "platform",
-      platformAccess: { permissions: { companies: "full" } },
+      platformAccess: {
+        permissions: {
+          "platform.dashboard": "view",
+          "platform.tenants": "full",
+        },
+      },
       tenantAccess: null,
       refreshAccess: vi.fn(),
       logout: vi.fn(),
@@ -79,5 +85,58 @@ describe("Sidebar", () => {
 
     expect(screen.getByText("Sales Dashboard")).toBeInTheDocument();
     expect(screen.queryByText("Companies")).not.toBeInTheDocument();
+  });
+
+  it("filters sidebar menus from the search input", async () => {
+    const user = userEvent.setup();
+
+    mockUseAuth.mockReturnValue({
+      loading: false,
+      sessionKind: "tenant",
+      tier: "owner",
+      platformAccess: null,
+      tenantAccess: {
+        role_slugs: ["admin"],
+        is_tenant_admin: true,
+        permissions: {},
+        enabled_features: [],
+      },
+      refreshAccess: vi.fn(),
+      logout: vi.fn(),
+    });
+
+    render(<Sidebar />);
+
+    expect(screen.getByText("Inventory")).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText("Search sidebar menus"), "sales");
+
+    expect(screen.getByText("Sales Dashboard")).toBeInTheDocument();
+    expect(screen.queryByText("Inventory")).not.toBeInTheDocument();
+  });
+
+  it("shows an empty state when no menus match the search", async () => {
+    const user = userEvent.setup();
+
+    mockUseAuth.mockReturnValue({
+      loading: false,
+      sessionKind: "tenant",
+      tier: "owner",
+      platformAccess: null,
+      tenantAccess: {
+        role_slugs: ["admin"],
+        is_tenant_admin: true,
+        permissions: {},
+        enabled_features: [],
+      },
+      refreshAccess: vi.fn(),
+      logout: vi.fn(),
+    });
+
+    render(<Sidebar />);
+
+    await user.type(screen.getByLabelText("Search sidebar menus"), "zzzz-not-found");
+
+    expect(screen.getByText("No menus found")).toBeInTheDocument();
   });
 });

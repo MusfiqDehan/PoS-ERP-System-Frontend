@@ -1,21 +1,38 @@
 "use client";
 
-import DateField from "@/core/common/form/DateField";
 import SelectField from "@/core/common/form/SelectField";
 import TextField from "@/core/common/form/TextField";
-import { Calendar } from "react-feather";
-import { warrantyOptions } from "./selectOptions";
+import type { SelectOption } from "@/core/common/form/types";
 
-const checks = [
-  { id: "warranties", label: "Warranties" },
-  { id: "manufacturer", label: "Manufacturer" },
-  { id: "expiry", label: "Expiry" },
-];
+export type CustomFieldsSectionProps = {
+  warrantyOptions: SelectOption[];
+  warrantyId: string;
+  manufacturer: string;
+  manufacturedAt: string;
+  expiresAt: string;
+  onWarrantyChange: (value: string) => void;
+  onManufacturerChange: (value: string) => void;
+  onManufacturedAtChange: (value: string) => void;
+  onExpiresAtChange: (value: string) => void;
+  disabled?: boolean;
+};
 
-export default function CustomFieldsSection() {
+const ic = "w-full border border-[#E2E8F0] rounded-lg px-3 py-2.5 text-[13px] text-[#0F172A] bg-white focus:border-[#0ac79e] focus:outline-none focus:ring-1 focus:ring-[#0ac79e]/20 transition-all";
+
+export default function CustomFieldsSection({
+  warrantyOptions,
+  warrantyId,
+  manufacturer,
+  manufacturedAt,
+  expiresAt,
+  onWarrantyChange,
+  onManufacturerChange,
+  onManufacturedAtChange,
+  onExpiresAtChange,
+  disabled,
+}: CustomFieldsSectionProps) {
   return (
     <div className="bg-white rounded-[12px] border border-[#E2E8F0] shadow-sm">
-      {/* Header */}
       <div className="flex items-center gap-3 px-5 py-4 border-b border-[#F1F5F9]">
         <div className="w-8 h-8 rounded-[9px] bg-gradient-to-br from-[#0ac79e]/15 to-[#089e7e]/15 flex items-center justify-center">
           <i className="ti ti-list text-[16px] text-[#0ac79e]" />
@@ -26,34 +43,23 @@ export default function CustomFieldsSection() {
         </div>
       </div>
 
-      {/* Body */}
       <div className="px-5 py-5">
-        {/* Checkbox toggles */}
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 p-3.5 bg-[#F8FAFC] rounded-xl border border-[#F1F5F9] mb-5">
-          {checks.map((c) => (
-            <label key={c.id} htmlFor={c.id} className="inline-flex items-center gap-2.5 cursor-pointer">
-              <input
-                type="checkbox"
-                id={c.id}
-                className="w-[18px] h-[18px] rounded border-[#CBD5E1] text-[#0ac79e] accent-[#0ac79e] focus:ring-[#0ac79e]/20 focus:ring-1"
-              />
-              <span className="text-[14px] font-medium text-[#0F172A]">{c.label}</span>
-            </label>
-          ))}
-        </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+          <SelectField
+            label="Warranty"
+            options={warrantyOptions}
+            value={warrantyOptions.find((o) => o.value === warrantyId) ?? null}
+            onChange={(opt) => onWarrantyChange(String(opt?.value ?? ""))}
+            isDisabled={disabled}
+          />
+          <TextField label="Manufacturer" value={manufacturer} onChange={(e) => onManufacturerChange(e.target.value)} disabled={disabled} />
           <div>
-            <SelectField label="Warranty" required options={warrantyOptions} />
+            <label className="block text-[13px] font-semibold text-[#0F172A] mb-1.5">Manufactured Date</label>
+            <input type="date" className={ic} value={manufacturedAt} onChange={(e) => onManufacturedAtChange(e.target.value)} disabled={disabled} />
           </div>
           <div>
-            <TextField label="Manufacturer" required />
-          </div>
-          <div>
-            <DateField label="Manufactured Date" required icon={<Calendar className="info-img" />} />
-          </div>
-          <div>
-            <DateField label="Expiry On" required icon={<Calendar className="info-img" />} />
+            <label className="block text-[13px] font-semibold text-[#0F172A] mb-1.5">Expiry On</label>
+            <input type="date" className={ic} value={expiresAt} onChange={(e) => onExpiresAtChange(e.target.value)} disabled={disabled} />
           </div>
         </div>
       </div>

@@ -13,6 +13,7 @@ export type TransactionSaleType = {
 
 export type TransactionPaymentMethod = {
   id: string;
+  code: string;
   label: string;
   iconSrc: string;
   bgColor: string;
@@ -108,39 +109,39 @@ export const transactionSaleTypes: TransactionSaleType[] = [
 export const transactionPaymentMethods: TransactionPaymentMethod[] = [
   {
     id: "card",
+    code: "card",
     label: "Card",
     iconSrc: `${PANEL_IMG}/card.svg`,
     bgColor: "#4687f4",
-    modalTarget: "#pos-finalize-sale",
   },
   {
     id: "giftcard",
+    code: "other",
     label: "Giftcard",
     iconSrc: `${PANEL_IMG}/giftcard.svg`,
     bgColor: "#fe9f43",
-    modalTarget: "#pos-finalize-sale",
   },
   {
     id: "cheque",
+    code: "other",
     label: "Cheque",
     iconSrc: `${PANEL_IMG}/cheque.png`,
     bgColor: "#0bdbae",
-    modalTarget: "#pos-finalize-sale",
   },
   {
     id: "cash",
+    code: "cash",
     label: "Cash",
     iconSrc: `${PANEL_IMG}/cash.png`,
     bgColor: "#f5805a",
-    modalTarget: "#pos-finalize-sale",
     width: "half",
   },
   {
     id: "mobile-banking",
+    code: "mobile",
     label: "Mobile Banking",
     iconSrc: `${PANEL_IMG}/mobile-banking.png`,
     bgColor: "#d8526e",
-    modalTarget: "#pos-finalize-sale",
     width: "half",
   },
 ];

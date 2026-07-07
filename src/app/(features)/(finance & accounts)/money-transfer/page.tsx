@@ -1,3 +1,6 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import AddMoneyTransferModal from "@/components/FinanceAccounts/MoneyTransfer/AddMoneyTransferModal";
 import DeleteMoneyTransferModal from "@/components/FinanceAccounts/MoneyTransfer/DeleteMoneyTransferModal";
 import EditMoneyTransferModal from "@/components/FinanceAccounts/MoneyTransfer/EditMoneyTransferModal";
@@ -7,7 +10,7 @@ import CommonFooter from "@/core/common/footer/commonFooter";
 
 export default function MoneyTransfer() {
   return (
-    <>
+    <PermissionGuard featureKey="money_transfer">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -18,6 +21,6 @@ export default function MoneyTransfer() {
       <AddMoneyTransferModal />
       <EditMoneyTransferModal />
       <DeleteMoneyTransferModal />
-    </>
+    </PermissionGuard>
   );
 }

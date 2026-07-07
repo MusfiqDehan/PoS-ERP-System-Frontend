@@ -60,18 +60,37 @@ export function shouldHideStoreSelector(
 
 type SidebarNode = {
   roles?: AppTier[];
+  featureKey?: string;
   submenuItems?: SidebarNode[];
   [key: string]: unknown;
 };
 
-/** Deep-filter sidebar tree to nodes visible for the given access tier. */
+const PERM_HIERARCHY: Record<string, number> = {
+  none: 0,
+  view: 1,
+  edit: 2,
+  full: 3,
+};
+
+/**
+ * Deep-filter sidebar tree.
+ *
+ * Pass 1: tier-based visibility (platform / owner / manager).
+ * Pass 2: per-item permission check via `featureKey`. Items whose featureKey
+ *          resolves to "none" (or is missing from the map) are hidden.
+ *          Tenant admins skip pass 2.
+ */
 export function filterSidebarByAccess<T extends SidebarNode>(
   sections: T[],
   tier: AppTier | null,
+  permissions?: Record<string, string> | null,
+  isTenantAdmin?: boolean,
 ): T[] {
   if (!tier) return [];
+  const perms = permissions ?? null;
+  const skipPermCheck = isTenantAdmin === true;
   return sections
-    .map((section) => filterNode(section, tier, undefined))
+    .map((section) => filterNode(section, tier, undefined, perms, skipPermCheck))
     .filter((node): node is T => node !== null);
 }
 
@@ -79,14 +98,21 @@ function filterNode<T extends SidebarNode>(
   node: T,
   tier: AppTier,
   inherited: AppTier[] | undefined,
+  permissions: Record<string, string> | null,
+  skipPermCheck: boolean,
 ): T | null {
   const effective = node.roles ?? inherited;
-  const allowed = !effective || effective.includes(tier);
-  if (!allowed) return null;
+  const tierAllowed = !effective || effective.includes(tier);
+  if (!tierAllowed) return null;
+
+  if (!skipPermCheck && permissions && node.featureKey) {
+    const level = permissions[node.featureKey] ?? "none";
+    if (PERM_HIERARCHY[level] < PERM_HIERARCHY["view"]) return null;
+  }
 
   if (Array.isArray(node.submenuItems)) {
     const children = node.submenuItems
-      .map((child) => filterNode(child, tier, effective))
+      .map((child) => filterNode(child, tier, effective, permissions, skipPermCheck))
       .filter((child): child is SidebarNode => child !== null);
 
     if (children.length === 0) return null;

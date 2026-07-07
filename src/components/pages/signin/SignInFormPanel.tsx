@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthSocialSection } from "@/core/common/auth";
 import { AuthEmailField, AuthPasswordField } from "@/core/common/form/auth";
 import { all_routes } from "@/data/all_routes";
@@ -17,13 +17,6 @@ import SignInFormHeader from "./SignInFormHeader";
 import SignInFormOptions from "./SignInFormOptions";
 import SignInPrimaryActions from "./SignInPrimaryActions";
 
-/** Extract the subdomain from a hostname (e.g. "robin.sortorium.com" → "robin"). */
-function extractSubdomain(host: string): string {
-  const parts = host.split(".");
-  if (parts.length > 2) return parts[0];
-  return "";
-}
-
 export default function SignInFormPanel() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -31,10 +24,19 @@ export default function SignInFormPanel() {
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const [tenantSubdomain, setTenantSubdomain] = useState("");
+  const [isTenantHost, setIsTenantHost] = useState(false);
+  const [hostReady, setHostReady] = useState(false);
 
-  const tenantSubdomain = getTenantSubdomainFromHost();
-  const isTenantHost = !isPublicMarketingHost() && tenantSubdomain.length > 0;
-  const isPlatform = !isTenantHost;
+  useEffect(() => {
+    const sub = getTenantSubdomainFromHost();
+    const isTenant = !isPublicMarketingHost() && sub.length > 0;
+    setTenantSubdomain(sub);
+    setIsTenantHost(isTenant);
+    setHostReady(true);
+  }, []);
+
+  const isPlatform = hostReady && !isTenantHost;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -86,7 +88,7 @@ export default function SignInFormPanel() {
           <div className="auth-split-page__form-main">
             <SignInFormHeader
               isPlatform={isPlatform}
-              tenantSubdomain={isTenantHost ? tenantSubdomain : undefined}
+              tenantSubdomain={hostReady && isTenantHost ? tenantSubdomain : undefined}
             />
 
             {errors.length > 0 ? (

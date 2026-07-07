@@ -15,6 +15,7 @@ import {
   type TenantBranding,
 } from "@/lib/branding";
 import { getAccessToken } from "@/lib/auth-session";
+import LandingPageSettings from "./LandingPageSettings";
 
 export default function CompanySettingsComponent() {
   const token = getAccessToken();
@@ -346,6 +347,7 @@ export default function CompanySettingsComponent() {
                         </a>
                       </div>
                     </form>
+                    <LandingPageSettings />
                   </div>
                 </div>
               </div>

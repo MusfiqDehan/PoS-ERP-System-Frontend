@@ -1,3 +1,6 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import PageFooter from "@/components/sales/sale-return/PageFooter";
 import PageHeader from "@/components/sales/sale-return/PageHeader";
 import SalesReturnTable from "@/components/sales/sale-return/SalesReturnTable";
@@ -7,7 +10,7 @@ import EditSalesRetuens from "@/core/modals/sales/editsalesretuens";
 
 export default function SaleReturn() {
   return (
-    <div>
+    <PermissionGuard featureKey="sales_returns">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -18,6 +21,6 @@ export default function SaleReturn() {
       <AddSalesReturns />
       <EditSalesRetuens />
       <CommonDeleteModal />
-    </div>
+    </PermissionGuard>
   );
 }

@@ -1,6 +1,13 @@
 "use client";
 
-export default function StockTabsToolbar() {
+import type { LowStockTab } from "./types";
+
+type Props = {
+  activeTab: LowStockTab;
+  onTabChange: (tab: LowStockTab) => void;
+};
+
+export default function StockTabsToolbar({ activeTab, onTabChange }: Props) {
   return (
     <div className="flex flex-wrap justify-between items-center gap-3 mb-3">
       <ul
@@ -10,28 +17,30 @@ export default function StockTabsToolbar() {
       >
         <li className="nav-item" role="presentation">
           <button
-            className="nav-link active px-4 py-1.5 rounded text-[13px] font-medium"
+            className={`nav-link px-4 py-1.5 rounded text-[13px] font-medium ${
+              activeTab === "low" ? "active" : "text-[#646B72]"
+            }`}
             id="pills-home-tab"
-            data-bs-toggle="pill"
-            data-bs-target="#pills-home"
             type="button"
             role="tab"
             aria-controls="pills-home"
-            aria-selected="true"
+            aria-selected={activeTab === "low"}
+            onClick={() => onTabChange("low")}
           >
             Low Stocks
           </button>
         </li>
         <li className="nav-item" role="presentation">
           <button
-            className="nav-link px-4 py-1.5 rounded text-[13px] font-medium text-[#646B72]"
+            className={`nav-link px-4 py-1.5 rounded text-[13px] font-medium ${
+              activeTab === "out" ? "active" : "text-[#646B72]"
+            }`}
             id="pills-profile-tab"
-            data-bs-toggle="pill"
-            data-bs-target="#pills-profile"
             type="button"
             role="tab"
             aria-controls="pills-profile"
-            aria-selected="false"
+            aria-selected={activeTab === "out"}
+            onClick={() => onTabChange("out")}
           >
             Out of Stocks
           </button>

@@ -12,7 +12,11 @@ function planTypeFromPkg(pkg: Package): string {
   return "Monthly";
 }
 
-export default function StatsCards() {
+type Props = {
+  refreshKey?: number;
+};
+
+export default function StatsCards({ refreshKey }: Props) {
   const [pkgs, setPkgs] = useState<Package[]>([]);
   const [loaded, setLoaded] = useState(false);
 
@@ -29,7 +33,7 @@ export default function StatsCards() {
 
   useEffect(function() {
     loadPackages();
-  }, [loadPackages]);
+  }, [loadPackages, refreshKey]);
 
   const total = loaded ? pkgs.length : "---";
   const active = loaded ? pkgs.filter(function(p) { return p.is_active; }).length : "---";

@@ -12,6 +12,10 @@
  */
 
 import { API_BASE_URL, PUBLIC_API_BASE_URL, type AuthTokens } from "./env";
+import {
+  buildDevTenantRequestHeaders,
+  resolveHostAwareApiBase,
+} from "./dev-tenant-api";
 
 /* ------------------------------------------------------------------ */
 /*  Token helpers (legacy — stored under sortorium_auth key)           */
@@ -44,11 +48,13 @@ export function clearStoredTokens(): void {
 /** Django requires trailing slashes when APPEND_SLASH=True. */
 export function joinApiUrl(base: string, path: string): string {
   const normalizedBase = base.replace(/\/+$/, "");
-  const segments = path
+  const [pathPart, queryPart] = path.split("?");
+  const segments = pathPart
     .split("/")
     .map((segment) => segment.trim())
     .filter(Boolean);
-  return `${normalizedBase}/${segments.join("/")}/`;
+  const url = `${normalizedBase}/${segments.join("/")}/`;
+  return queryPart ? `${url}?${queryPart}` : url;
 }
 
 export type ApiEnvelope<T = unknown> = {
@@ -65,12 +71,66 @@ export type ApiResult<T> = {
   body: ApiEnvelope<T>;
 };
 
+export type PaginationMeta = {
+  has_next: boolean;
+  has_previous: boolean;
+  page_size: number;
+  next_cursor?: string;
+  previous_cursor?: string;
+};
+
+export type ListEnvelope<T> = {
+  items: T[];
+  pagination?: PaginationMeta;
+  meta?: Record<string, unknown>;
+};
+
+/**
+ * Extract items array from a backend list response.
+ * Handles both `{ items: [...] }` (ModelCRUDView) and plain array (custom APIView).
+ */
+export function extractListItems<T>(data: unknown): T[] {
+  if (Array.isArray(data)) return data as T[];
+  if (data && typeof data === "object" && "items" in data) {
+    const envelope = data as ListEnvelope<T>;
+    return Array.isArray(envelope.items) ? envelope.items : [];
+  }
+  return [];
+}
+
+/**
+ * Extract pagination metadata from a backend list response envelope.
+ */
+export function extractPagination(data: unknown): PaginationMeta | undefined {
+  if (data && typeof data === "object" && "pagination" in data) {
+    return (data as ListEnvelope<unknown>).pagination;
+  }
+  return undefined;
+}
+
 /** GET JSON from `path` using the tenant-scoped base URL with optional Bearer token. */
 export async function apiGet<T = unknown>(
   path: string,
   accessToken?: string,
 ): Promise<ApiResult<T>> {
   return rawGet(API_BASE_URL, path, accessToken);
+}
+
+/**
+ * GET for endpoints resolved from the browser host (e.g. public tenant landing).
+ * In local dev on `*.localhost`, uses same-origin `/api/v1` and sends
+ * `X-Tenant-Subdomain` so Django can resolve the tenant without Host header.
+ */
+export async function hostAwareApiGet<T = unknown>(
+  path: string,
+  accessToken?: string,
+): Promise<ApiResult<T>> {
+  return rawGet(
+    resolveHostAwareApiBase(API_BASE_URL),
+    path,
+    accessToken,
+    buildDevTenantRequestHeaders(),
+  );
 }
 
 /** GET JSON from `path` using the **public** base URL with optional Bearer token. */
@@ -138,6 +198,18 @@ export async function publicApiPost<T = unknown>(
   });
 }
 
+/** PUT JSON to `path` using the **public** base URL (platform-owner public schema). */
+export async function publicApiPut<T = unknown>(
+  path: string,
+  payload: unknown,
+  accessToken?: string,
+): Promise<ApiResult<T>> {
+  return rawPost(PUBLIC_API_BASE_URL, path, accessToken, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
 /** PATCH JSON to `path` using the **public** base URL (platform-owner public schema). */
 export async function publicApiPatch<T = unknown>(
   path: string,
@@ -162,10 +234,12 @@ async function rawGet<T>(
   base: string,
   path: string,
   accessToken?: string,
+  extraHeaders?: Record<string, string>,
 ): Promise<ApiResult<T>> {
   const url = joinApiUrl(base, path);
   const headers: Record<string, string> = {
     Accept: "application/json",
+    ...extraHeaders,
   };
   if (accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
@@ -278,7 +352,7 @@ export function collectErrorMessages(envelope: ApiEnvelope): string[] {
 export async function apiUploadFile<T = unknown>(
   path: string,
   file: File,
-  method: "PATCH" | "PUT" = "PATCH",
+  method: "POST" | "PATCH" | "PUT" = "PATCH",
   accessToken?: string,
 ): Promise<ApiResult<T>> {
   const url = joinApiUrl(API_BASE_URL, path);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import AddSubCategoryModal from "@/components/Inventory/sub-categories/AddSubCategoryModal";
 import EditSubCategoryModal from "@/components/Inventory/sub-categories/EditSubCategoryModal";
 import DeleteSubCategoryModal from "@/components/Inventory/sub-categories/DeleteSubCategoryModal";
@@ -33,7 +34,7 @@ export default function SubCategories() {
   }, []);
 
   return (
-    <div>
+    <PermissionGuard featureKey="sub_categories">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -60,6 +61,6 @@ export default function SubCategories() {
         subCategory={selectedForDelete}
         onDeleteSubCategory={removeSubCategory}
       />
-    </div>
+    </PermissionGuard>
   );
 }

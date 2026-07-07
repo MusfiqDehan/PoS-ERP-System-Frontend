@@ -150,7 +150,7 @@ export const all_routes = {
   holidays: "/holidays",
   customers: "/customers",
   suppliers: "/suppliers",
-  storelist: "/store-list",
+  branchlist: "/branch-list",
   managestock: "/manage-stocks",
   stockadjustment: "/stock-adjustment",
   stocktransfer: "/stock-transfer",

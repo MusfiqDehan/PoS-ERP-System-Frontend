@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { getAccessToken } from "@/lib/auth-session";
+import { extractListItems } from "@/lib/api";
 import { fetchExpiredProducts, type Product } from "@/lib/inventory";
 
 export function useExpiredProducts() {
@@ -14,7 +15,7 @@ export function useExpiredProducts() {
     setError(null);
     const result = await fetchExpiredProducts(getAccessToken());
     if (result.ok && result.body.data) {
-      setDataSource(Array.isArray(result.body.data) ? result.body.data : []);
+      setDataSource(extractListItems<Product>(result.body.data));
     } else {
       setError(result.body.message ?? "Failed to load expired products.");
     }

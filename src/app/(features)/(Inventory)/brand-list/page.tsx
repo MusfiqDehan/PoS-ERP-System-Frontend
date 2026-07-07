@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import AddBrandModal from "@/components/Inventory/brand-list/AddBrandModal";
 import BrandListTable from "@/components/Inventory/brand-list/BrandListTable";
 import EditBrandModal from "@/components/Inventory/brand-list/EditBrandModal";
@@ -26,7 +27,7 @@ export default function BrandList() {
   }, []);
 
   return (
-    <div>
+    <PermissionGuard featureKey="brands">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -43,6 +44,6 @@ export default function BrandList() {
       <AddBrandModal onAddBrand={addBrand} />
       <EditBrandModal brand={selectedForEdit} onEditBrand={editBrand} />
       <DeleteBrandModal brand={selectedForDelete} onDeleteBrand={removeBrand} />
-    </div>
+    </PermissionGuard>
   );
 }
