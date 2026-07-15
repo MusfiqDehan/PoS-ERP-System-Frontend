@@ -9,9 +9,23 @@ type DatatableProps = {
   columns: unknown;
   dataSource: unknown;
   searchText?: string;
+  className?: string;
+  footer?: React.ReactNode | (() => React.ReactNode);
+  rowKey?: string | ((record: any) => React.Key);
+  /** When false, hides antd row selection checkboxes. Default true. */
+  Selection?: boolean;
 };
 
-const Datatable = ({ props, columns, dataSource, searchText }: DatatableProps) => {
+const Datatable = ({
+  props,
+  columns,
+  dataSource,
+  searchText,
+  className,
+  footer,
+  rowKey,
+  Selection = true,
+}: DatatableProps) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [internalSearch, setInternalSearch] = useState("");
   const debouncedInternalSearch = useDebouncedValue(internalSearch, 300);
@@ -99,11 +113,17 @@ const Datatable = ({ props, columns, dataSource, searchText }: DatatableProps) =
 
       <Table
         key={props as React.Key}
-        className="table datanew dataTable no-footer"
-        rowSelection={rowSelection}
+        className={["table datanew dataTable no-footer", className]
+          .filter(Boolean)
+          .join(" ")}
+        rowSelection={Selection ? rowSelection : undefined}
         columns={columns as never}
         dataSource={filteredDataSource}
-        rowKey={(record) => (record as { id: React.Key }).id}
+        rowKey={
+          (rowKey as never) ??
+          ((record) => (record as { id: React.Key }).id)
+        }
+        footer={footer as never}
         pagination={pagination}
       />
     </>

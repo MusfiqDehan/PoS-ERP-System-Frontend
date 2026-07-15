@@ -4,6 +4,10 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { AuthCardLogo } from "@/core/common/auth";
 import { AuthPasswordField } from "@/core/common/form/auth";
+import {
+  acceptEmployeeInvitation,
+  type ValidateInvitationTokenResult,
+} from "@/lib/roles";
 
 type Props = {
   token: string;

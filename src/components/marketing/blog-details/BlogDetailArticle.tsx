@@ -114,7 +114,7 @@ export function BlogDetailArticle() {
                       <p className="mb-0 leading-[1.5]!">{part.intro}</p>
                     ) : null}
                     <ArticleList items={[...part.bullets]} lineHeight="leading-[1.5]" />
-                    {part.outro ? (
+                    {"outro" in part && part.outro ? (
                       <p className="mb-0 leading-[1.5]!">{part.outro}</p>
                     ) : null}
                   </div>
