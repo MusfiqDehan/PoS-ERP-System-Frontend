@@ -39,7 +39,7 @@ wait_container_healthy() {
   log "Waiting for $name to become healthy..."
   while (( SECONDS < deadline )); do
     local status
-    status="$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$name" 2>/dev/null || echo missing)"
+    status="$(docker inspect --type=container --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$name" 2>/dev/null || echo missing)"
     if [[ "$status" == "healthy" ]]; then
       log "$name is healthy."
       return 0
@@ -79,8 +79,10 @@ smoke_check_external() {
   fi
 }
 
+# Must use --type=container: plain `docker inspect sortorium-frontend` also matches
+# the image built in Phase 1 (same name), which made drain think live existed.
 container_exists() {
-  docker inspect "$1" >/dev/null 2>&1
+  docker inspect --type=container "$1" >/dev/null 2>&1
 }
 
 stop_live_if_running() {
