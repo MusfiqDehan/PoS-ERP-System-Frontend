@@ -1,6 +1,10 @@
+import { AuthCardLogo } from "@/core/common/auth";
+
 export default function RegisterFormHeader() {
   return (
-    <div className="auth-split-page__form-header">
+    <div className="auth-split-page__form-header auth-card-page__header">
+      <AuthCardLogo />
+
       <span className="auth-split-page__register-badge">
         <i className="ti ti-rocket" />
         Get Started

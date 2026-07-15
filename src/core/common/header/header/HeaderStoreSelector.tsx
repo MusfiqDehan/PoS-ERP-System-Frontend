@@ -69,7 +69,7 @@ export default function HeaderStoreSelector() {
             </span>
             <span className="user-detail">
               <span className="user-name">
-                {activeBranch?.name ?? "Main Branch"}
+                {activeBranch?.name ?? (loading ? "Loading…" : "Branch")}
               </span>
             </span>
           </span>

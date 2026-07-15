@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "../utils/variables" as *;
 
 .tenant-landing {
@@ -58,7 +59,7 @@
 
   &:hover {
     color: #fff;
-    background: darken($primary, 6%);
+    background: color.adjust($primary, $lightness: -6%);
   }
 }
 
@@ -126,7 +127,7 @@
 
   &:hover {
     color: #fff;
-    background: darken($primary, 6%);
+    background: color.adjust($primary, $lightness: -6%);
   }
 }
 

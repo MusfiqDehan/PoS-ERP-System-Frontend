@@ -49,7 +49,7 @@ export default function ForgotPasswordFormPanel() {
   return (
     <section className="auth-split-page__form-panel">
       <form
-        className="auth-split-page__form"
+        className="auth-split-page__form auth-card-page__card"
         onSubmit={(event) => {
           event.preventDefault();
           handleSubmit();

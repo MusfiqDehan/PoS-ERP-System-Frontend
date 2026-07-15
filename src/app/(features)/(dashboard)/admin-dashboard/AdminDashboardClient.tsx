@@ -1,24 +1,42 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import CommonFooter from "@/core/common/footer/commonFooter";
-import ExpiredProducts from "@/components/NewDashboard/ExpiredProducts";
 import LowStockAlert from "@/components/NewDashboard/LowStockAlert";
-import LowStockProducts from "@/components/NewDashboard/LowStockProducts";
-import OrderStatistics from "@/components/NewDashboard/OrderStatistics";
-import OverallInformation from "@/components/NewDashboard/OverallInformation";
 import PageHeader from "@/components/NewDashboard/PageHeader";
-import RecentSales from "@/components/NewDashboard/RecentSales";
-import RecentTransactions from "@/components/NewDashboard/RecentTransactions";
 import RevenueWidgets from "@/components/NewDashboard/RevenueWidgets";
 import SaleWidgets from "@/components/NewDashboard/SaleWidgets";
-import SalesPurchaseChart from "@/components/NewDashboard/SalesPurchaseChart";
-import SalesStatistics from "@/components/NewDashboard/SalesStatistics";
-import RecentlyAdded from "@/components/NewDashboard/RecentlyAdded";
-import TopCategories from "@/components/NewDashboard/TopCategories";
-import TopCustomers from "@/components/NewDashboard/TopCustomers";
-import TopSellingProducts from "@/components/NewDashboard/TopSellingProducts";
 import { SalesDashboardProvider } from "@/hooks/dashboard/useSalesDashboard";
+
+const SalesPurchaseChart = dynamic(
+  () => import("@/components/NewDashboard/SalesPurchaseChart"),
+);
+const OverallInformation = dynamic(
+  () => import("@/components/NewDashboard/OverallInformation"),
+);
+const TopSellingProducts = dynamic(
+  () => import("@/components/NewDashboard/TopSellingProducts"),
+);
+const LowStockProducts = dynamic(
+  () => import("@/components/NewDashboard/LowStockProducts"),
+);
+const RecentSales = dynamic(() => import("@/components/NewDashboard/RecentSales"));
+const SalesStatistics = dynamic(
+  () => import("@/components/NewDashboard/SalesStatistics"),
+);
+const RecentTransactions = dynamic(
+  () => import("@/components/NewDashboard/RecentTransactions"),
+);
+const TopCustomers = dynamic(() => import("@/components/NewDashboard/TopCustomers"));
+const TopCategories = dynamic(() => import("@/components/NewDashboard/TopCategories"));
+const OrderStatistics = dynamic(
+  () => import("@/components/NewDashboard/OrderStatistics"),
+);
+const ExpiredProducts = dynamic(
+  () => import("@/components/NewDashboard/ExpiredProducts"),
+);
+const RecentlyAdded = dynamic(() => import("@/components/NewDashboard/RecentlyAdded"));
 
 export default function AdminDashboardClient() {
   return (

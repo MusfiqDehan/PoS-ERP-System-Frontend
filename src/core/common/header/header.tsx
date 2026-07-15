@@ -76,11 +76,8 @@ export default function Header() {
 
                 <div className="figma-header-group figma-header-group--left">
                     {!hideStoreSelector && <HeaderStoreSelector />}
-                    <HeaderQuickAdd route={route} />
-                </div>
-
-                <div className="header-search-center">
                     <HeaderSearch />
+                    <HeaderQuickAdd route={route} />
                 </div>
 
                 <ul className="nav user-menu figma-header-group figma-header-group--right">

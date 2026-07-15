@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AuthSocialSection } from "@/core/common/auth";
 import { AuthEmailField, AuthPasswordField } from "@/core/common/form/auth";
 import { all_routes } from "@/data/all_routes";
 import { saveSession } from "@/lib/auth-session";
@@ -83,7 +82,7 @@ export default function SignInFormPanel() {
 
   return (
     <section className="auth-split-page__form-panel">
-      <form className="auth-split-page__form" onSubmit={handleSubmit}>
+      <form className="auth-split-page__form auth-card-page__card" onSubmit={handleSubmit}>
         <div className="auth-split-page__form-top">
           <div className="auth-split-page__form-main">
             <SignInFormHeader
@@ -130,8 +129,6 @@ export default function SignInFormPanel() {
 
           <SignInPrimaryActions loading={loading} hideRegister={isPlatform} />
         </div>
-
-        <AuthSocialSection />
       </form>
     </section>
   );
