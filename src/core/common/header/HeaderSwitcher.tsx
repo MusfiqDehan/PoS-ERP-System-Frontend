@@ -1,8 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useAuth } from "@/providers/auth-provider";
-import Header from "./header";
-import PlatformHeader from "./PlatformHeader";
+
+const Header = dynamic(() => import("./header"));
+const PlatformHeader = dynamic(() => import("./PlatformHeader"));
 
 export default function HeaderSwitcher() {
   const { tier } = useAuth();

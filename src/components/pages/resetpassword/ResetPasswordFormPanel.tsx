@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { AuthCardLogo } from "@/core/common/auth";
 import { AuthPasswordField } from "@/core/common/form/auth";
 import ResetPasswordFormHeader from "./ResetPasswordFormHeader";
 import ResetPasswordPrimaryActions from "./ResetPasswordPrimaryActions";
@@ -61,10 +62,11 @@ export default function ResetPasswordFormPanel() {
   if (!token) {
     return (
       <section className="auth-split-page__form-panel">
-        <div className="auth-split-page__form">
+        <div className="auth-split-page__form auth-card-page__card">
           <div className="auth-split-page__form-top">
             <div className="auth-split-page__form-main">
-              <div className="auth-split-page__form-header">
+              <div className="auth-split-page__form-header auth-card-page__header">
+                <AuthCardLogo />
                 <h1 className="auth-split-page__form-title auth-split-page__form-title--mixed">
                   Invalid link
                 </h1>
@@ -82,7 +84,7 @@ export default function ResetPasswordFormPanel() {
   return (
     <section className="auth-split-page__form-panel">
       <form
-        className="auth-split-page__form"
+        className="auth-split-page__form auth-card-page__card"
         onSubmit={(event) => {
           event.preventDefault();
           handleSubmit();

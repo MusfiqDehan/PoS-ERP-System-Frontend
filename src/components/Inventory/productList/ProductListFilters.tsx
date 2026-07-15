@@ -40,7 +40,7 @@ export default function ProductListFilters({ categories, brands, filters, onFilt
   ];
 
   return (
-    <div className="flex items-center justify-end flex-wrap gap-2 p-4 border-b border-[#f1f1f1]">
+    <div className="flex items-center justify-end flex-wrap gap-2">
       {dropdowns.map((dd) => (
         <div key={dd.key} className="dropdown">
           <button

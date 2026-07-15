@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { getAccessToken } from "@/lib/auth-session";
 import { extractListItems, extractPagination, type PaginationMeta } from "@/lib/api";
 import {
@@ -34,6 +35,8 @@ export function useProductList() {
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationMeta | undefined>();
   const [filters, setFilters] = useState<ProductListFiltersState>({});
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchInput = useDebouncedValue(searchInput, 300);
   const [cursor, setCursor] = useState<string | undefined>();
 
   const loadLookups = useCallback(async () => {
@@ -83,6 +86,18 @@ export function useProductList() {
   useEffect(() => { loadLookups(); }, [loadLookups]);
   useEffect(() => { loadProducts(cursor); }, [loadProducts, cursor]);
 
+  useEffect(() => {
+    const trimmed = debouncedSearchInput.trim();
+    if (trimmed.length >= 2 || trimmed.length === 0) {
+      const nextSearch = trimmed || undefined;
+      setFilters((prev) => {
+        if (prev.search === nextSearch) return prev;
+        return { ...prev, search: nextSearch };
+      });
+      setCursor(undefined);
+    }
+  }, [debouncedSearchInput]);
+
   const dataSource: ProductDisplay[] = useMemo(() =>
     raw.map(p => ({
       ...p,
@@ -119,6 +134,8 @@ export function useProductList() {
     categories,
     brands,
     filters,
+    searchInput,
+    setSearchInput,
     applyFilters,
     pagination,
     goNextPage,

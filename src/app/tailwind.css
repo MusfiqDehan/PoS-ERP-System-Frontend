@@ -1,2 +1,71 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @source "../**/*.{js,ts,jsx,tsx}";
+
+@theme {
+  --color-primary-50: #E7FBF7;
+  --color-primary-100: #B3F4E6;
+  --color-primary-400: #5CE7C9;
+  --color-primary-600: #0AC79E;
+  --color-primary-700: #089B7C;
+  --color-primary-800: #067860;
+
+  --color-secondary-50: #FFFFFF;
+  --color-secondary-100: #F6F6F6;
+  --color-secondary-200: #E7E7E7;
+  --color-secondary-300: #666666;
+  --color-secondary-400: #333333;
+
+  --color-black-60: #666666;
+  --color-black-80: #333333;
+  --color-black-100: #212121;
+
+  --color-grey-500: #7A8086;
+  --color-grey-600: #646B72;
+  --color-grey-900: #212B36;
+
+  --color-base-60: #8C8C8C;
+}
+
+.marketing-site {
+  --background: #ffffff;
+  --foreground: #212121;
+  --font-google-sans: "Google Sans", sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-google-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: clip;
+}
+
+.marketing-site img,
+.marketing-site svg,
+.marketing-site video {
+  max-width: 100%;
+}
+
+.marketing-site :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  font-family: var(--font-google-sans);
+}
+
+.marketing-site p,
+.marketing-site a,
+.marketing-site span,
+.marketing-site button {
+  font-family: inherit;
+}
+
+@keyframes marketing-flow {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.marketing-site .animate-flow {
+  animation: marketing-flow 1.5s linear infinite;
+}

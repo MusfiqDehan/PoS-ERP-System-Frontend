@@ -1,61 +1,28 @@
 "use client";
 
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import Table from "@/core/common/pagination/datatable";
 import { makeProductListColumns } from "./columns";
-import ProductListFilters, { type ProductFilters } from "./ProductListFilters";
 import type { ProductListRecord } from "./types";
 import type { PaginationMeta } from "@/lib/api";
-
-type FilterOption = { id: string; name: string };
 
 type Props = {
   dataSource: ProductListRecord[];
   loading: boolean;
   error: string | null;
   onSelectForDelete: (r: ProductListRecord) => void;
-  categories: FilterOption[];
-  brands: FilterOption[];
-  filters: ProductFilters;
-  onFilterChange: (filters: ProductFilters) => void;
-  onSearchChange: (search: string) => void;
-  searchValue: string;
   pagination?: PaginationMeta;
   onNextPage?: () => void;
   onPrevPage?: () => void;
 };
 
-export default function ProductListTable({
+export default memo(function ProductListTable({
   dataSource, loading, error, onSelectForDelete,
-  categories, brands, filters, onFilterChange,
-  onSearchChange, searchValue,
   pagination, onNextPage, onPrevPage,
 }: Props) {
   const columns = useMemo(() => makeProductListColumns({ onSelectForDelete }), [onSelectForDelete]);
   return (
     <div className="bg-white border border-[#f1f1f1] rounded-[8px]">
-      <div className="flex items-center justify-between flex-wrap gap-3 p-4 border-b border-[#f1f1f1]">
-        <div className="search-set">
-          <div className="search-input">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="form-control form-control-sm"
-              value={searchValue}
-              onChange={(e) => onSearchChange(e.target.value)}
-            />
-            <span className="btn btn-searchset">
-              <i className="ti ti-search" />
-            </span>
-          </div>
-        </div>
-      </div>
-      <ProductListFilters
-        categories={categories}
-        brands={brands}
-        filters={filters}
-        onFilterChange={onFilterChange}
-      />
       <div className="overflow-x-auto">
         {error ? (
           <div className="p-6 text-center text-[#646B72]">
@@ -93,4 +60,4 @@ export default function ProductListTable({
       )}
     </div>
   );
-}
+});

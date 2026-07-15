@@ -1,8 +1,13 @@
 import path from "path";
+import bundleAnalyzer from "@next/bundle-analyzer";
 
 const isDev = process.env.NODE_ENV === "development";
 const backendProxyTarget =
   process.env.BACKEND_PROXY_TARGET || "http://localhost:8002";
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -55,6 +60,12 @@ const nextConfig = {
       "react-apexcharts",
       "apexcharts",
       "antd",
+      "chart.js",
+      "lucide-react",
+      "react-icons",
+      "sweetalert2",
+      "@fullcalendar/react",
+      "@fullcalendar/daygrid",
     ],
   },
 
@@ -79,4 +90,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

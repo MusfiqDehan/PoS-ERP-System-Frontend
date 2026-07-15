@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { getAccessToken } from "@/lib/auth-session";
 import { extractListItems, extractPagination, type PaginationMeta } from "@/lib/api";
 import { fetchPosOrders, type PosOrder, type PosOrderParams } from "@/lib/pos";
@@ -74,6 +75,8 @@ export function usePosOrders() {
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationMeta | undefined>();
   const [filters, setFilters] = useState<PosOrderFiltersState>({});
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchInput = useDebouncedValue(searchInput, 300);
   const [cursor, setCursor] = useState<string | undefined>();
   const [branches, setBranches] = useState<BranchOption[]>([]);
 
@@ -117,6 +120,18 @@ export function usePosOrders() {
     loadOrders(cursor);
   }, [loadOrders, cursor]);
 
+  useEffect(() => {
+    const trimmed = debouncedSearchInput.trim();
+    if (trimmed.length >= 2 || trimmed.length === 0) {
+      const nextSearch = trimmed || undefined;
+      setFilters((prev) => {
+        if (prev.search === nextSearch) return prev;
+        return { ...prev, search: nextSearch };
+      });
+      setCursor(undefined);
+    }
+  }, [debouncedSearchInput]);
+
   const dataSource = useMemo(
     () => raw.map(mapPosOrderToRecord),
     [raw],
@@ -142,6 +157,8 @@ export function usePosOrders() {
     reload: () => loadOrders(cursor),
     branches,
     filters,
+    searchInput,
+    setSearchInput,
     applyFilters,
     pagination,
     goNextPage,

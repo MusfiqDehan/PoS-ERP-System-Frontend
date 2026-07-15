@@ -1,89 +1,113 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import { Table } from "antd";
+import React, { memo, useCallback, useMemo, useState } from "react";
+import Table from "antd/es/table";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
-const Datatable = ({ props, columns, dataSource, searchText }:any) => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [filteredDataSource, setFilteredDataSource] = useState(Array.isArray(dataSource) ? dataSource : []);
+type DatatableProps = {
+  props?: unknown;
+  columns: unknown;
+  dataSource: unknown;
+  searchText?: string;
+};
 
-  const safeSource: any[] = Array.isArray(dataSource) ? dataSource : [];
+const Datatable = ({ props, columns, dataSource, searchText }: DatatableProps) => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [internalSearch, setInternalSearch] = useState("");
+  const debouncedInternalSearch = useDebouncedValue(internalSearch, 300);
 
-  // Sync filteredDataSource whenever dataSource or external searchText changes.
-  useEffect(() => {
-    if (searchText === undefined) {
-      setFilteredDataSource(safeSource);
-      return;
-    }
-    const filteredData = safeSource.filter((record:any) =>
+  const safeSource = useMemo(
+    () => (Array.isArray(dataSource) ? dataSource : []),
+    [dataSource],
+  );
+
+  const debouncedExternalSearch = useDebouncedValue(
+    searchText !== undefined ? searchText : "",
+    300,
+  );
+
+  const activeSearchText =
+    searchText !== undefined ? debouncedExternalSearch : debouncedInternalSearch;
+
+  const filteredDataSource = useMemo(() => {
+    const query = activeSearchText.trim();
+    if (!query) return safeSource;
+
+    const lower = query.toLowerCase();
+    return safeSource.filter((record: Record<string, unknown>) =>
       Object.values(record).some((field) =>
-        String(field).toLowerCase().includes(searchText.toLowerCase())
-      )
+        String(field).toLowerCase().includes(lower),
+      ),
     );
-    setFilteredDataSource(filteredData);
-  }, [searchText, safeSource.length]);
+  }, [safeSource, activeSearchText]);
 
-  const onSelectChange = (newSelectedRowKeys:any) => {
+  const onSelectChange = useCallback((newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
-  };
+  }, []);
 
-  const handleSearch = (value:any) => {
-    const filteredData = safeSource.filter((record:any) =>
-      Object.values(record).some((field) =>
-        String(field).toLowerCase().includes(value.toLowerCase())
-      )
-    );
-    setFilteredDataSource(filteredData);
-  };
+  const rowSelection = useMemo(
+    () => ({
+      selectedRowKeys,
+      onChange: onSelectChange,
+    }),
+    [selectedRowKeys, onSelectChange],
+  );
 
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+  const pagination = useMemo(
+    () => ({
+      locale: { items_per_page: "" },
+      nextIcon: (
+        <span>
+          <i className="fa fa-angle-right" />
+        </span>
+      ),
+      prevIcon: (
+        <span>
+          <i className="fa fa-angle-left" />
+        </span>
+      ),
+      defaultPageSize: 10,
+      showSizeChanger: true,
+      pageSizeOptions: ["10", "20", "30"],
+    }),
+    [],
+  );
 
   return (
     <>
       {searchText === undefined && (
-      <div className="search-set table-search-set">
-  <div className="search-input">
-    <a href="#" className="btn btn-searchset">
-      <i className="ti ti-search fs-14 feather-search" />
-    </a>
-    <div id="DataTables_Table_0_filter" className="dataTables_filter">
-      <label>
-        {" "}
-        <input
-          type="search"
-          onChange={(e) => handleSearch(e.target.value)}
-          className="form-control form-control-sm"
-          placeholder="Search"
-          aria-controls="DataTables_Table_0"
-        />
-      </label>
-    </div>
-  </div>
-</div>
+        <div className="search-set table-search-set">
+          <div className="search-input">
+            <a href="#" className="btn btn-searchset">
+              <i className="ti ti-search fs-14 feather-search" />
+            </a>
+            <div id="DataTables_Table_0_filter" className="dataTables_filter">
+              <label>
+                {" "}
+                <input
+                  type="search"
+                  onChange={(e) => setInternalSearch(e.target.value)}
+                  className="form-control form-control-sm"
+                  placeholder="Search"
+                  aria-controls="DataTables_Table_0"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
       )}
 
-
-    <Table
-      key={props}
-      className="table datanew dataTable no-footer"
-      rowSelection={rowSelection}
-      columns={columns}
-      dataSource={filteredDataSource}
-      rowKey={(record) => record.id}
-      pagination={{
-          locale: { items_per_page: "" },
-          nextIcon: <span><i className="fa fa-angle-right" /></span>,
-          prevIcon: <span><i className="fa fa-angle-left" /></span>,
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          pageSizeOptions: ["10", "20", "30"],
-        }}
-    />
-        </>
+      <Table
+        key={props as React.Key}
+        className="table datanew dataTable no-footer"
+        rowSelection={rowSelection}
+        columns={columns as never}
+        dataSource={filteredDataSource}
+        rowKey={(record) => (record as { id: React.Key }).id}
+        pagination={pagination}
+      />
+    </>
   );
 };
 
-export default Datatable;
+export default memo(Datatable);

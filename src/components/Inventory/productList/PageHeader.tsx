@@ -10,8 +10,12 @@ export default function PageHeader() {
   return (
     <div className="flex items-center justify-between flex-wrap gap-3 mb-[1.5rem]">
       <div>
-        <h4 className="mb-1 text-[20px] font-bold text-[#212B36]">Product List</h4>
-        <p className="m-0 text-[14px] font-medium text-[#646B72]">Manage your products</p>
+        <h4 className="mb-1 text-[24px] font-bold text-[#0f172a] leading-tight">
+          Product List
+        </h4>
+        <p className="m-0 text-[13px] font-medium text-[#718096] tracking-[0.2px]">
+          Track, filter, and manage your product catalog.
+        </p>
       </div>
       <div className="flex items-center flex-wrap gap-3">
         <ExportButtons />

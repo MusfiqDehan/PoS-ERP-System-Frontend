@@ -1,0 +1,22 @@
+# Sortorium - Agentic Browsing Guide
+
+## Overview
+Sortorium is an all-in-one ERP (Enterprise Resource Planning) platform designed for retail businesses. It provides tools for POS (Point of Sale), HRM (Human Resource Management), Inventory Management, Sales, Purchases, Analytics, and CMS.
+
+## Navigation
+- [Home](/)
+- [Blog](/blog)
+- [Demo Request](/demo)
+- [Contact](/contact)
+- [Sign In](/signin)
+- [Sign Up](/signup)
+
+## Interactive Elements
+The site uses standard HTML forms for all data entry (e.g., Demo Request on /demo). All form inputs are associated with `<label>` tags via the `id` and `htmlFor` attributes to ensure high accessibility for automated agents.
+
+## Actions
+- To request a demo, agents should navigate to `/demo`, fill out the form (First Name, Last Name, Work Email, Phone Number, Company Size), and click the "Request Demo" button.
+- To read blog content, navigate to `/blog` and follow the article links.
+
+## Architecture
+The site is built with Next.js, React, and Tailwind CSS. It is fully static and optimized for Agentic Browsing, ensuring minimal Layout Shifts (CLS) and a stable Accessibility Tree.

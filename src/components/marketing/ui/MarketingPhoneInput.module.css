@@ -1,0 +1,68 @@
+.root :global(.PhoneInput) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border: 1px solid #f1f1f1;
+  border-radius: 4px;
+  background: #fff;
+  padding: 0 16px;
+  min-height: 54px;
+}
+
+.root :global(.PhoneInput:focus-within) {
+  border-color: #089b7c;
+}
+
+.root :global(.PhoneInputCountry) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 0;
+  padding-right: 8px;
+  border-right: 1px solid #f1f1f1;
+  align-self: stretch;
+}
+
+.root :global(.PhoneInputCountryIcon) {
+  width: 22px;
+  height: 16px;
+  box-shadow: none;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.root :global(.PhoneInputCountryIcon--border) {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.root :global(.PhoneInputCountrySelect) {
+  font-size: 14px;
+}
+
+.root :global(.PhoneInputCountrySelectArrow) {
+  width: 6px;
+  height: 6px;
+  border-color: #666;
+  opacity: 1;
+  margin-left: 4px;
+}
+
+.root :global(.PhoneInputInput) {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  padding: 15px 0;
+  font-size: 16px;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  color: #212121;
+  font-family: inherit;
+}
+
+.root :global(.PhoneInputInput::placeholder) {
+  color: #666666;
+}
