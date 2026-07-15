@@ -79,6 +79,21 @@ smoke_check_external() {
   fi
 }
 
+container_exists() {
+  docker inspect "$1" >/dev/null 2>&1
+}
+
+stop_live_if_running() {
+  if container_exists "$LIVE_CONTAINER"; then
+    log "Stopping live container $LIVE_CONTAINER..."
+    docker stop -t 30 "$LIVE_CONTAINER"
+    DRAINED=1
+    return 0
+  fi
+
+  log "Live container $LIVE_CONTAINER not found — skipping drain (first deploy or recovery)."
+}
+
 export IMAGE_TAG
 
 finalize_deploy_tree() {
@@ -107,8 +122,7 @@ log "Phase 4: candidate smoke check (direct — live still in Traefik pool)..."
 smoke_check_candidate
 
 log "Phase 5: graceful drain of live frontend..."
-DRAINED=1
-docker stop -t 30 "$LIVE_CONTAINER"
+stop_live_if_running
 
 log "Phase 6: promote canonical frontend with image tag $IMAGE_TAG..."
 IMAGE_TAG="$IMAGE_TAG" "${COMPOSE[@]}" up -d --no-deps frontend
