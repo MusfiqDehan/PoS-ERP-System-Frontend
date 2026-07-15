@@ -19,6 +19,12 @@ const nextConfig = {
   // rewrites work without the export-no-custom-routes warning.
   ...(process.env.NODE_ENV === "production" ? { output: "export" as const } : {}),
 
+  // Required with output:"export": there is no /_next/image optimizer behind nginx.
+  // Without this, next/image emits /_next/image?url=... which falls back to HTML.
+  images: {
+    unoptimized: true,
+  },
+
   async rewrites() {
     const routes: Array<{ source: string; destination: string }> = [];
 
