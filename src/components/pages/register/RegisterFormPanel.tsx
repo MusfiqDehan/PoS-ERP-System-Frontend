@@ -122,14 +122,18 @@ export default function RegisterFormPanel() {
             ) : null}
 
             <div className="auth-split-page__credentials">
+              {/* ---- Workspace ---- */}
+              <p className="auth-register-page__section-label">Workspace</p>
+              <div className="auth-register-page__section-divider" />
+
               {packages.length > 0 ? (
-                <div className="mb-3">
-                  <label className="form-label" htmlFor="register-plan">
-                    Plan
+                <div className="auth-form-field">
+                  <label className="auth-form-field__label" htmlFor="register-plan">
+                    Plan <span className="auth-form-field__required">*</span>
                   </label>
                   <select
                     id="register-plan"
-                    className="form-select"
+                    className="auth-register-page__plan-select"
                     value={plan}
                     onChange={(event) => setPlan(event.target.value)}
                   >
@@ -153,6 +157,7 @@ export default function RegisterFormPanel() {
                 value={companyName}
                 onChange={setCompanyName}
                 autoComplete="organization"
+                placeholder="Your business name"
               />
 
               <AuthTextField
@@ -165,19 +170,23 @@ export default function RegisterFormPanel() {
                 placeholder="your-store"
               />
               {normalizedSubdomain.length > 0 && !subdomainValid ? (
-                <p className="auth-form-field__hint text-danger">
+                <p className="auth-register-page__inline-hint auth-register-page__inline-hint--error">
                   3–63 chars: lowercase letters, numbers, and hyphens only.
                 </p>
-              ) : (
-                normalizedSubdomain.length > 0 && (
-                  <p className="auth-form-field__hint">
-                    Your workspace:{" "}
-                    <strong>
-                      {normalizedSubdomain}.{TENANT_BASE_DOMAIN}
-                    </strong>
-                  </p>
-                )
-              )}
+              ) : normalizedSubdomain.length > 0 ? (
+                <p className="auth-register-page__inline-hint">
+                  Your workspace URL:{" "}
+                  <strong>
+                    {normalizedSubdomain}.{TENANT_BASE_DOMAIN}
+                  </strong>
+                </p>
+              ) : null}
+
+              {/* ---- Your Account ---- */}
+              <p className="auth-register-page__section-label auth-register-page__section-label--spaced">
+                Your Account
+              </p>
+              <div className="auth-register-page__section-divider" />
 
               <AuthTextField
                 label="Full Name"
@@ -185,6 +194,7 @@ export default function RegisterFormPanel() {
                 value={fullName}
                 onChange={setFullName}
                 autoComplete="name"
+                placeholder="Your full name"
               />
 
               <AuthEmailField
@@ -201,9 +211,10 @@ export default function RegisterFormPanel() {
                 onChange={setPhone}
                 type="tel"
                 autoComplete="tel"
+                placeholder="+1 234 567 8900"
               />
 
-              <p className="auth-form-field__hint">
+              <p className="auth-register-page__inline-hint auth-register-page__inline-hint--top">
                 After signing up, we&apos;ll email you a verification link to
                 confirm your address and set your password.
               </p>

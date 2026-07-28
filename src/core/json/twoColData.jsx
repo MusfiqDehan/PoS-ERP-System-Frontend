@@ -195,8 +195,8 @@ export const TowColData = [
                 base: 'leads',
               },
               {
-                menuValue: 'Purchase Transaction',
-                route: routes.superAdminPurchaseTransaction,
+                menuValue: 'Invoices',
+                route: routes.superAdminInvoices,
                 base: 'leads',
               },
             ],

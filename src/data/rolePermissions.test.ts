@@ -76,4 +76,37 @@ describe("filterSidebarByAccess", () => {
     const filtered = filterSidebarByAccess(sections, "manager");
     expect(filtered[0]?.submenuItems?.map((n) => n.label)).toEqual(["Dashboard"]);
   });
+
+  it("filters items by featureKey when permissions are supplied", () => {
+    const featureItems = [
+      {
+        label: "Inventory",
+        roles: ["owner"] as AppTier[],
+        submenuItems: [
+          { label: "Products", link: "/products", featureKey: "products" },
+          { label: "Brands", link: "/brands", featureKey: "brands" },
+          { label: "Units", link: "/units", featureKey: "units" },
+        ],
+      },
+    ];
+    const perms = { products: "view", brands: "none", units: "edit" };
+    const filtered = filterSidebarByAccess(featureItems, "owner", perms, false);
+    expect(filtered[0]?.submenuItems?.map((n) => n.label)).toEqual(["Products", "Units"]);
+  });
+
+  it("skips permission filtering for tenant admins", () => {
+    const featureItems = [
+      {
+        label: "Inventory",
+        roles: ["owner"] as AppTier[],
+        submenuItems: [
+          { label: "Products", link: "/products", featureKey: "products" },
+          { label: "Brands", link: "/brands", featureKey: "brands" },
+        ],
+      },
+    ];
+    const perms = { products: "none", brands: "none" };
+    const filtered = filterSidebarByAccess(featureItems, "owner", perms, true);
+    expect(filtered[0]?.submenuItems?.map((n) => n.label)).toEqual(["Products", "Brands"]);
+  });
 });

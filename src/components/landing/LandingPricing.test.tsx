@@ -39,4 +39,25 @@ describe("LandingPricing", () => {
       );
     });
   });
+
+  it("shows a status message when the API returns no packages", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          success: true,
+          data: { items: [] },
+        }),
+      }),
+    );
+
+    render(<LandingPricing />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/unable to load pricing right now/i),
+      ).toBeInTheDocument();
+    });
+  });
 });

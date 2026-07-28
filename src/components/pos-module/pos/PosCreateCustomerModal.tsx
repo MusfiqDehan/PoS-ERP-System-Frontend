@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { closePosModal } from "./categories-modal/closePosModal";
 
 export type CreateCustomerInput = {
   name: string;
@@ -10,7 +11,7 @@ export type CreateCustomerInput = {
 };
 
 type PosCreateCustomerModalProps = {
-  onCreateCustomer: (input: CreateCustomerInput) => void;
+  onCreateCustomer: (input: CreateCustomerInput) => void | Promise<void>;
 };
 
 const emptyForm: CreateCustomerInput = {
@@ -50,21 +51,10 @@ export default function PosCreateCustomerModal({
     return Object.keys(nextErrors).length === 0;
   };
 
-  const closeModal = () => {
-    const modal = document.querySelector("#pos-create-customer");
-    if (!modal || typeof window === "undefined") {
-      return;
-    }
-
-    const bootstrap = (
-      window as Window & {
-        bootstrap?: {
-          Modal?: { getOrCreateInstance: (el: Element) => { hide: () => void } };
-        };
-      }
-    ).bootstrap;
-
-    bootstrap?.Modal?.getOrCreateInstance(modal)?.hide();
+  const handleClose = () => {
+    setForm(emptyForm);
+    setErrors({});
+    closePosModal("pos-create-customer");
   };
 
   const handleSubmit = () => {
@@ -80,12 +70,7 @@ export default function PosCreateCustomerModal({
     });
     setForm(emptyForm);
     setErrors({});
-    closeModal();
-  };
-
-  const handleClose = () => {
-    setForm(emptyForm);
-    setErrors({});
+    closePosModal("pos-create-customer");
   };
 
   return (
@@ -110,7 +95,6 @@ export default function PosCreateCustomerModal({
             <button
               type="button"
               className="pos-sale-modal__close"
-              data-bs-dismiss="modal"
               aria-label="Close"
               onClick={handleClose}
             >
@@ -192,7 +176,6 @@ export default function PosCreateCustomerModal({
             <button
               type="button"
               className="pos-sale-modal__btn pos-sale-modal__btn--ghost"
-              data-bs-dismiss="modal"
               onClick={handleClose}
             >
               Cancel

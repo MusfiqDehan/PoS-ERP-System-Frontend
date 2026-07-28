@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthSocialSection } from "@/core/common/auth";
 import { AuthEmailField, AuthPasswordField } from "@/core/common/form/auth";
 import { all_routes } from "@/data/all_routes";
@@ -24,9 +24,19 @@ export default function SignInFormPanel() {
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const [tenantSubdomain, setTenantSubdomain] = useState("");
+  const [isTenantHost, setIsTenantHost] = useState(false);
+  const [hostReady, setHostReady] = useState(false);
 
-  const tenantSubdomain = getTenantSubdomainFromHost();
-  const isTenantHost = !isPublicMarketingHost() && tenantSubdomain.length > 0;
+  useEffect(() => {
+    const sub = getTenantSubdomainFromHost();
+    const isTenant = !isPublicMarketingHost() && sub.length > 0;
+    setTenantSubdomain(sub);
+    setIsTenantHost(isTenant);
+    setHostReady(true);
+  }, []);
+
+  const isPlatform = hostReady && !isTenantHost;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -76,17 +86,10 @@ export default function SignInFormPanel() {
       <form className="auth-split-page__form" onSubmit={handleSubmit}>
         <div className="auth-split-page__form-top">
           <div className="auth-split-page__form-main">
-            <SignInFormHeader />
-
-            {isTenantHost ? (
-              <p className="auth-form-field__hint">
-                Signing in to <strong>{tenantSubdomain}</strong> workspace.
-              </p>
-            ) : (
-              <p className="auth-form-field__hint">
-                Platform administrator sign-in.
-              </p>
-            )}
+            <SignInFormHeader
+              isPlatform={isPlatform}
+              tenantSubdomain={hostReady && isTenantHost ? tenantSubdomain : undefined}
+            />
 
             {errors.length > 0 ? (
               <div
@@ -106,7 +109,11 @@ export default function SignInFormPanel() {
             ) : null}
 
             <div className="auth-split-page__credentials">
-              <AuthEmailField id="sign-in-email" value={email} onChange={setEmail} />
+              <AuthEmailField
+                id="sign-in-email"
+                value={email}
+                onChange={setEmail}
+              />
               <div className="auth-split-page__password-group">
                 <AuthPasswordField
                   id="sign-in-password"
@@ -121,7 +128,7 @@ export default function SignInFormPanel() {
             </div>
           </div>
 
-          <SignInPrimaryActions loading={loading} />
+          <SignInPrimaryActions loading={loading} hideRegister={isPlatform} />
         </div>
 
         <AuthSocialSection />

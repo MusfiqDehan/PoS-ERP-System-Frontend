@@ -1,8 +1,23 @@
 "use client";
 
-export default function DeleteProductModal() {
+import { useState } from "react";
+import type { ProductListRecord } from "./types";
+
+type Props = { product: ProductListRecord | null; onDelete: (id: string) => Promise<boolean> };
+
+export default function DeleteProductModal({ product, onDelete }: Props) {
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (!product) return;
+    setDeleting(true);
+    const ok = await onDelete(product.id);
+    setDeleting(false);
+    if (ok) (window as any).bootstrap?.Modal?.getInstance?.(document.getElementById("delete-product-modal"))?.hide();
+  };
+
   return (
-    <div className="modal fade" id="delete-modal">
+    <div className="modal fade" id="delete-product-modal">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="p-6 text-center">
@@ -13,23 +28,11 @@ export default function DeleteProductModal() {
             </div>
             <h4 className="mb-1 text-[20px] font-bold text-[#212B36]">Delete Product</h4>
             <p className="mb-4 text-[14px] text-[#646B72]">
-              Are you sure you want to delete product?
+              Are you sure you want to delete &quot;{product?.name ?? ""}&quot;?
             </p>
             <div className="flex items-center justify-center gap-3">
-              <button
-                type="button"
-                data-bs-dismiss="modal"
-                className="px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                data-bs-dismiss="modal"
-                className="px-4 py-2 rounded-[6px] bg-[#dc3545] text-white text-[14px] font-medium hover:bg-[#bb2d3b] transition-colors"
-              >
-                Yes, Delete
-              </button>
+              <button type="button" data-bs-dismiss="modal" className="px-4 py-2 rounded-[6px] border border-[#e7e7e7] text-[#646B72] text-[14px] font-medium hover:bg-[#f6f6f6] transition-colors">Cancel</button>
+              <button type="button" disabled={deleting} onClick={handleDelete} className="px-4 py-2 rounded-[6px] bg-[#dc3545] text-white text-[14px] font-medium hover:bg-[#bb2d3b] transition-colors disabled:opacity-50">{deleting ? "Deleting..." : "Yes, Delete"}</button>
             </div>
           </div>
         </div>

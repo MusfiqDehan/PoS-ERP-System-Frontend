@@ -15,14 +15,14 @@ export default function VendorPageHeader() {
 
       <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 text-white/90 text-[11px] font-semibold mb-2.5 backdrop-blur-sm">
-            <i className="ti ti-sparkles text-[12px]" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 text-white/90 text-[14px] font-semibold mb-2.5 backdrop-blur-sm">
+            <i className="ti ti-sparkles text-[14px]" />
             Platform Overview
           </span>
-          <h2 className="m-0 text-[24px] sm:text-[26px] font-bold text-white leading-tight">
+          <h2 className="m-0 text-[26px] sm:text-[28px] font-bold text-white leading-tight">
             Welcome Back, Adrian
           </h2>
-          <p className="m-0 mt-1 text-[14px] text-white/80">
+          <p className="m-0 mt-1 text-[16px] text-white/80">
             14 New Companies subscribed today &mdash; great momentum!
           </p>
         </div>
@@ -30,16 +30,16 @@ export default function VendorPageHeader() {
         <div className="flex items-center gap-2.5 flex-wrap">
           <Link
             href={routes.superAdminCompanies}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-white text-[#089b7c] text-[13px] font-semibold hover:bg-white/90 transition-colors shadow-sm"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-white text-[#089b7c] text-[14px] font-semibold hover:bg-white/90 transition-colors shadow-sm"
           >
-            <i className="ti ti-building text-[15px]" />
+            <i className="ti ti-building text-[16px]" />
             Companies
           </Link>
           <Link
             href={routes.superAdminPackages}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-white/15 text-white text-[13px] font-semibold hover:bg-white/25 transition-colors backdrop-blur-sm border border-white/20"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-white/15 text-white text-[14px] font-semibold hover:bg-white/25 transition-colors backdrop-blur-sm border border-white/20"
           >
-            <i className="ti ti-box text-[15px]" />
+            <i className="ti ti-box text-[16px]" />
             All Packages
           </Link>
         </div>

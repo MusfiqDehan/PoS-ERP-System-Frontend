@@ -1,10 +1,28 @@
-import { expiredproduct } from "@/core/json/expiredproductdata";
-import type { ExpiredProductRecord } from "@/components/Inventory/expired-products/types";
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { getAccessToken } from "@/lib/auth-session";
+import { extractListItems } from "@/lib/api";
+import { fetchExpiredProducts, type Product } from "@/lib/inventory";
 
 export function useExpiredProducts() {
-  const dataSource = expiredproduct as ExpiredProductRecord[];
+  const [dataSource, setDataSource] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  return {
-    dataSource,
-  };
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    const result = await fetchExpiredProducts(getAccessToken());
+    if (result.ok && result.body.data) {
+      setDataSource(extractListItems<Product>(result.body.data));
+    } else {
+      setError(result.body.message ?? "Failed to load expired products.");
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  return { dataSource, loading, error, reload: load };
 }

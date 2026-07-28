@@ -1,7 +1,8 @@
 import OtpSettingsComponent from "@/components/settings/systemsettings/otpsettings";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 
 export default function OtpSettings(){
     return(
-        <><OtpSettingsComponent /></>
+        <PermissionGuard featureKey="system_settings"><OtpSettingsComponent /></PermissionGuard>
     )
 }

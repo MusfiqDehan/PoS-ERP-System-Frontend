@@ -25,7 +25,7 @@ export default function LandingPricing() {
     let active = true;
     fetchPublicPackages().then(({ ok, body }) => {
       if (!active) return;
-      if (ok && body.success && body.data?.items) {
+      if (ok && body.success && body.data?.items && body.data.items.length > 0) {
         setPackages(body.data.items);
       } else {
         setError("Unable to load pricing right now. You can still register.");

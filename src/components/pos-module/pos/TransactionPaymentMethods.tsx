@@ -1,19 +1,23 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import type { TransactionPaymentMethod } from "./transactionDetailsData";
 import { transactionPaymentMethods } from "./transactionDetailsData";
 
 type TransactionPaymentMethodsProps = {
   selectedPaymentId: string | null;
   onSelectPayment: (paymentId: string) => void;
+  methods?: TransactionPaymentMethod[];
 };
 
 export default function TransactionPaymentMethods({
   selectedPaymentId,
   onSelectPayment,
+  methods,
 }: TransactionPaymentMethodsProps) {
-  const topRow = transactionPaymentMethods.filter((m) => m.width !== "half");
-  const bottomRow = transactionPaymentMethods.filter((m) => m.width === "half");
+  const allMethods = methods ?? transactionPaymentMethods;
+  const topRow = allMethods.filter((m) => m.width !== "half");
+  const bottomRow = allMethods.filter((m) => m.width === "half");
 
   return (
     <div className="pos-transaction-details__section pos-transaction-details__section--payment">
@@ -31,8 +35,6 @@ export default function TransactionPaymentMethods({
                   : ""
               }`}
               style={{ backgroundColor: method.bgColor }}
-              data-bs-toggle={method.modalTarget ? "modal" : undefined}
-              data-bs-target={method.modalTarget}
               onClick={() => onSelectPayment(method.id)}
             >
               <img
@@ -58,8 +60,6 @@ export default function TransactionPaymentMethods({
                   : ""
               }`}
               style={{ backgroundColor: method.bgColor }}
-              data-bs-toggle={method.modalTarget ? "modal" : undefined}
-              data-bs-target={method.modalTarget}
               onClick={() => onSelectPayment(method.id)}
             >
               <img

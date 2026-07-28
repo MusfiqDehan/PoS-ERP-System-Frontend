@@ -1,3 +1,6 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import PageHeader from "@/components/sales/quotation/PageHeader";
 import QuotationTable from "@/components/sales/quotation/QuotationTable";
 import CommonDeleteModal from "@/core/common/modal/commonDeleteModal";
@@ -7,7 +10,7 @@ import EditQuotation from "@/core/modals/sales/editquotation";
 
 export default function Quotation() {
   return (
-    <div>
+    <PermissionGuard featureKey="quotations">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -18,6 +21,6 @@ export default function Quotation() {
       <AddQuotation />
       <EditQuotation />
       <CommonDeleteModal />
-    </div>
+    </PermissionGuard>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import ImageWithBasePath from "@/core/common/image-with-base-path";
 import type { PosProduct } from "./posProductsData";
+import { resolveProductImageUrl } from "@/lib/media";
 
 type PosProductCardProps = {
   product: PosProduct;
@@ -27,8 +27,8 @@ export default function PosProductCard({
       aria-label={`Add ${product.name} to order`}
     >
       <div className="pos-products-panel__card-image">
-        <ImageWithBasePath
-          src={product.imageSrc}
+        <img
+          src={resolveProductImageUrl(product.imageSrc)}
           alt={product.name}
           className="pos-products-panel__card-img"
         />

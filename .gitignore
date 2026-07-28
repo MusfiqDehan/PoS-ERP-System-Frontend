@@ -1,7 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-.env
-.env.*
-!.env.example
+
 # ---------------------------------------------------------------------------
 # Dependencies
 # ---------------------------------------------------------------------------
@@ -69,6 +67,21 @@ yarn-error.log*
 *.swo
 .history
 
+# AI assistant / tooling
+.claude/
+.cursor/
+.mcps/
+.agent/
+.next-root-owned/
+
+# Project docs & notes (kept outside the repo)
+docs/
+BACKEND_BUG_NOTES/
+NOTES/
+*.notes.md
+daily-task.md
+TODO_*.md
+
 # ---------------------------------------------------------------------------
 # OS files
 # ---------------------------------------------------------------------------
@@ -91,8 +104,11 @@ Desktop.ini
 # ---------------------------------------------------------------------------
 # Local-only / scratch
 # ---------------------------------------------------------------------------
-# local docs (daily goals, personal notes)
-docs/daily-goals/
 # git recovery backups (e.g. created when repairing a corrupted .git)
 .git.broken/
 *.corrupt.bak
+# misc temp files
+*.tmp
+*.temp
+*~
+*.bak

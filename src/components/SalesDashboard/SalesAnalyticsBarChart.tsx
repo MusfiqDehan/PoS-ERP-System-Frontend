@@ -4,32 +4,64 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
+import type { DashboardSalesTrendPoint } from "@/lib/dashboard";
+import { formatCurrency, parseCurrency } from "@/lib/currency";
 import {
   salesAnalyticsChartMax,
-  salesAnalyticsFeaturedMonthIndex,
   salesAnalyticsMonths,
   salesAnalyticsYAxisLabels,
 } from "./salesAnalyticsData";
 
-const toBarHeight = (value: number) =>
-  `${(value / salesAnalyticsChartMax) * 100}%`;
+type ChartMonth = {
+  month: string;
+  height: number;
+  tooltipValue: string;
+};
+
+function buildChartMonths(trend: DashboardSalesTrendPoint[]): ChartMonth[] {
+  if (!trend.length) {
+    return salesAnalyticsMonths;
+  }
+  const values = trend.map((point) => parseCurrency(point.total));
+  const max = Math.max(...values, 1);
+  return trend.map((point) => ({
+    month: point.label.split(" ")[0] ?? point.label,
+    height: (parseCurrency(point.total) / max) * salesAnalyticsChartMax,
+    tooltipValue: formatCurrency(parseCurrency(point.total)),
+  }));
+}
+
+const toBarHeight = (value: number, chartMax: number) =>
+  `${(value / chartMax) * 100}%`;
 
 type TooltipPosition = {
   left: number;
   top: number;
 };
 
-export default function SalesAnalyticsBarChart() {
-  const featuredMonth = salesAnalyticsMonths[salesAnalyticsFeaturedMonthIndex];
+type Props = {
+  trend?: DashboardSalesTrendPoint[];
+};
+
+export default function SalesAnalyticsBarChart({ trend = [] }: Props) {
+  const months = useMemo(() => buildChartMonths(trend), [trend]);
+  const chartMax = useMemo(
+    () => Math.max(...months.map((item) => item.height), salesAnalyticsChartMax),
+    [months],
+  );
+  const featuredIndex = Math.max(months.length - 1, 0);
+  const featuredMonth = months[featuredIndex] ?? salesAnalyticsMonths[0];
+
   const barsAreaRef = useRef<HTMLDivElement>(null);
   const barsScrollRef = useRef<HTMLDivElement>(null);
   const barRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   const [tooltip, setTooltip] = useState({
-    monthIndex: salesAnalyticsFeaturedMonthIndex,
+    monthIndex: featuredIndex,
     value: featuredMonth.tooltipValue,
   });
   const [tooltipPos, setTooltipPos] = useState<TooltipPosition | null>(null);
@@ -52,7 +84,7 @@ export default function SalesAnalyticsBarChart() {
 
   useLayoutEffect(() => {
     updateTooltipPosition(tooltip.monthIndex);
-  }, [tooltip.monthIndex, updateTooltipPosition]);
+  }, [tooltip.monthIndex, updateTooltipPosition, months.length]);
 
   useEffect(() => {
     const area = barsAreaRef.current;
@@ -86,11 +118,17 @@ export default function SalesAnalyticsBarChart() {
 
   const resetTooltip = useCallback(() => {
     setTooltip({
-      monthIndex: salesAnalyticsFeaturedMonthIndex,
+      monthIndex: featuredIndex,
       value: featuredMonth.tooltipValue,
     });
-    updateTooltipPosition(salesAnalyticsFeaturedMonthIndex);
-  }, [featuredMonth.tooltipValue, updateTooltipPosition]);
+    updateTooltipPosition(featuredIndex);
+  }, [featuredIndex, featuredMonth.tooltipValue, updateTooltipPosition]);
+
+  if (!months.length) {
+    return (
+      <p className="px-3 py-4 text-[#646B72]">No sales trend data yet.</p>
+    );
+  }
 
   return (
     <div className="sales-analytics__plot">
@@ -112,9 +150,9 @@ export default function SalesAnalyticsBarChart() {
 
           <div ref={barsScrollRef} className="sales-analytics__bars-scroll">
             <div className="sales-analytics__bars">
-              {salesAnalyticsMonths.map((item, monthIndex) => (
+              {months.map((item, monthIndex) => (
                 <div
-                  key={item.month}
+                  key={`${item.month}-${monthIndex}`}
                   className="sales-analytics__bar-group"
                   onMouseEnter={() =>
                     showTooltip(monthIndex, item.tooltipValue)
@@ -129,7 +167,7 @@ export default function SalesAnalyticsBarChart() {
                         barRefs.current[monthIndex] = element;
                       }}
                       className="sales-analytics__bar"
-                      style={{ height: toBarHeight(item.height) }}
+                      style={{ height: toBarHeight(item.height, chartMax) }}
                     />
                   </div>
                 </div>
@@ -162,8 +200,8 @@ export default function SalesAnalyticsBarChart() {
         </div>
 
         <div className="sales-analytics__x-labels" aria-hidden="true">
-          {salesAnalyticsMonths.map((item) => (
-            <span key={item.month} className="sales-analytics__x-label">
+          {months.map((item, index) => (
+            <span key={`${item.month}-${index}`} className="sales-analytics__x-label">
               {item.month}
             </span>
           ))}

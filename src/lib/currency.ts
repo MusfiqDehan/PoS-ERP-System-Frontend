@@ -14,8 +14,14 @@ export function formatCurrency(value: number): string {
   return currencyFormatter.format(value);
 }
 
-/** Parse a formatted or raw price string into a number (strips ৳, commas, etc.). */
-export function parseCurrency(value: string): number {
+/** Parse a formatted or raw price string/number into a number (strips ৳, commas, etc.). */
+export function parseCurrency(value: string | number | null | undefined): number {
+  if (value === null || value === undefined || value === "") {
+    return 0;
+  }
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : 0;
+  }
   const cleaned = value.replace(/[^0-9.]/g, "");
   return Number.parseFloat(cleaned) || 0;
 }

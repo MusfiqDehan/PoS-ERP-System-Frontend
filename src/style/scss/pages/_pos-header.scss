@@ -16,8 +16,14 @@
   font-weight: 500;
   line-height: normal;
   color: #ffffff;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: center;
   pointer-events: none;
+
+  &--warning {
+    top: 132px;
+    background: #b45309;
+  }
 }
 
 .pos-layout-shell {

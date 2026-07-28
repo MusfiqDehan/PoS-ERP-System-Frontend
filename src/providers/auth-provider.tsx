@@ -65,6 +65,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setTenantAccess(null);
   }, []);
 
+  const clearAccessPayloads = useCallback(() => {
+    setPlatformAccess(null);
+    setTenantAccess(null);
+  }, []);
+
   const refreshAccess = useCallback(async () => {
     removeLegacyAppRole();
     const token = getAccessToken();
@@ -81,29 +86,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (kind === "platform") {
       const result = await fetchPlatformPermissions(token);
-      if (!result.ok || !result.body.success || !result.body.data) {
-        clearSession();
-        resetAuth();
+      if (result.ok && result.body.success && result.body.data) {
+        setPlatformAccess(result.body.data);
+        setTenantAccess(null);
         setLoading(false);
         return;
       }
-      setPlatformAccess(result.body.data);
-      setTenantAccess(null);
+      // Permissions fetch failed — keep sessionKind, just clear payloads.
+      // SessionGuard has the token/sessionKind from localStorage to gate properly.
+      clearAccessPayloads();
       setLoading(false);
       return;
     }
 
     const result = await fetchTenantPermissions(token);
-    if (!result.ok || !result.body.success || !result.body.data) {
-      clearSession();
-      resetAuth();
+    if (result.ok && result.body.success && result.body.data) {
+      setTenantAccess(toTenantAccess(result.body.data));
+      setPlatformAccess(null);
       setLoading(false);
       return;
     }
-    setTenantAccess(toTenantAccess(result.body.data));
-    setPlatformAccess(null);
+    clearAccessPayloads();
     setLoading(false);
-  }, [resetAuth]);
+  }, [resetAuth, clearAccessPayloads]);
 
   useEffect(() => {
     void refreshAccess();

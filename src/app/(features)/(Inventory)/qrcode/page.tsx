@@ -1,19 +1,20 @@
+"use client";
+
+import LabelPrintWorkspace from "@/components/Inventory/labels/LabelPrintWorkspace";
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import PageHeader from "@/components/Inventory/qrcode/PageHeader";
-import QrCodeContent from "@/components/Inventory/qrcode/QrCodeContent";
 import CommonFooter from "@/core/common/footer/commonFooter";
-import QRcodeModelPopup from "@/core/modals/inventory/qrcode";
 
 export default function Qrcode() {
   return (
-    <div>
+    <PermissionGuard featureKey="qrcodes">
       <div className="page-wrapper notes-page-wrapper">
         <div className="content">
           <PageHeader />
-          <QrCodeContent />
+          <LabelPrintWorkspace codeType="qrcode" />
         </div>
         <CommonFooter />
       </div>
-      <QRcodeModelPopup />
-    </div>
+    </PermissionGuard>
   );
 }

@@ -1,7 +1,12 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import SuppliersComponent from "@/components/people/suppliers";
 
 export default function Suppliers(){
     return(
-        <><SuppliersComponent /></>
+        <PermissionGuard featureKey="suppliers">
+            <SuppliersComponent />
+        </PermissionGuard>
     )
 }

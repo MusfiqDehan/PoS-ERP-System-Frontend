@@ -1,30 +1,8 @@
-export const warehouseFilterOptions = [
-  "Lenovo IdeaPad 3",
-  "Beats Pro",
-  "Nike Jordan",
-  "Apple Series 5 Watch",
-];
+import type { LowStockFilterOption } from "./types";
 
-export const storeFilterOptions = [
-  "James Kirwin",
-  "Francis Chang",
-  "Antonio Engle",
-  "Leo Kelly",
-];
-
-export const categoryFilterOptions = [
-  "Computers",
-  "Electronics",
-  "Shoe",
-  "Electronics",
-];
-
-export const productFilterOptions = ["Lenovo", "Beats", "Nike", "Apple"];
-
-export const sortFilterOptions = [
-  "Recently Added",
-  "Ascending",
-  "Desending",
-  "Last Month",
-  "Last 7 Days",
+export const sortFilterOptions: LowStockFilterOption[] = [
+  { id: "-quantity", name: "Quantity High-Low" },
+  { id: "quantity", name: "Quantity Low-High" },
+  { id: "name", name: "Product A-Z" },
+  { id: "-name", name: "Product Z-A" },
 ];

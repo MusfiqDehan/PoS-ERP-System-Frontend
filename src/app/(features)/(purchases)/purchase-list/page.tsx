@@ -1,3 +1,6 @@
+"use client";
+
+import { PermissionGuard } from "@/components/auth/PermissionGuard";
 import PageHeader from "@/components/purchase/purchase-list/PageHeader";
 import PurchaseListTable from "@/components/purchase/purchase-list/PurchaseListTable";
 import AddPurchases from "@/core/modals/purchases/addpurchases";
@@ -8,7 +11,7 @@ import CommonFooter from "@/core/common/footer/commonFooter";
 
 export default function PurchaseList() {
   return (
-    <div>
+    <PermissionGuard featureKey="purchases">
       <div className="page-wrapper">
         <div className="content">
           <PageHeader />
@@ -20,6 +23,6 @@ export default function PurchaseList() {
       <ImportPurchases />
       <EditPurchases />
       <CommonDeleteModal />
-    </div>
+    </PermissionGuard>
   );
 }

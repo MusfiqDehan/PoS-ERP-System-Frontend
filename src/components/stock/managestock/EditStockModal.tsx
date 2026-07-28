@@ -1,28 +1,46 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
-import SelectField from "@/core/common/form/SelectField";
-import FormCol from "@/core/common/form/FormCol";
-import {
-  ResponsiblePerson,
-  Shop,
-  WareHouse,
-} from "@/core/common/selectOption/selectOption";
-import Link from "next/link";
-import { useState } from "react";
-import { MinusCircle, PlusCircle, Search } from "react-feather";
+import { useState, useEffect, FormEvent } from "react";
+import type { StockLevel } from "@/lib/stock";
 
-export default function EditStockModal() {
-  const [quantity, setQuantity] = useState(4);
+type Props = {
+  target: StockLevel | null;
+  onSubmit: (payload: {
+    branch?: string;
+    warehouse?: string;
+    product: string;
+    variant?: string;
+    quantity_after: string;
+    reason: string;
+  }) => Promise<boolean>;
+};
 
-  const handleDecrement = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
+export default function EditStockModal({ target, onSubmit }: Props) {
+  const [quantityAfter, setQuantityAfter] = useState("");
+  const [reason, setReason] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (target) {
+      setQuantityAfter(target.quantity);
+      setReason("");
     }
-  };
+  }, [target]);
 
-  const handleIncrement = () => {
-    setQuantity(quantity + 1);
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!target) return;
+    setSubmitting(true);
+    const ok = await onSubmit({
+      branch: target.branch ?? undefined,
+      warehouse: target.warehouse ?? undefined,
+      product: target.product,
+      variant: target.variant ?? undefined,
+      quantity_after: quantityAfter,
+      reason,
+    });
+    setSubmitting(false);
+    if (ok) closeBsModal("edit-units");
   };
 
   return (
@@ -30,155 +48,48 @@ export default function EditStockModal() {
       <div className="modal-dialog modal-dialog-centered stock-adjust-modal">
         <div className="modal-content">
           <div className="modal-header">
-            <div className="page-title">
-              <h4>Edit Stock</h4>
-            </div>
-            <button
-              type="button"
-              className="close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">×</span>
+            <div className="page-title"><h4>Adjust Stock</h4></div>
+            <button type="button" className="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="modal-body">
-              <div className="row">
-                <FormCol lg={12}>
-                  <SelectField
-                    label="Warehouse"
-                    required
-                    className="mb-3"
-                    options={WareHouse}
-                    placeholder="Choose"
-                    classNamePrefix="react-select"
-                  />
-                </FormCol>
-                <FormCol lg={12}>
-                  <SelectField
-                    label="Shop"
-                    required
-                    className="mb-3"
-                    options={Shop}
-                    placeholder="Choose"
-                    classNamePrefix="react-select"
-                  />
-                </FormCol>
-                <FormCol lg={12}>
-                  <SelectField
-                    label="Responsible Person"
-                    required
-                    className="mb-3"
-                    options={ResponsiblePerson}
-                    placeholder="Choose"
-                    classNamePrefix="react-select"
-                  />
-                </FormCol>
-                <FormCol lg={12}>
-                  <div className="search-form mb-3">
-                    <label className="form-label">
-                      Product<span className="text-danger ms-1">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Select Product"
-                      defaultValue="Nike Jordan"
-                    />
-                    <Search className="feather-search" />
-                  </div>
-                </FormCol>
-                <FormCol lg={12}>
-                  <div className="modal-body-table">
-                    <div className="table-responsive">
-                      <table className="table  datanew">
-                        <thead>
-                          <tr>
-                            <th>Product</th>
-                            <th>SKU</th>
-                            <th>Category</th>
-                            <th>Qty</th>
-                            <th className="no-sort" />
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <div className="d-flex align-items-center">
-                                <Link href="#" className="avatar avatar-md">
-                                  <img
-                                    src="assets/img/products/stock-img-02.png"
-                                    alt="product"
-                                  />
-                                </Link>
-                                <Link href="#">Nike Jordan</Link>
-                              </div>
-                            </td>
-                            <td>PT002</td>
-                            <td>Nike</td>
-                            <td>
-                              <div className="product-quantity bg-gray-transparent border-0">
-                                <span
-                                  className="quantity-btn"
-                                  onClick={handleDecrement}
-                                >
-                                  <MinusCircle size={14} />
-                                </span>
-                                <input
-                                  type="text"
-                                  className="quntity-input bg-transparent"
-                                  defaultValue={2}
-                                />
-                                <span
-                                  className="quantity-btn"
-                                  onClick={handleIncrement}
-                                >
-                                  +
-                                  <PlusCircle size={14} className="plus-circle" />
-                                </span>
-                              </div>
-                            </td>
-                            <td>
-                              <div className="d-flex align-items-center justify-content-between edit-delete-action">
-                                <Link
-                                  className="d-flex align-items-center border rounded p-2"
-                                  href="#"
-                                >
-                                  <i
-                                    data-feather="trash-2"
-                                    className="feather-trash-2"
-                                  />
-                                </Link>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </FormCol>
+              <div className="mb-3">
+                <label className="form-label">Product</label>
+                <input type="text" className="form-control" value={target?.product_name ?? target?.product ?? ""} disabled />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Current Quantity</label>
+                <input type="text" className="form-control" value={target?.quantity ?? ""} disabled />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">New Quantity <span className="text-danger">*</span></label>
+                <input type="number" className="form-control" required value={quantityAfter} onChange={(e) => setQuantityAfter(e.target.value)} min="0" />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Reason <span className="text-danger">*</span></label>
+                <textarea className="form-control" required value={reason} onChange={(e) => setReason(e.target.value)} rows={3} placeholder="Reason for adjustment" />
               </div>
             </div>
             <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary me-2"
-                data-bs-dismiss="modal"
-              >
-                Cancel
+              <button type="button" className="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" className="btn btn-primary" disabled={submitting || !reason}>
+                {submitting ? "Saving..." : "Save Changes"}
               </button>
-              <Link
-                href="#"
-                className="btn btn-primary"
-                data-bs-dismiss="modal"
-              >
-                Save Changes
-              </Link>
             </div>
           </form>
         </div>
       </div>
     </div>
   );
+}
+
+function closeBsModal(id: string) {
+  if (typeof window === "undefined") return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const bsModal = (window as any).bootstrap?.Modal?.getInstance(el);
+  bsModal?.hide();
 }

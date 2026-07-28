@@ -6,14 +6,14 @@ type TransactionActionsProps = {
   totalPayable: number;
   canCheckout: boolean;
   onSaveDraft: () => void;
-  onCompleteOrder: () => void;
+  onPayAndPrint: () => void;
 };
 
 export default function TransactionActions({
   totalPayable,
   canCheckout,
   onSaveDraft,
-  onCompleteOrder,
+  onPayAndPrint,
 }: TransactionActionsProps) {
   return (
     <div className="pos-transaction-details__actions">
@@ -21,13 +21,7 @@ export default function TransactionActions({
         type="button"
         className="pos-transaction-details__pay-btn"
         disabled={!canCheckout}
-        data-bs-toggle={canCheckout ? "modal" : undefined}
-        data-bs-target="#pos-payment-completed"
-        onClick={() => {
-          if (canCheckout) {
-            onCompleteOrder();
-          }
-        }}
+        onClick={canCheckout ? onPayAndPrint : undefined}
       >
         Pay &amp; Print {formatOrderCurrency(totalPayable)}
       </button>

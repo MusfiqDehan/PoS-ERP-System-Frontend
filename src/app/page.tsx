@@ -1,5 +1,5 @@
-import LandingPage from "@/components/landing";
+import HomeRouter from "@/components/HomeRouter";
 
 export default function Home() {
-  return <LandingPage />;
+  return <HomeRouter />;
 }

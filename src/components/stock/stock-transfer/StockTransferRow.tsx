@@ -1,28 +1,29 @@
 "use client";
 
-import { Edit, Trash2 } from "react-feather";
+import { Edit } from "react-feather";
 import Link from "next/link";
+import type { StockTransferRecord } from "./types";
 
-export function StockTransferActionsCell() {
+type Props = {
+  record: StockTransferRecord;
+  onView: (record: StockTransferRecord) => void;
+};
+
+export function StockTransferActionsCell({ record, onView }: Props) {
   return (
     <div className="action-table-data">
       <div className="edit-delete-action">
-        <div className="input-block add-lists"></div>
         <Link
           className="me-2 p-2"
           href="#"
           data-bs-toggle="modal"
           data-bs-target="#edit-units"
+          onClick={(e) => {
+            e.preventDefault();
+            onView(record);
+          }}
         >
           <Edit className="feather-edit" />
-        </Link>
-        <Link
-          className="confirm-text p-2"
-          href="#"
-          data-bs-toggle="modal"
-          data-bs-target="#delete-modal"
-        >
-          <Trash2 className="feather-trash-2" />
         </Link>
       </div>
     </div>

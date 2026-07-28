@@ -2,16 +2,32 @@
 
 import ExportButtons from "@/core/common/exportButtons";
 
-export default function PageHeader() {
+type PageHeaderProps = {
+  searchText: string;
+  onSearchChange: (value: string) => void;
+};
+
+export default function PageHeader({ searchText, onSearchChange }: PageHeaderProps) {
   return (
-    <div className="flex items-center justify-between flex-wrap gap-3 mb-[1.5rem]">
-      <div>
-        <h4 className="mb-1 text-[20px] font-bold text-[#212B36]">Domain</h4>
-        <p className="m-0 text-[14px] font-medium text-[#646B72]">
-          Manage your domain
-        </p>
+    <div className="flex items-center justify-between flex-wrap gap-4 mb-[1.5rem]">
+      {/* Left — search */}
+      <div className="flex-1 min-w-[200px] max-w-[400px]">
+        <div className="relative w-full">
+          <i className="ti ti-search absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[#94A3B8] pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search domains..."
+            value={searchText}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="w-full h-[38px] pl-9 pr-4 rounded-[10px] border border-[#E2E8F0] bg-white text-[13px] text-[#0F172A] placeholder:text-[#94A3B8] outline-none focus:border-[#0ac79e] focus:ring-1 focus:ring-[#0ac79e]/20 transition-all"
+          />
+        </div>
       </div>
-      <ExportButtons />
+
+      {/* Right — actions */}
+      <div className="flex items-center flex-wrap gap-2">
+        <ExportButtons />
+      </div>
     </div>
   );
 }
