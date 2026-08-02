@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { AuthCardLogo } from "@/core/common/auth";
 import { AuthPasswordField } from "@/core/common/form/auth";
 import { acceptTenantInvitation, type TenantInvitation } from "@/lib/platform";
 
@@ -55,10 +56,11 @@ export default function TenantInviteFormPanel({ token, invitation }: Props) {
 
   return (
     <section className="auth-split-page__form-panel">
-      <form className="auth-split-page__form" onSubmit={handleSubmit}>
+      <form className="auth-split-page__form auth-card-page__card" onSubmit={handleSubmit}>
         <div className="auth-split-page__form-top">
           <div className="auth-split-page__form-main">
-            <div className="auth-split-page__form-header">
+            <div className="auth-split-page__form-header auth-card-page__header">
+              <AuthCardLogo />
               <h1 className="auth-split-page__form-title auth-split-page__form-title--mixed">
                 Set up {invitation.company_name}
               </h1>

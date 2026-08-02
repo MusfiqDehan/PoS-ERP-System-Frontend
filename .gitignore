@@ -3,9 +3,8 @@
 # ---------------------------------------------------------------------------
 # Dependencies
 # ---------------------------------------------------------------------------
-/node_modules
-/node_modules/
-/.pnp
+node_modules/
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -22,25 +21,31 @@ pnpm-lock.yaml
 # ---------------------------------------------------------------------------
 # Next.js / build output
 # ---------------------------------------------------------------------------
-/.next/
-/out/
-/build
-/dist
+.next/
+out/
+build/
+dist/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+
+# Bundle analyzer
+analyze/
+.next/analyze/
 
 # ---------------------------------------------------------------------------
 # Testing
 # ---------------------------------------------------------------------------
-/coverage
+coverage/
 *.lcov
+.vitest/
+playwright-report/
+test-results/
+blob-report/
+.nyc_output/
 
 # ---------------------------------------------------------------------------
-# TypeScript
-# ---------------------------------------------------------------------------
-*.tsbuildinfo
-next-env.d.ts
-
-# ---------------------------------------------------------------------------
-# Environment files — commit .env.example only; keep local/prod secrets untracked
+# Environment — commit .env.example only; never commit local/prod secrets
 # ---------------------------------------------------------------------------
 .env
 .env.*
@@ -49,12 +54,17 @@ next-env.d.ts
 # ---------------------------------------------------------------------------
 # Logs & debug
 # ---------------------------------------------------------------------------
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+.eslintcache
+.stylelintcache
+*.pid
+*.seed
+*.pid.lock
 
 # ---------------------------------------------------------------------------
 # Editor / IDE
@@ -65,27 +75,24 @@ yarn-error.log*
 .idea/
 *.swp
 *.swo
-.history
+*~
+.history/
+*.sublime-project
+*.sublime-workspace
 
-# AI assistant / tooling
+# AI assistant / local tooling
 .claude/
 .cursor/
 .mcps/
 .agent/
 .next-root-owned/
 
-# Project docs & notes (kept outside the repo)
-docs/
-BACKEND_BUG_NOTES/
-NOTES/
-*.notes.md
-daily-task.md
-TODO_*.md
-
 # ---------------------------------------------------------------------------
-# OS files
+# OS
 # ---------------------------------------------------------------------------
 .DS_Store
+.DS_Store?
+._*
 Thumbs.db
 ehthumbs.db
 Desktop.ini
@@ -94,21 +101,38 @@ Desktop.ini
 # Security / certs
 # ---------------------------------------------------------------------------
 *.pem
+*.key
+*.crt
+*.p12
 
 # ---------------------------------------------------------------------------
-# Deployment
+# Deployment / hosting
 # ---------------------------------------------------------------------------
 .vercel
 .deploy-revision
+.netlify/
 
 # ---------------------------------------------------------------------------
-# Local-only / scratch
+# Generated / local-only
 # ---------------------------------------------------------------------------
-# git recovery backups (e.g. created when repairing a corrupted .git)
+graphify-out/
+graphify/
+
+# Project notes kept outside the repo
+docs/
+BACKEND_BUG_NOTES/
+NOTES/
+*.notes.md
+daily-task.md
+TODO_*.md
+
+# git recovery backups
 .git.broken/
 *.corrupt.bak
-# misc temp files
+
+# misc temp / scratch
 *.tmp
 *.temp
-*~
 *.bak
+*.orig
+*.rej

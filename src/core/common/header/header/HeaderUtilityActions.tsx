@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useAuth } from "@/providers/auth-provider";
 import type { HeaderRoutes } from "./types";
 import LogoutLink from "@/components/auth/LogoutLink";
 
@@ -12,6 +13,24 @@ type HeaderUtilityActionsProps = {
     onToggleFullscreen: () => void;
 };
 
+function formatRoleLabel(
+    roleSlugs: string[] | undefined,
+    isTenantAdmin: boolean,
+): string {
+    if (isTenantAdmin || roleSlugs?.includes("admin")) {
+        return "Administrator";
+    }
+    if (roleSlugs?.includes("branch_manager")) {
+        return "Branch Manager";
+    }
+    const slug = roleSlugs?.[0];
+    if (!slug) return "Team Member";
+    return slug
+        .split("_")
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ");
+}
+
 export default function HeaderUtilityActions({
     route,
     flagImage,
@@ -19,9 +38,13 @@ export default function HeaderUtilityActions({
     onToggleFullscreen,
 }: HeaderUtilityActionsProps) {
     const { user } = useCurrentUser();
+    const { tenantAccess } = useAuth();
 
-    const displayName = user?.full_name || "User";
-    const displayRole = user?.platform_roles?.[0] || "Tenant";
+    const displayName = user?.full_name?.trim() || user?.email || "User";
+    const displayRole = formatRoleLabel(
+        tenantAccess?.role_slugs,
+        tenantAccess?.is_tenant_admin ?? false,
+    );
     const firstLetter = displayName.charAt(0).toUpperCase();
 
     const profilePictureUrl =
@@ -31,7 +54,6 @@ export default function HeaderUtilityActions({
 
     return (
         <>
-            {/* ... POS button, flag, fullscreen, email, bell — unchanged ... */}
             <li className="nav-item pos-nav figma-utility-item figma-utility-pos">
                 <Link
                     href={route.pos}
@@ -108,52 +130,6 @@ export default function HeaderUtilityActions({
                                     </div>
                                 </Link>
                             </li>
-                            <li className="notification-message">
-                                <Link href={route.activities}>
-                                    <div className="media d-flex">
-                                        <span className="avatar flex-shrink-0">
-                                            <img alt="Sortorium" src="assets/img/profiles/avatar-03.jpg" />
-                                        </span>
-                                        <div className="flex-grow-1">
-                                            <p className="noti-details">
-                                                <span className="noti-title">Leo Kelly</span> cancelled his order scheduled for 17 Jan 2025
-                                            </p>
-                                            <p className="noti-time">10 mins ago</p>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </li>
-                            <li className="notification-message">
-                                <Link href={route.activities} className="recent-msg">
-                                    <div className="media d-flex">
-                                        <span className="avatar flex-shrink-0">
-                                            <img alt="Sortorium" src="assets/img/profiles/avatar-17.jpg" />
-                                        </span>
-                                        <div className="flex-grow-1">
-                                            <p className="noti-details">
-                                                Payment of $50 received for Order #67890 from <span className="noti-title">Antonio Engle</span>
-                                            </p>
-                                            <p className="noti-time">05 mins ago</p>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </li>
-                            <li className="notification-message">
-                                <Link href={route.activities} className="recent-msg">
-                                    <div className="media d-flex">
-                                        <span className="avatar flex-shrink-0">
-                                            <img alt="Sortorium" src="assets/img/profiles/avatar-02.jpg" />
-                                        </span>
-                                        <div className="flex-grow-1">
-                                            <p className="noti-details">
-                                                <span className="noti-title">Andrea</span> confirmed his order. Order No: #73401.Estimated
-                                                delivery: 3 days
-                                            </p>
-                                            <p className="noti-time">4 mins ago</p>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </li>
                         </ul>
                     </div>
                     <div className="topnav-dropdown-footer d-flex align-items-center gap-3">
@@ -174,56 +150,72 @@ export default function HeaderUtilityActions({
             </li>
 
             <li className="nav-item dropdown has-arrow main-drop profile-nav figma-utility-item figma-profile-control">
-                <Link href="#" className="nav-link userset" data-bs-toggle="dropdown">
-                    <span className="user-info p-0">
-                        <span className="user-letter">
-                            {profilePictureUrl ? (
-                                <img
-                                    src={String(profilePictureUrl)}
-                                    alt={displayName}
-                                    className="img-fluid"
-                                />
-                            ) : (
-                                <span className="avatar-placeholder">{firstLetter}</span>
-                            )}
-                        </span>
-                        <span className="figma-profile-name">{displayName}</span>
+                <button
+                    type="button"
+                    className="nav-link userset figma-profile-trigger"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <span className="figma-profile-avatar">
+                        {profilePictureUrl ? (
+                            <img
+                                src={String(profilePictureUrl)}
+                                alt={displayName}
+                                className="img-fluid"
+                            />
+                        ) : (
+                            <span className="figma-profile-avatar__placeholder">
+                                {firstLetter}
+                            </span>
+                        )}
                     </span>
-                </Link>
-                <div className="dropdown-menu menu-drop-user">
-                    <div className="profileset d-flex align-items-center">
-                        <span className="user-img me-2">
+                    <span className="figma-profile-text">
+                        <span className="figma-profile-name">{displayName}</span>
+                        <span className="figma-profile-role">{displayRole}</span>
+                    </span>
+                    <i className="ti ti-chevron-down figma-profile-caret" aria-hidden="true" />
+                </button>
+
+                <div className="dropdown-menu dropdown-menu-end menu-drop-user figma-profile-menu">
+                    <div className="figma-profile-menu__header">
+                        <span className="figma-profile-menu__avatar">
                             {profilePictureUrl ? (
                                 <img
                                     src={String(profilePictureUrl)}
                                     alt={displayName}
                                 />
                             ) : (
-                                <span className="avatar-placeholder avatar-placeholder--lg">
+                                <span className="figma-profile-avatar__placeholder figma-profile-avatar__placeholder--lg">
                                     {firstLetter}
                                 </span>
                             )}
                         </span>
-                        <div>
-                            <h6 className="fw-medium">{displayName}</h6>
-                            <p className="text-capitalize">{displayRole}</p>
+                        <div className="figma-profile-menu__meta">
+                            <h6>{displayName}</h6>
+                            <p>{displayRole}</p>
+                            {user?.email ? <span>{user.email}</span> : null}
                         </div>
                     </div>
-                    <Link className="dropdown-item" href={route.profile}>
-                        <i className="ti ti-user-circle me-2" />
-                        MyProfile
+
+                    <div className="figma-profile-menu__divider" />
+
+                    <Link className="dropdown-item figma-profile-menu__item" href={route.profile}>
+                        <i className="ti ti-user-circle" />
+                        My Profile
                     </Link>
-                    <Link className="dropdown-item" href={route.salesreport}>
-                        <i className="ti ti-file-text me-2" />
+                    <Link className="dropdown-item figma-profile-menu__item" href={route.salesreport}>
+                        <i className="ti ti-file-text" />
                         Reports
                     </Link>
-                    <Link className="dropdown-item" href={route.generalsettings}>
-                        <i className="ti ti-settings-2 me-2" />
+                    <Link className="dropdown-item figma-profile-menu__item" href={route.generalsettings}>
+                        <i className="ti ti-settings-2" />
                         Settings
                     </Link>
-                    <hr className="my-2" />
-                    <LogoutLink className="dropdown-item logout pb-0">
-                        <i className="ti ti-logout me-2" />
+
+                    <div className="figma-profile-menu__divider" />
+
+                    <LogoutLink className="dropdown-item figma-profile-menu__item figma-profile-menu__item--logout logout pb-0">
+                        <i className="ti ti-logout" />
                         Logout
                     </LogoutLink>
                 </div>

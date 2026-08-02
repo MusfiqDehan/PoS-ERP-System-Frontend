@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useMemo, useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 
 import { SidebarData } from "../../json/siderbar_data";
 import { filterSidebarBySearch } from "./filterSidebarBySearch";
@@ -11,10 +12,14 @@ import { all_routes } from "@/data/all_routes";
 import ImageWithBasePath from "@/core/common/image-with-base-path";
 import { brandAssets, PRODUCT_NAME } from "@/lib/branding";
 import { ChevronsLeft } from "react-feather";
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
+import "react-perfect-scrollbar/dist/css/styles.css";
 import { filterSidebarByAccess } from "@/data/rolePermissions";
 import { useAuth } from "@/providers/auth-provider";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+
+const PerfectScrollbar = dynamic(() => import("react-perfect-scrollbar"), {
+  ssr: false,
+});
 
 export default function Sidebar() {
   const route = all_routes;
@@ -32,10 +37,11 @@ export default function Sidebar() {
     isTenantAdmin,
   );
   const [menuSearchQuery, setMenuSearchQuery] = useState("");
-  const isSearching = menuSearchQuery.trim().length > 0;
+  const debouncedMenuSearch = useDebouncedValue(menuSearchQuery, 200);
+  const isSearching = debouncedMenuSearch.trim().length > 0;
   const filteredSidebar = useMemo(
-    () => filterSidebarBySearch(visibleSidebar, menuSearchQuery),
-    [visibleSidebar, menuSearchQuery],
+    () => filterSidebarBySearch(visibleSidebar, debouncedMenuSearch),
+    [visibleSidebar, debouncedMenuSearch],
   );
   const sidebarDateLabel = new Intl.DateTimeFormat("en-US", {
     weekday: "long",

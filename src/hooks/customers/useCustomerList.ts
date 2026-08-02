@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { getAccessToken } from "@/lib/auth-session";
 import { extractListItems } from "@/lib/api";
 import {
@@ -19,13 +20,8 @@ export function useCustomerList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search.trim(), 300);
   const [statusFilter, setStatusFilter] = useState<CustomerStatusFilter>("all");
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setDebouncedSearch(search.trim()), 300);
-    return () => window.clearTimeout(timer);
-  }, [search]);
 
   const load = useCallback(async () => {
     setLoading(true);

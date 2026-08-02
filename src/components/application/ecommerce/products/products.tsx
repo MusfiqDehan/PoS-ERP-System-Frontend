@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import CommonFooter from "@/core/common/footer/commonFooter";
 import { all_routes } from "@/data/all_routes";
 import { Download, Eye } from "react-feather";
@@ -18,17 +17,9 @@ export default function ProductsComponent() {
   const {
     dataSource, loading, error,
     categories, brands, filters, applyFilters,
+    searchInput, setSearchInput,
     pagination, goNextPage, goPrevPage,
   } = useProductList();
-  const [searchValue, setSearchValue] = useState("");
-
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchValue(value);
-    const trimmed = value.trim();
-    if (trimmed.length >= 2 || trimmed.length === 0) {
-      applyFilters({ ...filters, search: trimmed || undefined });
-    }
-  }, [filters, applyFilters]);
 
   const columns = [
     {
@@ -124,8 +115,8 @@ export default function ProductsComponent() {
                     type="text"
                     placeholder="Search products..."
                     className="form-control form-control-sm"
-                    value={searchValue}
-                    onChange={(e) => handleSearchChange(e.target.value)}
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                   />
                   <span className="btn btn-searchset">
                     <i className="ti ti-search" />

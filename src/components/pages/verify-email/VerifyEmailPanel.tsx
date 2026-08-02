@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { AuthCardLogo } from "@/core/common/auth";
 import { all_routes } from "@/data/all_routes";
 import { AuthPasswordField } from "@/core/common/form/auth";
 import { collectErrorMessages } from "@/lib/api";
@@ -107,10 +108,11 @@ export default function VerifyEmailPanel() {
 
   return (
     <section className="auth-split-page__form-panel">
-      <div className="auth-split-page__form">
+      <div className="auth-split-page__form auth-card-page__card">
         <div className="auth-split-page__form-top">
           <div className="auth-split-page__form-main">
-            <div className="auth-split-page__form-header">
+            <div className="auth-split-page__form-header auth-card-page__header">
+              <AuthCardLogo />
               <h1 className="auth-split-page__form-title auth-split-page__form-title--mixed">
                 {status === "done" ? "You're all set" : "Verify your email"}
               </h1>

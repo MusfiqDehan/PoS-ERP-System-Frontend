@@ -63,15 +63,17 @@ describe("RegisterFormPanel", () => {
     const user = userEvent.setup();
     render(<RegisterFormPanel />);
 
+    await user.type(screen.getByLabelText(/email address/i), "owner@acme.com");
+    await user.click(screen.getByRole("button", { name: /^next$/i }));
+
     await waitFor(() => {
       expect(screen.getByLabelText(/plan/i)).toHaveValue("pro");
     });
 
     await user.type(screen.getByLabelText(/company name/i), "Acme");
     await user.type(screen.getByLabelText(/subdomain/i), "acme-shop");
-    await user.type(screen.getByLabelText(/email address/i), "owner@acme.com");
     await user.click(screen.getByRole("checkbox"));
-    await user.click(screen.getByRole("button", { name: /sign up/i }));
+    await user.click(screen.getByRole("button", { name: /create account/i }));
 
     await waitFor(() => {
       expect(screen.getByRole("status")).toHaveTextContent(

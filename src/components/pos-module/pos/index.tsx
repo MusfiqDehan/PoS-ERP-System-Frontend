@@ -1,10 +1,8 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
-import PosModals from "@/core/modals/pos-modal/posModals";
-import PosManageCategoriesModal from "./categories-modal/PosManageCategoriesModal";
 import { openPosModal } from "./categories-modal/openPosModal";
-import PosCreateCustomerModal from "./PosCreateCustomerModal";
 import PosSaleModals, { useFinalizeSale } from "./PosSaleModals";
 import PosOrderDetails from "./PosOrderDetails";
 import PosOrderSidebar from "./PosOrderSidebar";
@@ -29,6 +27,12 @@ import {
   scanOutOfStockMessage,
   scanStockLimitMessage,
 } from "@/lib/posScanFeedback";
+
+const PosModals = dynamic(() => import("@/core/modals/pos-modal/posModals"));
+const PosManageCategoriesModal = dynamic(
+  () => import("./categories-modal/PosManageCategoriesModal"),
+);
+const PosCreateCustomerModal = dynamic(() => import("./PosCreateCustomerModal"));
 
 function scanFailureMessage(apiMessage: string): string {
   if (

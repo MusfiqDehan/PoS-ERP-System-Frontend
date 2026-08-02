@@ -1,8 +1,13 @@
 import path from "path";
+import bundleAnalyzer from "@next/bundle-analyzer";
 
 const isDev = process.env.NODE_ENV === "development";
 const backendProxyTarget =
   process.env.BACKEND_PROXY_TARGET || "http://localhost:8002";
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -13,6 +18,12 @@ const nextConfig = {
   // Static export only for production builds (Docker/nginx). Omit in dev so
   // rewrites work without the export-no-custom-routes warning.
   ...(process.env.NODE_ENV === "production" ? { output: "export" as const } : {}),
+
+  // Required with output:"export": there is no /_next/image optimizer behind nginx.
+  // Without this, next/image emits /_next/image?url=... which falls back to HTML.
+  images: {
+    unoptimized: true,
+  },
 
   async rewrites() {
     const routes: Array<{ source: string; destination: string }> = [];
@@ -55,6 +66,12 @@ const nextConfig = {
       "react-apexcharts",
       "apexcharts",
       "antd",
+      "chart.js",
+      "lucide-react",
+      "react-icons",
+      "sweetalert2",
+      "@fullcalendar/react",
+      "@fullcalendar/daygrid",
     ],
   },
 
@@ -79,4 +96,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

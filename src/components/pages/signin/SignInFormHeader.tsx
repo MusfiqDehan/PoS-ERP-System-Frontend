@@ -1,3 +1,5 @@
+import { AuthCardLogo } from "@/core/common/auth";
+
 type SignInFormHeaderProps = {
   isPlatform?: boolean;
   tenantSubdomain?: string;
@@ -9,7 +11,8 @@ export default function SignInFormHeader({
 }: SignInFormHeaderProps) {
 
   return (
-    <div className="auth-split-page__form-header">
+    <div className="auth-split-page__form-header auth-card-page__header">
+      <AuthCardLogo />
       {isPlatform ? (
         <>
           <span className="auth-split-page__admin-badge">

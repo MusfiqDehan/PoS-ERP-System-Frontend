@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
@@ -111,8 +111,11 @@ describe("Sidebar", () => {
 
     await user.type(screen.getByLabelText("Search sidebar menus"), "sales");
 
-    expect(screen.getByText("Sales Dashboard")).toBeInTheDocument();
-    expect(screen.queryByText("Inventory")).not.toBeInTheDocument();
+    // Search is debounced (200ms) before the menu list filters.
+    expect(await screen.findByText("Sales Dashboard")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText("Inventory")).not.toBeInTheDocument();
+    });
   });
 
   it("shows an empty state when no menus match the search", async () => {
@@ -137,6 +140,6 @@ describe("Sidebar", () => {
 
     await user.type(screen.getByLabelText("Search sidebar menus"), "zzzz-not-found");
 
-    expect(screen.getByText("No menus found")).toBeInTheDocument();
+    expect(await screen.findByText("No menus found")).toBeInTheDocument();
   });
 });

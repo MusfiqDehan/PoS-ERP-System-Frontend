@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback, useState } from "react";
 import Table from "@/core/common/pagination/datatable";
 import { posOrderColumns } from "./columns";
 import PosOrderFilters from "./PosOrderFilters";
@@ -14,23 +13,13 @@ export default function PosOrderTable() {
     error,
     branches,
     filters,
+    searchInput,
+    setSearchInput,
     applyFilters,
     pagination,
     goNextPage,
     goPrevPage,
   } = usePosOrders();
-  const [searchValue, setSearchValue] = useState(filters.search ?? "");
-
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchValue(value);
-      const trimmed = value.trim();
-      if (trimmed.length >= 2 || trimmed.length === 0) {
-        applyFilters({ ...filters, search: trimmed || undefined });
-      }
-    },
-    [applyFilters, filters],
-  );
 
   return (
     <div className="card table-list-card manage-stock">
@@ -41,8 +30,8 @@ export default function PosOrderTable() {
               type="text"
               placeholder="Search by reference or customer..."
               className="form-control form-control-sm"
-              value={searchValue}
-              onChange={(event) => handleSearchChange(event.target.value)}
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
             />
             <span className="btn btn-searchset">
               <i className="ti ti-search" />

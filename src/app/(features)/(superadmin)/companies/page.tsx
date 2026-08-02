@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import CommonFooter from "@/core/common/footer/commonFooter";
 import CompaniesTable from "@/components/SuperAdmin/companies/CompaniesTable";
 import CompanyDetailModal from "@/components/SuperAdmin/companies/CompanyDetailModal";
@@ -18,6 +19,7 @@ import type { PlatformTenant } from "@/lib/platform";
 
 export default function Companies() {
   const [searchText, setSearchText] = useState("");
+  const debouncedSearchText = useDebouncedValue(searchText, 300);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -64,7 +66,7 @@ export default function Companies() {
             <PendingInvitesTable refreshKey={refreshKey} />
           ) : (
             <CompaniesTable
-              searchText={searchText}
+              searchText={debouncedSearchText}
               statusFilter={apiStatusFilter}
               onViewDetails={(t) => setDetailTenant(t)}
               onEdit={(t) => setEditTenant(t)}
