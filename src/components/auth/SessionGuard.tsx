@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { all_routes } from "@/data/all_routes";
 import { getAccessToken, getSessionKind } from "@/lib/auth-session";
+import { getTenantSubdomainFromHost } from "@/lib/host-context";
 import { useAuth } from "@/providers/auth-provider";
 
 const PLATFORM_ONLY_PREFIXES = [
@@ -22,14 +23,10 @@ function isPlatformOnlyPath(pathname: string): boolean {
   );
 }
 
-/** Returns the tenant subdomain (e.g. "jubayer") when on a .localhost tenant host, else empty. */
+/** Returns the tenant subdomain when on a tenant host, else empty. */
 function getTenantSubdomain(): string {
   if (typeof window === "undefined") return "";
-  const h = window.location.hostname;
-  if (h.endsWith(".localhost")) {
-    return h.replace(/\.localhost$/, "");
-  }
-  return "";
+  return getTenantSubdomainFromHost();
 }
 
 export function SessionGuard({ children }: { children: ReactNode }) {
