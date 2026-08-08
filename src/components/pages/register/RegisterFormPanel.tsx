@@ -12,7 +12,7 @@ import RegisterTermsAgreement from "./RegisterTermsAgreement";
 
 const SUBDOMAIN_PATTERN = /^(?!-)[a-z0-9-]{3,63}(?<!-)$/;
 const TENANT_BASE_DOMAIN =
-  process.env.NEXT_PUBLIC_TENANT_BASE_DOMAIN || "sortorium.com";
+  process.env.NEXT_PUBLIC_TENANT_BASE_DOMAIN || "shop.musfiqdehan.com";
 
 export default function RegisterFormPanel() {
   const searchParams = useSearchParams();
