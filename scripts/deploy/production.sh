@@ -8,7 +8,7 @@ LIVE_CONTAINER="sortorium-frontend"
 CANDIDATE_CONTAINER="sortorium-frontend-candidate"
 COMPOSE=(docker compose -f docker-compose.prod.yml)
 COMPOSE_DEPLOY=(docker compose -f docker-compose.prod.yml -f docker-compose.deploy.yml)
-SMOKE_URL="${SMOKE_URL:-https://sortorium.com/}"
+SMOKE_URL="${SMOKE_URL:-https://shop.musfiqdehan.com/}"
 HEALTH_TIMEOUT_SECONDS="${HEALTH_TIMEOUT_SECONDS:-180}"
 DRAINED=0
 
