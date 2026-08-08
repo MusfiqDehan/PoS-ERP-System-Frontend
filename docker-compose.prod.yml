@@ -1,3 +1,5 @@
+name: pos-erp-frontend
+
 services:
   frontend:
     build:
@@ -5,11 +7,12 @@ services:
       dockerfile: Dockerfile.prod
       args:
         - NEXT_PUBLIC_API_BASE_URL=/api/v1
-        - NEXT_PUBLIC_PUBLIC_API_BASE_URL=https://sortorium.com/api/v1
-        - NEXT_PUBLIC_PUBLIC_DOMAIN=sortorium.com
-        - NEXT_PUBLIC_WS_BASE_URL=wss://sortorium.com
-    container_name: sortorium-frontend
-    image: sortorium-frontend:${IMAGE_TAG:-latest}
+        - NEXT_PUBLIC_PUBLIC_API_BASE_URL=https://shop.musfiqdehan.com/api/v1
+        - NEXT_PUBLIC_PUBLIC_DOMAIN=shop.musfiqdehan.com
+        - NEXT_PUBLIC_TENANT_BASE_DOMAIN=shop.musfiqdehan.com
+        - NEXT_PUBLIC_WS_BASE_URL=wss://shop.musfiqdehan.com
+    container_name: pos-erp-frontend
+    image: pos-erp-frontend:${IMAGE_TAG:-latest}
     stop_grace_period: 30s
     env_file: .env.prod
     expose:
@@ -21,47 +24,41 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      
       start_period: 20s
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_proxy"
 
-      # ── Frontend router: catch-all for sortorium.com + all *.sortorium.com subdomains.
-      #    Lower priority than backend so /api|/admin/|/media|/static|ADMS routes
-      #    Use /admin/ (not /admin) so frontend routes like /admin-dashboard are not swallowed.
-      #    are handled by the backend container first.
-      - "traefik.http.routers.frontend.rule=(Host(`sortorium.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.frontend.tls.domains[0].main=sortorium.com"
-      - "traefik.http.routers.frontend.tls.domains[0].sans=*.sortorium.com"
-      - "traefik.http.routers.frontend.priority=1"
-      - "traefik.http.routers.frontend.middlewares=security-headers@file,compress@file"
-      - "traefik.http.routers.frontend.service=frontend"
-      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+      # ── Frontend router: catch-all for shop.musfiqdehan.com + all *.shop.musfiqdehan.com subdomains.
+      - "traefik.http.routers.pos-erp-frontend.rule=(Host(`shop.musfiqdehan.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.shop\\.musfiqdehan\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
+      - "traefik.http.routers.pos-erp-frontend.entrypoints=websecure"
+      - "traefik.http.routers.pos-erp-frontend.tls=true"
+      - "traefik.http.routers.pos-erp-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.pos-erp-frontend.tls.domains[0].main=shop.musfiqdehan.com"
+      - "traefik.http.routers.pos-erp-frontend.tls.domains[0].sans=*.shop.musfiqdehan.com"
+      - "traefik.http.routers.pos-erp-frontend.priority=100"
+      - "traefik.http.routers.pos-erp-frontend.middlewares=security-headers@file,compress@file"
+      - "traefik.http.routers.pos-erp-frontend.service=pos-erp-frontend"
+      - "traefik.http.services.pos-erp-frontend.loadbalancer.server.port=80"
 
-      # ── HTTP router: redirect to HTTPS while leaving ACME and ADMS on port 80.
-      - "traefik.http.routers.frontend-http.rule=(Host(`sortorium.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
-      - "traefik.http.routers.frontend-http.entrypoints=web"
-      - "traefik.http.routers.frontend-http.priority=10"
-      - "traefik.http.routers.frontend-http.middlewares=redirect-to-https@file"
-      - "traefik.http.routers.frontend-http.service=frontend"
+      - "traefik.http.routers.pos-erp-frontend-http.rule=(Host(`shop.musfiqdehan.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.shop\\.musfiqdehan\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
+      - "traefik.http.routers.pos-erp-frontend-http.entrypoints=web"
+      - "traefik.http.routers.pos-erp-frontend-http.priority=100"
+      - "traefik.http.routers.pos-erp-frontend-http.middlewares=redirect-to-https@file"
+      - "traefik.http.routers.pos-erp-frontend-http.service=pos-erp-frontend"
 
-      # ── Custom domain frontend routers (on-demand TLS via customdomains resolver).
-      - "traefik.http.routers.frontend-custom.rule=HostRegexp(`^.+$`) && !Host(`sortorium.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
-      - "traefik.http.routers.frontend-custom.entrypoints=websecure"
-      - "traefik.http.routers.frontend-custom.tls=true"
-      - "traefik.http.routers.frontend-custom.tls.certresolver=customdomains"
-      - "traefik.http.routers.frontend-custom.priority=1"
-      - "traefik.http.routers.frontend-custom.middlewares=security-headers@file,compress@file"
-      - "traefik.http.routers.frontend-custom.service=frontend"
-      - "traefik.http.routers.frontend-custom-http.rule=HostRegexp(`^.+$`) && !Host(`sortorium.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
-      - "traefik.http.routers.frontend-custom-http.entrypoints=web"
-      - "traefik.http.routers.frontend-custom-http.priority=10"
-      - "traefik.http.routers.frontend-custom-http.middlewares=redirect-to-https@file"
-      - "traefik.http.routers.frontend-custom-http.service=frontend"
+      - "traefik.http.routers.pos-erp-frontend-custom.rule=HostRegexp(`^.+$`) && !Host(`shop.musfiqdehan.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.shop\\.musfiqdehan\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
+      - "traefik.http.routers.pos-erp-frontend-custom.entrypoints=websecure"
+      - "traefik.http.routers.pos-erp-frontend-custom.tls=true"
+      - "traefik.http.routers.pos-erp-frontend-custom.tls.certresolver=customdomains"
+      - "traefik.http.routers.pos-erp-frontend-custom.priority=1"
+      - "traefik.http.routers.pos-erp-frontend-custom.middlewares=security-headers@file,compress@file"
+      - "traefik.http.routers.pos-erp-frontend-custom.service=pos-erp-frontend"
+      - "traefik.http.routers.pos-erp-frontend-custom-http.rule=HostRegexp(`^.+$`) && !Host(`shop.musfiqdehan.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.shop\\.musfiqdehan\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
+      - "traefik.http.routers.pos-erp-frontend-custom-http.entrypoints=web"
+      - "traefik.http.routers.pos-erp-frontend-custom-http.priority=10"
+      - "traefik.http.routers.pos-erp-frontend-custom-http.middlewares=redirect-to-https@file"
+      - "traefik.http.routers.pos-erp-frontend-custom-http.service=pos-erp-frontend"
     restart: unless-stopped
     mem_limit: 128m
     logging:
