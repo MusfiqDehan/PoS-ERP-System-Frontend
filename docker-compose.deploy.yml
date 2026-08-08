@@ -3,6 +3,8 @@
 #
 # Candidate routers use a -candidate suffix but share traefik.http.services.frontend.
 
+name: pos-erp-frontend
+
 services:
   frontend_candidate:
     extends:
@@ -14,29 +16,29 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_proxy"
-      - "traefik.http.routers.frontend-candidate.rule=(Host(`sortorium.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
+      - "traefik.http.routers.frontend-candidate.rule=(Host(`shop.musfiqdehan.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.shop\\.musfiqdehan\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
       - "traefik.http.routers.frontend-candidate.entrypoints=websecure"
       - "traefik.http.routers.frontend-candidate.tls=true"
       - "traefik.http.routers.frontend-candidate.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.frontend-candidate.tls.domains[0].main=sortorium.com"
-      - "traefik.http.routers.frontend-candidate.tls.domains[0].sans=*.sortorium.com"
+      - "traefik.http.routers.frontend-candidate.tls.domains[0].main=shop.musfiqdehan.com"
+      - "traefik.http.routers.frontend-candidate.tls.domains[0].sans=*.shop.musfiqdehan.com"
       - "traefik.http.routers.frontend-candidate.priority=1"
       - "traefik.http.routers.frontend-candidate.middlewares=security-headers@file,compress@file"
       - "traefik.http.routers.frontend-candidate.service=frontend"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
-      - "traefik.http.routers.frontend-http-candidate.rule=(Host(`sortorium.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
+      - "traefik.http.routers.frontend-http-candidate.rule=(Host(`shop.musfiqdehan.com`) || HostRegexp(`^[a-z0-9][a-z0-9-]*\\.shop\\.musfiqdehan\\.com$`)) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
       - "traefik.http.routers.frontend-http-candidate.entrypoints=web"
       - "traefik.http.routers.frontend-http-candidate.priority=10"
       - "traefik.http.routers.frontend-http-candidate.middlewares=redirect-to-https@file"
       - "traefik.http.routers.frontend-http-candidate.service=frontend"
-      - "traefik.http.routers.frontend-custom-candidate.rule=HostRegexp(`^.+$`) && !Host(`sortorium.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
+      - "traefik.http.routers.frontend-custom-candidate.rule=HostRegexp(`^.+$`) && !Host(`shop.musfiqdehan.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.shop\\.musfiqdehan\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`)"
       - "traefik.http.routers.frontend-custom-candidate.entrypoints=websecure"
       - "traefik.http.routers.frontend-custom-candidate.tls=true"
       - "traefik.http.routers.frontend-custom-candidate.tls.certresolver=customdomains"
       - "traefik.http.routers.frontend-custom-candidate.priority=1"
       - "traefik.http.routers.frontend-custom-candidate.middlewares=security-headers@file,compress@file"
       - "traefik.http.routers.frontend-custom-candidate.service=frontend"
-      - "traefik.http.routers.frontend-custom-http-candidate.rule=HostRegexp(`^.+$`) && !Host(`sortorium.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.sortorium\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
+      - "traefik.http.routers.frontend-custom-http-candidate.rule=HostRegexp(`^.+$`) && !Host(`shop.musfiqdehan.com`) && !HostRegexp(`^[a-z0-9][a-z0-9-]*\\.shop\\.musfiqdehan\\.com$`) && !PathPrefix(`/api`) && !PathPrefix(`/admin/`) && !Path(`/admin`) && !PathPrefix(`/media`) && !PathPrefix(`/static`) && !PathPrefix(`/ws`) && !PathPrefix(`/iclock`) && !PathPrefix(`/cdata`) && !PathPrefix(`/getrequest`) && !PathPrefix(`/devicecmd`) && !PathPrefix(`/.well-known/acme-challenge/`)"
       - "traefik.http.routers.frontend-custom-http-candidate.entrypoints=web"
       - "traefik.http.routers.frontend-custom-http-candidate.priority=10"
       - "traefik.http.routers.frontend-custom-http-candidate.middlewares=redirect-to-https@file"
