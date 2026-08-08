@@ -1,7 +1,7 @@
 /** Host detection for marketing vs tenant subdomain contexts. */
 
 const TENANT_BASE_DOMAIN =
-  process.env.NEXT_PUBLIC_TENANT_BASE_DOMAIN || "sortorium.com";
+  process.env.NEXT_PUBLIC_TENANT_BASE_DOMAIN || "shop.musfiqdehan.com";
 
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1"]);
 
