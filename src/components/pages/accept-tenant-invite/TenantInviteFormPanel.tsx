@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { AuthCardLogo } from "@/core/common/auth";
 import { AuthPasswordField } from "@/core/common/form/auth";
 import { acceptTenantInvitation, type TenantInvitation } from "@/lib/platform";
+import { TENANT_BASE_DOMAIN } from "@/lib/host-context";
 
 type Props = {
   token: string;
@@ -66,7 +67,7 @@ export default function TenantInviteFormPanel({ token, invitation }: Props) {
               </h1>
               <p className="auth-split-page__form-subtitle">
                 Your company workspace will be available at{" "}
-                <strong>{invitation.subdomain}.sortorium.com</strong>.
+                <strong>{invitation.subdomain}.{TENANT_BASE_DOMAIN}</strong>.
               </p>
               <p className="auth-split-page__form-subtitle">
                 Plan: <strong className="capitalize">{invitation.plan}</strong>
